@@ -19,10 +19,13 @@ export function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // 비워둠
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
           }
         },
       },
     }
   );
 }
+

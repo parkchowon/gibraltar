@@ -9,7 +9,7 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: `${baseURL}/home`,
+        redirectTo: `${baseURL}/api/auth/callback`,
       },
     });
 

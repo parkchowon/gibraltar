@@ -6,6 +6,7 @@ const nextConfig = {
       { hostname: "t1.kakaocdn.net" },
       { hostname: "k.kakaocdn.net" },
       { hostname: "img1.kakaocdn.net" },
+      { hostname: "pbs.twimg.com" },
     ],
   },
 };
