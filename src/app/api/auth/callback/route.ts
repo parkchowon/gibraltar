@@ -15,7 +15,7 @@ export async function GET(request:NextRequest) {
       if (error) {
         return NextResponse.redirect(`${origin}/auth/error`);
       }
-      const redirectUrl = isProfileSetting ? '/home' : '/profile-setting';
+      const redirectUrl = isProfileSetting ? '/home' : '/profile-setting?step=1';
       return NextResponse.redirect(`${origin}${redirectUrl}`)
   
     } catch (e){
