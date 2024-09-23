@@ -14,7 +14,6 @@ function PostBox() {
       const post = {
         content: text,
         user_id: userData.id,
-        tags: null,
         images: null,
       };
       await createPost(post);
