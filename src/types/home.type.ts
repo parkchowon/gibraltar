@@ -16,7 +16,6 @@ export type PostType = {
   created_at: string;
   id: string;
   images: Json | null;
-  tags: Json | null;
   user_id: string;
   user: {
     nickname: string;
