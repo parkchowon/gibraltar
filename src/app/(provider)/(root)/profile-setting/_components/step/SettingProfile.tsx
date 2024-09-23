@@ -1,23 +1,11 @@
 "use client";
-import { getUser } from "@/apis/auth.api";
 import { useAuth } from "@/contexts/auth.context";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { ChangeEvent } from "react";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 
 function SettingProfile() {
-  const { isInitialized, user } = useAuth();
-
-  const { isPending, data: userData } = useQuery({
-    queryKey: ["userData", user?.id],
-    queryFn: () => {
-      if (user) {
-        return getUser(user.id);
-      }
-    },
-    enabled: isInitialized,
-  });
+  const { userData, isPending } = useAuth();
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

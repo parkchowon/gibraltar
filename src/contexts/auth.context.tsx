@@ -1,7 +1,10 @@
 "use client";
 
+import { getUser } from "@/apis/auth.api";
 import supabase from "@/supabase/client";
+import { UserRow } from "@/types/database";
 import { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
+import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
   PropsWithChildren,
@@ -10,12 +13,16 @@ import {
   useState,
 } from "react";
 
-type AuthContextValue = {
+type UserDataProps = {
+  userData: UserRow | undefined | null;
+  isPending?: boolean;
+};
+interface AuthContextValue extends UserDataProps {
   isInitialized: boolean;
   isLoggedIn: boolean;
   user: User | null;
   setUser: (user: User | null) => void;
-};
+}
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -57,7 +64,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
     );
   }, []);
 
-  const value = { isInitialized, isLoggedIn, user, setUser };
+  const { isPending, data: userData } = useQuery({
+    queryKey: ["userData", user?.id],
+    queryFn: () => {
+      if (user) {
+        return getUser(user.id);
+      }
+    },
+    enabled: isInitialized,
+  });
+
+  const value = {
+    isInitialized,
+    isLoggedIn,
+    user,
+    setUser,
+    userData,
+    isPending,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -1,8 +1,10 @@
 "use client";
-import { UserDataProps } from "@/types/home.type";
+import { useAuth } from "@/contexts/auth.context";
 import Image from "next/image";
 
-function Profile({ userData, isPending }: UserDataProps) {
+function Profile() {
+  const { userData, isPending } = useAuth();
+
   if (isPending) {
     return (
       <div className="flex w-full mt-[37px] mb-[60px] py-4 px-5 rounded-2xl bg-white">

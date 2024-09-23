@@ -1,41 +1,34 @@
-import { useRouter, useSearchParams } from "next/navigation";
 import { PropsWithChildren } from "react";
+import NextStepButton from "./NextStepButton";
 import ProgressBar from "./ProgressBar";
 
 type ProfileSettingProps = {
   title: string;
-  sub: string;
+  sub?: string;
+  btn?: string;
 };
 
 function ProfileSettingContainer({
   title,
   sub,
+  btn = "다음단계로",
   children,
 }: PropsWithChildren<ProfileSettingProps>) {
-  const router = useRouter();
-  const params = useSearchParams();
-  const step = params.get("step");
-
-  const handleClickNext = () => {
-    router.push(`/profile-setting?step=${Number(step) + 1}`);
-  };
-
   return (
     <div className="flex flex-col w-full h-screen items-center justify-center">
       <div className="flex flex-col w-[546px] items-center">
         <ProgressBar />
-        <div className="flex flex-col w-full mt-[84px] items-center">
-          <div>
-            <p className="text-[40px] font-medium">{title}</p>
+        <div className="flex flex-col w-full mt-[84px]">
+          <div className="pl-[70px]">
+            <p className="text-[40px] font-medium whitespace-pre-wrap">
+              {title}
+            </p>
             <p className="mt-[17px] font-medium">{sub}</p>
           </div>
-          {children}
-          <button
-            onClick={handleClickNext}
-            className="w-[352px] bg-mint rounded-full py-[19px] font-medium text-xl text-[#6A6A6A]"
-          >
-            다음단계로
-          </button>
+          <div className="flex flex-col mx-auto items-center">
+            {children}
+            <NextStepButton text={btn} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
+import FollowUser from "./step/FollowUser";
 import SettingChamp from "./step/SettingChamp";
 import SettingPlaying from "./step/SettingPlaying";
 import SettingProfile from "./step/SettingProfile";
@@ -22,6 +23,8 @@ function ProfileSetting() {
         return <SettingTeam />;
       case "5":
         return <SettingText />;
+      case "6":
+        return <FollowUser />;
     }
   }
 }

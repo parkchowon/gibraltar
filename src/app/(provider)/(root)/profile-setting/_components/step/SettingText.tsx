@@ -3,10 +3,14 @@ import ProfileSettingContainer from "../ProfileSettingContainer";
 function SettingText() {
   return (
     <ProfileSettingContainer
-      title="즐겨하는 영웅을 선택해주세요."
-      sub="입력한 정보를 기반으로 잘 맞는 친구를 소개해드릴게요!"
+      title="마지막 단계예요!"
+      sub="나를 표현하는 소개글을 적어보세요."
+      btn="완성하기"
     >
-      SettingText
+      <textarea
+        className="w-[404px] resize-none border-[1px] border-black rounded-[15px] h-[367px] px-6 py-5 my-[84px] outline-none"
+        placeholder="저는 오버워치를 하는 홍길동이라고 해요"
+      ></textarea>
     </ProfileSettingContainer>
   );
 }

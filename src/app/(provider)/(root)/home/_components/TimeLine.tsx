@@ -1,11 +1,13 @@
 "use client";
 
 import { getPost } from "@/apis/post.api";
-import { PostsType, UserDataProps } from "@/types/home.type";
+import { useAuth } from "@/contexts/auth.context";
+import { PostsType } from "@/types/home.type";
 import { useEffect, useState } from "react";
 import Post from "./Post";
 
-function TimeLine({ userData }: UserDataProps) {
+function TimeLine() {
+  const { userData } = useAuth();
   const [posts, setPosts] = useState<PostsType>([]);
   const getMyPost = async () => {
     if (userData) {

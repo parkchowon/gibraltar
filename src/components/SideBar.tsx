@@ -1,14 +1,9 @@
 function SideBar() {
   return (
-    <aside className="flex flex-col bg-blue-50 w-[198px] mt-[127px] ml-[300px] mr-[71px] gap-[13px]">
+    <aside className="absolute top-0 left-0 flex flex-col bg-blue-50 w-fit h-fit">
       <button className="flex justify-center items-center h-[58px]">
+        <div className="w-6 h-6 mx-10 bg-gray-300" />
         Home
-      </button>
-      <button className="flex justify-center items-center h-[58px]">
-        그룹 찾기
-      </button>
-      <button className="flex justify-center items-center h-[58px]">
-        오버워치 정보
       </button>
     </aside>
   );

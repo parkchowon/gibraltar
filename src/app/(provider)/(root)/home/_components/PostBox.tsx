@@ -1,10 +1,11 @@
 "use client";
 
 import { createPost } from "@/apis/post.api";
-import { UserDataProps } from "@/types/home.type";
+import { useAuth } from "@/contexts/auth.context";
 import { ChangeEvent, FormEvent, useState } from "react";
 
-function PostBox({ userData }: UserDataProps) {
+function PostBox() {
+  const { userData } = useAuth();
   const [text, setText] = useState<string>("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
