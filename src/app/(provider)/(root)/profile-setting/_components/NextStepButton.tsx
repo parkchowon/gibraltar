@@ -9,8 +9,9 @@ function NextStepButton({ text }: { text: string }) {
   const handleClickNext = () => {
     if (step !== "6") {
       router.push(`/profile-setting?step=${Number(step) + 1}`);
+    } else {
+      router.push("/home");
     }
-    router.push("/home");
   };
 
   return (

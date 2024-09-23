@@ -23,3 +23,11 @@ export const getPost = async(userId: string)=> {
 
   return posts;
 }
+
+export const getUserPost = async(userId: string)=>{
+  const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url)").eq("user_id", userId)
+  if(error){
+    console.error('post 불러오는 중 오류')
+  }
+  return data;
+}

@@ -9,3 +9,9 @@ export const getUser = async(userId: string)=>{
   
           return data;
 }
+
+export const getFollower = async(userId: string)=>{
+  const { data } = await supabase.from("followers").select("*").or(`following_id.eq.${userId}, follower_id.eq.${userId}`)
+  
+  return data;
+}

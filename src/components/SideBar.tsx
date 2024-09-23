@@ -1,10 +1,43 @@
+"use client";
+import { SIDE_BAR } from "@/constants/sidebar";
+import { useAuth } from "@/contexts/auth.context";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+
 function SideBar() {
+  const router = useRouter();
+  const path = usePathname();
+  const { user } = useAuth();
+
+  const handleClick = (path: string) => {
+    if (path === "/mypage") {
+      return router.replace(`/${user?.id}`);
+    }
+    router.push(path);
+  };
+
   return (
-    <aside className="absolute top-0 left-0 flex flex-col bg-blue-50 w-fit h-fit">
-      <button className="flex justify-center items-center h-[58px]">
-        <div className="w-6 h-6 mx-10 bg-gray-300" />
-        Home
-      </button>
+    <aside className="flex flex-col w-full h-fit items-start">
+      {SIDE_BAR.map((item) => {
+        return (
+          <button
+            key={item.id}
+            onClick={() => handleClick(item.path)}
+            className="flex justify-center items-center h-[58px]"
+          >
+            <Image
+              width={24}
+              height={24}
+              alt="icon"
+              src={path === item.path ? item.icon.fill : item.icon.line}
+              className="mx-10"
+            />
+            <p className={`${path === item.path ? "font-extrabold" : ""}`}>
+              {item.name}
+            </p>
+          </button>
+        );
+      })}
     </aside>
   );
 }

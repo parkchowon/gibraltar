@@ -10,7 +10,7 @@ function PostBox() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userData) {
+    if (userData && text) {
       const post = {
         content: text,
         user_id: userData.id,
@@ -41,7 +41,11 @@ function PostBox() {
         </button>
         <div>{}</div>
       </div>
-      <button className="mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300">
+      <button
+        className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300 ${
+          text ? "cursor-pointer" : "cursor-not-allowed"
+        }`}
+      >
         게시하기
       </button>
     </form>

@@ -32,9 +32,19 @@ function Profile() {
         <div className="flex">
           <p className="font-bold text-base">{userData?.nickname}</p>
         </div>
-        <p>오버워치 하는 중</p>
+        <div className="flex items-center gap-x-1.5">
+          <div className="w-[9px] h-[9px] rounded-full bg-mint" />
+          <p className="text-xs text-gray-400">오버워치 하는 중</p>
+        </div>
       </div>
-      <button></button>
+      <button className="ml-auto">
+        <Image
+          width={30}
+          height={30}
+          alt="icon"
+          src={"/icons/mypage_line.svg"}
+        />
+      </button>
     </div>
   );
 }

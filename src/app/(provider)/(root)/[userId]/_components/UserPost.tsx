@@ -1,19 +1,15 @@
-"use client";
-
-import { getPost } from "@/apis/post.api";
-import { useAuth } from "@/contexts/auth.context";
+import { getUserPost } from "@/apis/post.api";
 import { useQuery } from "@tanstack/react-query";
-import Post from "./Post";
+import { usePathname } from "next/navigation";
+import Post from "../../home/_components/Post";
 
-function TimeLine() {
-  const { userData } = useAuth();
-
+function UserPost() {
+  const pathname = usePathname();
+  const userId = pathname.replace("/", "");
   const { isPending, data: posts } = useQuery({
-    queryKey: ["timelineData", userData],
+    queryKey: ["userPost", userId],
     queryFn: () => {
-      if (userData) {
-        return getPost(userData.id);
-      }
+      return getUserPost(userId);
     },
   });
 
@@ -29,4 +25,4 @@ function TimeLine() {
   );
 }
 
-export default TimeLine;
+export default UserPost;

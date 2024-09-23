@@ -7,16 +7,21 @@ import SideBar from "../SideBar";
 
 function MainLayout({ children }: PropsWithChildren) {
   return (
-    <div className="flex h-screen w-full">
-      <main className="relative flex w-full h-full items-center justify-center">
+    <div className="relative h-screen">
+      {/* 사이드 바 */}
+      <section className="absolute left-[15.6%] top-[11.7%] w-[198px]">
         <SideBar />
+      </section>
+      {/* 가운데 */}
+      <section className="absolute left-1/2 transform -translate-x-1/2 w-[784px] bg-gray-300">
         {children}
-        <section className="absolute w-[352px] h-full top-[77px]">
-          <SearchBar />
-          <Profile />
-          <PostBox />
-        </section>
-      </main>
+      </section>
+      {/* 오른쪽 프로필 */}
+      <section className="absolute right-[6.3%] top-[7.1%] w-[352px]">
+        <SearchBar />
+        <Profile />
+        <PostBox />
+      </section>
     </div>
   );
 }
