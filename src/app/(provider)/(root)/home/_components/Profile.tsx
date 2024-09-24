@@ -31,6 +31,7 @@ function Profile() {
       <div>
         <div className="flex">
           <p className="font-bold text-base">{userData?.nickname}</p>
+          <p className="text-sm ml-1.5 text-gray-400">{userData?.handle}</p>
         </div>
         <div className="flex items-center gap-x-1.5">
           <div className="w-[9px] h-[9px] rounded-full bg-mint" />

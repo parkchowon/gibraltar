@@ -13,7 +13,7 @@ export const getPost = async(userId: string)=> {
   const {data:followings, error:followingError} = await supabase.from('followers').select('following_id').eq('follower_id', userId);
   const followingId = followings?.map(item=>item.following_id);
   const followerList = followingId ? [userId, ...followingId]: [userId];
-  const {data:posts, error:myError} = await supabase.from('posts').select('*, user:users (nickname, profile_url)').in('user_id', followerList);
+  const {data:posts, error:myError} = await supabase.from('posts').select('*, user:users (nickname, profile_url, handle)').in('user_id', followerList);
   if(myError){
     console.error('로그인 유저의 포스팅 불러오는 중 에러: ',myError)
   }
@@ -25,7 +25,7 @@ export const getPost = async(userId: string)=> {
 }
 
 export const getUserPost = async(userId: string)=>{
-  const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url)").eq("user_id", userId)
+  const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url, handle)").eq("user_id", userId)
   if(error){
     console.error('post 불러오는 중 오류')
   }

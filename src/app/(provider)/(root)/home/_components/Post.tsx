@@ -25,7 +25,8 @@ function Post({ post }: PostProps) {
   };
 
   // 하트 누를 시
-  const handleHeartClick = () => {
+  const handleHeartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setHeartClick(!heartClick);
   };
 
@@ -55,7 +56,10 @@ function Post({ post }: PostProps) {
         onClick={handleProfileClick}
       />
       <div className="ml-6">
-        <p className="font-semibold">{post.user.nickname}</p>
+        <div className="flex items-center">
+          <p className="font-semibold">{post.user.nickname}</p>
+          <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
+        </div>
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
         <div className="flex gap-6 mt-3">
           <button className="flex rounded-full p-1 hover:bg-gray-300">

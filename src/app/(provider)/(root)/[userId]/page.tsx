@@ -1,15 +1,62 @@
 "use client";
+import { getUserPost } from "@/apis/post.api";
 import MainLayout from "@/components/Layout/MainLayout";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { usePathname, useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
+import ProfileDetail from "./_components/ProfileDetail";
+import TabContainer from "./_components/TabContainer";
+import UserLikes from "./_components/UserLikes";
+import UserMedia from "./_components/UserMedia";
 import UserPost from "./_components/UserPost";
 
 function ProfilePage() {
+  const pathname = usePathname();
+  const userId = pathname.replace("/", "");
+  const params = useSearchParams();
+  const tab = params.get("tab");
+
+  const { isPending, data: posts } = useQuery({
+    queryKey: ["userPost", userId],
+    queryFn: () => {
+      return getUserPost(userId);
+    },
+  });
+
+  const tabComponent = () => {
+    switch (tab) {
+      case "media":
+        return <UserMedia />;
+      case "bookmark":
+        return <UserLikes />;
+      default:
+        return <UserPost posts={posts} />;
+    }
+  };
+
+  if (isPending) return <p>loading...</p>;
+
   return (
     <MainLayout>
-      <div>
-        <div>홈으로</div>
-        <ProfileBox />
-        <UserPost />
+      <div className="px-6 pt-[50px]">
+        <div className="flex gap-8 items-center">
+          <button>
+            <Image
+              alt="arrow"
+              width={15}
+              height={13.7}
+              src={"/icons/arrow.svg"}
+            />
+          </button>
+          <p className="font-semibold">홈으로</p>
+        </div>
+        {/* profile user info section */}
+        <ProfileBox countPost={posts ? posts?.length : 0} />
+        {/* profile detail section */}
+        <ProfileDetail />
+        {/* tab section */}
+        <TabContainer>{tabComponent()}</TabContainer>
       </div>
     </MainLayout>
   );

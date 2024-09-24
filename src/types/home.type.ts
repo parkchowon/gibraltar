@@ -18,6 +18,7 @@ export type PostType = {
   images: Json | null;
   user_id: string;
   user: {
+    handle: string;
     nickname: string;
     profile_url: string;
   } | null;

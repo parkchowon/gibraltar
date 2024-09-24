@@ -174,6 +174,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          handle: string
           id: string
           nickname: string
           profile_url: string
@@ -181,6 +182,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          handle?: string
           id?: string
           nickname: string
           profile_url: string
@@ -188,6 +190,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          handle?: string
           id?: string
           nickname?: string
           profile_url?: string
