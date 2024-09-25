@@ -1,17 +1,14 @@
 import { PropsWithChildren } from "react";
-import NextStepButton from "./NextStepButton";
 import ProgressBar from "./ProgressBar";
 
 type ProfileSettingProps = {
   title: string;
   sub?: string;
-  btn?: string;
 };
 
 function ProfileSettingContainer({
   title,
   sub,
-  btn = "다음단계로",
   children,
 }: PropsWithChildren<ProfileSettingProps>) {
   return (
@@ -25,10 +22,7 @@ function ProfileSettingContainer({
             </p>
             <p className="mt-[17px] font-medium">{sub}</p>
           </div>
-          <div className="flex flex-col mx-auto items-center">
-            {children}
-            <NextStepButton text={btn} />
-          </div>
+          <div className="flex flex-col mx-auto items-center">{children}</div>
         </div>
       </div>
     </div>

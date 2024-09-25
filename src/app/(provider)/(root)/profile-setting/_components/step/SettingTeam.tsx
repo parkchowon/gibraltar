@@ -28,6 +28,7 @@ function SettingTeam() {
     <ProfileSettingContainer
       title="응원하는 팀을 알려주세요."
       sub="입력한 정보를 기반으로 잘 맞는 친구를 소개해드릴게요!"
+      btnInvalid={!!team}
     >
       <div className="flex flex-col w-[413px] mt-[66px] mb-[75px]">
         <p className="font-bold mb-5">응원하는 팀이 있다면 알려주시겠어요?</p>
@@ -37,8 +38,8 @@ function SettingTeam() {
               isVisible ? "rounded-t-[15px] border-b-0" : "rounded-[15px]"
             } `}
           >
-            <button className="" onClick={handleClickToggle}>
-              선택하세요
+            <button className="w-full text-left" onClick={handleClickToggle}>
+              {team ? team.name : "선택하세요"}
             </button>
           </label>
           {isVisible && (
@@ -70,7 +71,7 @@ function SettingTeam() {
             <Image
               src={team ? `${team.logo}` : ""}
               fill
-              className="absolute aspect-square rounded-full"
+              className="absolute aspect-square rounded-full -z-10"
               alt="logo"
             />
           </div>
