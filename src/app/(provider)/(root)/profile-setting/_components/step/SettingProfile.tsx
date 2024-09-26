@@ -104,10 +104,9 @@ function SettingProfile() {
         <div className="relative w-[200px] h-[200px] mb-[84px]">
           <Image
             src={profileImg ? profileImg : userData.profile_url}
-            width={200}
-            height={200}
             alt="profile"
-            className="absolute rounded-full"
+            fill
+            className="absolute rounded-full object-cover object-center"
           />
           {/** 컴퓨터에서 사진 받는 input */}
           <input

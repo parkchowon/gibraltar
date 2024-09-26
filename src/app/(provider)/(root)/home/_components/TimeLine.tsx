@@ -8,7 +8,7 @@ import Post from "./Post";
 function TimeLine() {
   const { userData } = useAuth();
 
-  const { isPending, data: posts } = useQuery({
+  const { isPending, data } = useQuery({
     queryKey: ["timelineData", userData],
     queryFn: () => {
       if (userData) {
@@ -16,6 +16,8 @@ function TimeLine() {
       }
     },
   });
+
+  const posts = data?.slice(0).reverse();
 
   if (isPending) return <p>loading...</p>;
 

@@ -31,3 +31,8 @@ export const getUserPost = async(userId: string)=>{
   }
   return data;
 }
+
+export const getTagList = async()=>{
+  const {data, error} = await supabase.from('tags').select('*');
+  return data;
+}

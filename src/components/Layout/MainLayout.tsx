@@ -7,7 +7,7 @@ import SideBar from "../SideBar";
 
 function MainLayout({ children }: PropsWithChildren) {
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen overflow-scroll">
       {/* 사이드 바 */}
       <section className="absolute left-[15.6%] top-[11.7%] w-[198px]">
         <SideBar />

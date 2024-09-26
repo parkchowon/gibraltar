@@ -1,7 +1,9 @@
 "use client";
 import { OWCSTeam } from "@/constants/owcsTeam";
+import { useProfileStore } from "@/stores/profile.store";
 import Image from "next/image";
 import { useState } from "react";
+import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 
 type TeamType = {
@@ -13,6 +15,7 @@ type TeamType = {
 function SettingTeam() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [team, setTeam] = useState<TeamType>();
+  const { putFavoriteTeam } = useProfileStore();
 
   const handleClickToggle = () => {
     setIsVisible(!isVisible);
@@ -21,7 +24,10 @@ function SettingTeam() {
   const handleClickTeam = (team: TeamType) => {
     setIsVisible(false);
     setTeam(team);
-    console.log(team.name);
+  };
+
+  const handleSubmit = () => {
+    if (team) putFavoriteTeam(team.name);
   };
 
   return (
@@ -77,6 +83,7 @@ function SettingTeam() {
           <p className="mt-4 font-bold">{team?.name}</p>
         </div>
       </div>
+      <NextStepButton isClickable={!!team} onClick={handleSubmit} />
     </ProfileSettingContainer>
   );
 }

@@ -1,12 +1,22 @@
 import { PLAY_MODE, PLAY_STYLE, PLAY_TIME } from "@/constants/profile";
-import { useState } from "react";
+import { useProfileStore } from "@/stores/profile.store";
+import { useEffect, useState } from "react";
+import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 
 function SettingPlaying() {
   const [modeClick, setModeClick] = useState<number[]>([]);
   const [styleClick, setStyleClick] = useState<number>(0);
   const [timeClick, setTimeClick] = useState<number[]>([]);
+  const [checkPass, setCheckPass] = useState<boolean>(false);
+  const { putPlayStyle } = useProfileStore();
 
+  useEffect(() => {
+    // 다 클릭 해야 버튼 활성화
+    setCheckPass(!!modeClick.length && !!styleClick && !!timeClick.length);
+  }, [modeClick, styleClick, timeClick]);
+
+  // mode 클릭 시
   const handleModeClick = (mode: number) => {
     if (modeClick.includes(mode)) {
       setModeClick(modeClick.filter((item) => item !== mode));
@@ -15,16 +25,28 @@ function SettingPlaying() {
     }
   };
 
+  // 플레이 성향 클릭 시
   const handleStyleClick = (style: number) => {
     setStyleClick(style);
   };
 
+  // 접속 시간 클릭 시
   const handleTimeClick = (time: number) => {
     if (timeClick.includes(time)) {
       setTimeClick(timeClick.filter((item) => item !== time));
     } else {
       setTimeClick([...timeClick, time]);
     }
+  };
+
+  const handleSubmit = () => {
+    console.log("step2 is clicked");
+    console.log(modeClick, styleClick, timeClick);
+    putPlayStyle({
+      mode: modeClick,
+      style: styleClick,
+      time: timeClick,
+    });
   };
 
   return (
@@ -90,6 +112,7 @@ function SettingPlaying() {
           다중 선택이 가능해요.
         </p>
       </div>
+      <NextStepButton isClickable={checkPass} onClick={handleSubmit} />
     </ProfileSettingContainer>
   );
 }

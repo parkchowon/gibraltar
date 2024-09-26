@@ -1,0 +1,13 @@
+.customScrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: black; /* 스크롤바 색상 */
+  border-radius: 50px; /* 스크롤바 둥근 테두리 */
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: gainsboro; /*스크롤바 뒷 배경 색상*/
+  border-radius: 50px;
+}

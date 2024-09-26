@@ -1,9 +1,26 @@
 import { PLAY_POSITION } from "@/constants/profile";
-import { useState } from "react";
+import { useProfileStore } from "@/stores/profile.store";
+import { useEffect, useState } from "react";
+import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 
 function SettingChamp() {
   const [positonClick, setPositionClick] = useState<number[]>([]);
+  const [checkPass, setCheckPass] = useState<boolean>(false);
+  const { putPlayChamps } = useProfileStore();
+
+  // 버튼 활성화
+  useEffect(() => {
+    setCheckPass(!!positonClick.length);
+  }, [positonClick]);
+
+  // 다음 버튼 클릭 시
+  const handleSubmit = () => {
+    putPlayChamps({
+      position: positonClick,
+      champs: [],
+    });
+  };
 
   const handleClickPosition = (positon: number) => {
     if (positonClick.includes(positon)) {
@@ -18,7 +35,7 @@ function SettingChamp() {
       sub="입력한 정보를 기반으로 잘 맞는 친구를 소개해드릴게요!"
     >
       <div className="w-[404px] mt-[66px] mb-[30px]">
-        <p className="font-bold mb-6">내가 즐겨 하는 모드는...</p>
+        <p className="font-bold mb-6">내가 즐겨 하는 역할군은...</p>
         <div className="grid grid-cols-3 h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
           {PLAY_POSITION.map((pos) => {
             return (
@@ -40,6 +57,7 @@ function SettingChamp() {
           다중 선택이 가능해요.
         </p>
       </div>
+      <NextStepButton isClickable={checkPass} onClick={handleSubmit} />
     </ProfileSettingContainer>
   );
 }

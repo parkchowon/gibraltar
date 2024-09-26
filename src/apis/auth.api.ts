@@ -21,7 +21,7 @@ export const findDuplicateHandle = async(handle: string)=>{
   if(error){
     console.error(error)
   }
- return !!data;
+  return !!data;
 }
 
 type profileProps= {
@@ -34,23 +34,32 @@ userId: string;
 export const profileUpdate = async ({nickname, handle, file, userId}: profileProps) =>{
   let profileUrl = null;
 
-  if(file){
-    const fileName = `${Date.now()}_${file.name}`;
-    const {data, error} = await supabase.storage.from('profile-images').upload(fileName, file);
-    if(error){
-      console.error(error)
-      return;
+  const {data, error} = await supabase.from("users").select("profile_url").eq("id", userId).single();
+  if(data){
+    const isExist = data.profile_url.includes(process.env.NEXT_PUBLIC_SUPABASE_URL as string) 
+    if(isExist){
+      const oldProfile = data.profile_url.split('/').pop()
+      await supabase.storage.from('profile-images').remove([`${userId}/${oldProfile}`])
     }
-    profileUrl = supabase.storage.from('profile-images').getPublicUrl(fileName).data.publicUrl;
   }
 
-  const {data, error} = await supabase.from('users').update({
+  if(file){
+    const filePath = `${userId}/${Date.now()}_${file.name}`;
+    const {data:saveStorageData, error:saveStorageError} = await supabase.storage.from('profile-images').upload(filePath, file);
+    if(saveStorageError){
+      console.error(saveStorageError)
+      return;
+    }
+    profileUrl = supabase.storage.from('profile-images').getPublicUrl(filePath).data.publicUrl;
+  }
+
+  const {data: updateData, error: updateError} = await supabase.from('users').update({
     profile_url: profileUrl || undefined,
     nickname: nickname || undefined,
     handle: handle
   }).eq('id',userId)
 
-  if(error){
-    console.error(error)
+  if(updateError){
+    console.error(updateError)
   }
 }
