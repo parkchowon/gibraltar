@@ -6,15 +6,15 @@ import { useTagStore } from "@/stores/tag.store";
 import { TagRow } from "@/types/database";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import Chips from "./Chips";
 import TagBox from "./TagBox";
+import TagRowScroll from "./TagRowScroll";
 
 function PostBox() {
   const { userData } = useAuth();
   const [text, setText] = useState<string>("");
   const [tagOpen, setTagOpen] = useState<boolean>(false);
   const [tagList, setTagList] = useState<TagRow[]>([]);
-  const { selectedTag } = useTagStore();
+  const { selectedTag, resetTag } = useTagStore();
 
   useEffect(() => {
     const getTag = async () => {
@@ -23,7 +23,6 @@ function PostBox() {
         setTagList(tags);
       }
     };
-
     getTag();
   }, []);
 
@@ -35,7 +34,8 @@ function PostBox() {
         user_id: userData.id,
         images: null,
       };
-      await createPost(post);
+      resetTag();
+      await createPost(post, selectedTag);
     }
     setText("");
   };
@@ -62,7 +62,7 @@ function PostBox() {
           onClick={handleTagAddClick}
           className={`flex justify-between w-full px-1 ${
             tagOpen ? "pt-7" : "py-3.5 border-b-[1px]"
-          } text-left font-semibold  border-[#B2B2B2] z-10`}
+          } text-left font-semibold  border-[#B2B2B2] z-20`}
         >
           {tagOpen ? "태그 목록" : "태그 추가하기"}
           <Image
@@ -73,11 +73,7 @@ function PostBox() {
           />
         </button>
         {tagOpen && <TagBox tagList={tagList} />}
-        <div className="flex gap-2.5">
-          {selectedTag.map((tag, idx) => {
-            return <Chips key={idx} text={tag} intent="removable" />;
-          })}
-        </div>
+        <TagRowScroll />
       </div>
       <button
         className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300 ${

@@ -22,4 +22,17 @@ export type PostType = {
     nickname: string;
     profile_url: string;
   } | null;
+  post_tags: {
+    tag: { 
+      tag_name: string;
+    } | null
+  }[]
 };
+
+type Tag = {
+  tag_name: string;
+}
+
+type PostTags = {
+  tag: Tag | null;
+}

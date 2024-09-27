@@ -2,6 +2,7 @@ import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import PostTag from "./PostTag";
 
 type PostProps = {
   post: PostType;
@@ -11,6 +12,7 @@ type PostProps = {
 function Post({ post }: PostProps) {
   const router = useRouter();
   const [heartClick, setHeartClick] = useState<boolean>(false);
+  const tags = post.post_tags ? post.post_tags : [];
 
   // 포스트 클릭 시
   const handlePostClick = () => {
@@ -61,6 +63,7 @@ function Post({ post }: PostProps) {
           <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
         </div>
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
+        {tags && <PostTag tagList={tags} />}
         <div className="flex gap-6 mt-3">
           <button className="flex rounded-full p-1 hover:bg-gray-300">
             <Image

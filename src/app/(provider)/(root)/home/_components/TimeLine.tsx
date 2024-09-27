@@ -15,6 +15,7 @@ function TimeLine() {
         return getPost(userData.id);
       }
     },
+    refetchInterval: 10000,
   });
 
   const posts = data?.slice(0).reverse();

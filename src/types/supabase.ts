@@ -158,15 +158,15 @@ export type Database = {
       tags: {
         Row: {
           id: string
-          tag_name: string | null
+          tag_name: string
         }
         Insert: {
           id?: string
-          tag_name?: string | null
+          tag_name: string
         }
         Update: {
           id?: string
-          tag_name?: string | null
+          tag_name?: string
         }
         Relationships: []
       }

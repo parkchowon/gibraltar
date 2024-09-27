@@ -5,7 +5,7 @@ function Tag({ tag }: { tag: TagRow }) {
   const { setSelectTag } = useTagStore();
 
   const handleTagClick = () => {
-    if (tag.tag_name) setSelectTag(tag.tag_name);
+    if (tag.tag_name) setSelectTag(tag);
   };
 
   return (
