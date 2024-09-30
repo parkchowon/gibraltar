@@ -1,7 +1,7 @@
 import styles from "@/styles/postbox.module.css";
 import { TagRow } from "@/types/database";
+import SelectTag from "./SelectTag";
 import Tag from "./Tag";
-import TagRowScroll from "./TagRowScroll";
 
 function TagBox({ tagList }: { tagList: TagRow[] }) {
   return (
@@ -14,7 +14,7 @@ function TagBox({ tagList }: { tagList: TagRow[] }) {
         })}
       </div>
       <div className="h-[1px] w-full mt-7 bg-gray-300" />
-      <TagRowScroll />
+      <SelectTag />
     </div>
   );
 }

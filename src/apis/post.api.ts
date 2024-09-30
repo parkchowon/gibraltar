@@ -1,6 +1,7 @@
 import supabase from "@/supabase/client";
 import { PostType, TagRow } from "@/types/database";
 
+// post를 생성하기
 export const createPost = async(post:PostType, tags: TagRow[]) =>{
   const {data, error} = await supabase.from('posts').upsert([post]).select().single()
   if(error){
@@ -20,6 +21,7 @@ export const createPost = async(post:PostType, tags: TagRow[]) =>{
 
 }
 
+// user가 팔로하고 있는 모든 유저의 게시글 불러오기
 export const getPost = async(userId: string)=> {
   const {data:followings, error:followingError} = await supabase.from('followers').select('following_id').eq('follower_id', userId);
   const followingId = followings?.map(item=>item.following_id);
@@ -35,6 +37,7 @@ export const getPost = async(userId: string)=> {
   return posts;
 }
 
+// user의 포스팅만 불러오기
 export const getUserPost = async(userId: string)=>{
   const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))").eq("user_id", userId)
   if(error){
@@ -43,7 +46,12 @@ export const getUserPost = async(userId: string)=>{
   return data;
 }
 
+// tag 리스트 불러오기
 export const getTagList = async()=>{
   const {data, error} = await supabase.from('tags').select('*');
   return data;
+}
+
+export const insertRepost = async(postId: string, userId: string, comment?: string)=>{
+  const {data, error} = await supabase.from('reposts').insert({post_id:postId, reposted_by: userId, comment: comment })
 }

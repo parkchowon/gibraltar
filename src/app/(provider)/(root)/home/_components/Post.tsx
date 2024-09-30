@@ -1,3 +1,4 @@
+import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,8 +11,10 @@ type PostProps = {
 };
 
 function Post({ post }: PostProps) {
+  const { setIsModalOpen, setModal } = usePostStore();
   const router = useRouter();
   const [heartClick, setHeartClick] = useState<boolean>(false);
+  const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
 
   // 포스트 클릭 시
@@ -26,10 +29,26 @@ function Post({ post }: PostProps) {
     console.log("프로필 클릭");
   };
 
-  // 하트 누를 시
-  const handleHeartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  // 하트와 재게시 누를 시
+  const handleReactClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    postId: string,
+    tag: string
+  ) => {
     e.stopPropagation();
-    setHeartClick(!heartClick);
+    // 마음 누를 시 로직
+    if (tag === "heart") {
+      setHeartClick(!heartClick);
+    } else {
+      // 재게시버튼 누를 시
+      setIsModalOpen();
+      const currentBtn = e.currentTarget.getBoundingClientRect();
+      setModal({
+        postId: postId,
+        top: currentBtn.top,
+        left: currentBtn.left,
+      });
+    }
   };
 
   if (!post.user) {
@@ -65,6 +84,7 @@ function Post({ post }: PostProps) {
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
         {tags && <PostTag tagList={tags} />}
         <div className="flex gap-6 mt-3">
+          {/* 댓글 */}
           <button className="flex rounded-full p-1 hover:bg-gray-300">
             <Image
               alt="icon"
@@ -74,18 +94,25 @@ function Post({ post }: PostProps) {
             />
             <p>{}</p>
           </button>
-          <button className="flex rounded-full p-1 hover:bg-gray-300">
-            <Image
-              alt="icon"
-              width={18}
-              height={18}
-              src={"/icons/post_repeat.svg"}
-            />
-            <p>{}</p>
-          </button>
+          {/* 재게시 */}
+          <div className="relative">
+            <button
+              onClick={(e) => handleReactClick(e, post.id, "repost")}
+              className="flex rounded-full p-1 hover:bg-gray-300"
+            >
+              <Image
+                alt="icon"
+                width={18}
+                height={18}
+                src={`/icons/post_repeat${repostClick ? "_click" : ""}.svg`}
+              />
+              <p>{}</p>
+            </button>
+          </div>
+          {/* 하트 */}
           <button
             className="flex rounded-full p-1 hover:bg-gray-300"
-            onClick={handleHeartClick}
+            onClick={(e) => handleReactClick(e, post.id, "heart")}
           >
             <Image
               alt="icon"

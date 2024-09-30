@@ -51,11 +51,11 @@ function ProfilePage() {
           </button>
           <p className="font-semibold">홈으로</p>
         </div>
-        {/* profile user info section */}
+        {/* 프로필 부분 */}
         <ProfileBox countPost={posts ? posts?.length : 0} />
-        {/* profile detail section */}
+        {/* 세부프로필 부분 */}
         <ProfileDetail />
-        {/* tab section */}
+        {/* 탭 영역 */}
         <TabContainer>{tabComponent()}</TabContainer>
       </div>
     </MainLayout>

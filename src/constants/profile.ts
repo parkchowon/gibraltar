@@ -45,15 +45,15 @@ export const PLAY_TIME = [
 
 export const PLAY_POSITION = [
   {
-    id: 1,
+    id: "tank",
     name: '돌격'
   },
   {
-    id: 2,
+    id: "damage",
     name: '공격'
   },
   {
-    id: 3,
+    id: "support",
     name: '지원'
   },
 ]

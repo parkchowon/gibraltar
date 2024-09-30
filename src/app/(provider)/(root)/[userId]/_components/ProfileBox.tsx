@@ -5,11 +5,18 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type followerType = {
+  created_at: string;
+  follower_id: string;
+  following_id: string;
+  id: number;
+};
+
 function ProfileBox({ countPost }: { countPost: number }) {
   const pathname = usePathname();
-  const { user: loginUser, isInitialized } = useAuth();
+  const { user: loginUser } = useAuth();
   const userId = pathname.replace("/", "");
-  const [followers, setFollowers] = useState<number>(0);
+  const [followers, setFollowers] = useState<followerType[]>([]);
   const [followings, setFollowings] = useState<number>(0);
 
   const isMyProfile = loginUser && loginUser.id === userId;
@@ -26,13 +33,39 @@ function ProfileBox({ countPost }: { countPost: number }) {
   const followerList = data?.followerList;
   const user = data?.user;
 
+  const buttonRender = () => {
+    const isFollowing = followers.filter((follow) => {
+      return follow.follower_id == user?.id;
+    });
+
+    if (isMyProfile) {
+      return (
+        <button className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50">
+          프로필 편집
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className={`${
+            isFollowing.length
+              ? "bg-transparent border-[1px] border-gray-400"
+              : "bg-gray-50"
+          } ml-auto h-[35px] px-[15px] text-sm rounded-full `}
+        >
+          {isFollowing.length ? "팔로잉" : "팔로우"}
+        </button>
+      );
+    }
+  };
+
   useEffect(() => {
     if (followerList) {
       const follower = followerList.filter((follow) => {
         return follow.follower_id === userId;
       });
 
-      setFollowers(follower ? follower.length : 0);
+      setFollowers(follower);
       setFollowings(
         follower ? followerList.length - follower.length : followerList.length
       );
@@ -56,16 +89,12 @@ function ProfileBox({ countPost }: { countPost: number }) {
             <p className="font-semibold text-lg">{user?.nickname}</p>
             <p>{user?.handle}</p>
           </div>
-          {isMyProfile && (
-            <button className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50">
-              프로필 편집
-            </button>
-          )}
+          {buttonRender()}
         </div>
         <div className="flex gap-14 text-xs font-bold">
           <p>포스트 {countPost}</p>
           <p>팔로워 {followings}</p>
-          <p>팔로우 {followers}</p>
+          <p>팔로우 {followers.length}</p>
         </div>
       </div>
     </div>

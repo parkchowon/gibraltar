@@ -6,8 +6,8 @@ import { useTagStore } from "@/stores/tag.store";
 import { TagRow } from "@/types/database";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import SelectTag from "./SelectTag";
 import TagBox from "./TagBox";
-import TagRowScroll from "./TagRowScroll";
 
 function PostBox() {
   const { userData } = useAuth();
@@ -73,7 +73,7 @@ function PostBox() {
           />
         </button>
         {tagOpen && <TagBox tagList={tagList} />}
-        <TagRowScroll />
+        <SelectTag />
       </div>
       <button
         className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300 ${
