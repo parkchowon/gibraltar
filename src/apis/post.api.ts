@@ -26,7 +26,35 @@ export const getPost = async(userId: string)=> {
   const {data:followings, error:followingError} = await supabase.from('followers').select('following_id').eq('follower_id', userId);
   const followingId = followings?.map(item=>item.following_id);
   const followerList = followingId ? [userId, ...followingId]: [userId];
-  const {data:posts, error:myError} = await supabase.from('posts').select('*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))').in('user_id', followerList);
+  
+  const {data:posts, error:myError} =  await supabase.from('posts').select('*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))').in('user_id', followerList);
+  const postsId = posts ? posts.map(item=>item.id) : [];
+  
+
+  const [repostsResult, likesResult, commentsResult] = await Promise.all([
+    supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').in('post_id', postsId),
+    supabase.from('likes').select('post_id').in('post_id', postsId),
+    supabase.from('comments').select('*').in('post_id', postsId)
+  ])
+  const {data:reposts, error:reactsError} =  repostsResult;
+  const {data:likes, error:likesError} =  likesResult;
+  const {data:comments, error:commentError} =commentsResult;
+
+  
+    const enrichedPosts = posts?.map(post => {
+      const postReposts = reposts?.filter(repost => repost.post_id === post.id);
+      const postLikes = likes?.filter(like => like.post_id === post.id);
+      const postComments = comments?.filter(comment => comment.post_id === post.id);
+    
+      return {
+        ...post,
+        reposts: postReposts,
+        likes: postLikes, // 좋아요 수로 표시
+        comments: postComments
+      };
+    });
+  
+
   if(myError){
     console.error('로그인 유저의 포스팅 불러오는 중 에러: ',myError)
   }
@@ -34,16 +62,40 @@ export const getPost = async(userId: string)=> {
     console.error('팔로잉 목록 불러오는 중 에러:',followingError);
   }
 
-  return posts;
+  return enrichedPosts;
 }
 
 // user의 포스팅만 불러오기
 export const getUserPost = async(userId: string)=>{
   const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))").eq("user_id", userId)
+  const postsId = data ? data.map(item=>item.id) : [];
+
+  const [repostsResult, likesResult, commentsResult] = await Promise.all([
+    supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').in('post_id', postsId),
+    supabase.from('likes').select('post_id').in('post_id', postsId),
+    supabase.from('comments').select('*').in('post_id', postsId)
+  ])
+  const {data:reposts, error:reactsError} =  repostsResult;
+  const {data:likes, error:likesError} =  likesResult;
+  const {data:comments, error:commentError} =commentsResult;
+
+  const enrichedPosts = data?.map(post => {
+    const postReposts = reposts?.filter(repost => repost.post_id === post.id);
+    const postLikes = likes?.filter(like => like.post_id === post.id);
+    const postComments = comments?.filter(comment => comment.post_id === post.id);
+  
+    return {
+      ...post,
+      reposts: postReposts,
+      likes: postLikes, // 좋아요 수로 표시
+      comments: postComments
+    };
+  });
+
   if(error){
     console.error('post 불러오는 중 오류')
   }
-  return data;
+  return enrichedPosts;
 }
 
 // tag 리스트 불러오기
@@ -54,4 +106,8 @@ export const getTagList = async()=>{
 
 export const insertRepost = async(postId: string, userId: string, comment?: string)=>{
   const {data, error} = await supabase.from('reposts').insert({post_id:postId, reposted_by: userId, comment: comment })
+}
+
+export const deleteRepost = async(postId: string)=>{
+  const {data, error} = await supabase.from('reposts').delete().eq('post_id', postId)
 }

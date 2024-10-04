@@ -12,6 +12,23 @@ export type UserDataProps = {
 export type PostsType = PostType[] | null;
 
 export type PostType = {
+  reposts: {
+    post_id: string;
+    comment: string | null;
+    reposted_by: string;
+    reposted_at: string;
+  }[] | undefined;
+  likes: {
+    post_id: string;
+  }[] | undefined;
+  comments: {
+    comment: string;
+    created_at: string;
+    id: string;
+    parent_comment_id: string | null;
+    post_id: string;
+    user_id: string;
+  }[] | undefined;
   content: string;
   created_at: string;
   id: string;

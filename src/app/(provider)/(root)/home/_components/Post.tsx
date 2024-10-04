@@ -1,8 +1,10 @@
+import { deleteRepost } from "@/apis/post.api";
+import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostTag from "./PostTag";
 
 type PostProps = {
@@ -13,9 +15,20 @@ type PostProps = {
 function Post({ post }: PostProps) {
   const { setIsModalOpen, setModal } = usePostStore();
   const router = useRouter();
+  const { isInitialized, user } = useAuth();
   const [heartClick, setHeartClick] = useState<boolean>(false);
   const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
+
+  useEffect(() => {
+    if (isInitialized && user) {
+      post.reposts?.map((repost) => {
+        if (repost.reposted_by === user.id) {
+          setRepostClick(true);
+        }
+      });
+    }
+  }, [post]);
 
   // 포스트 클릭 시
   const handlePostClick = () => {
@@ -41,6 +54,10 @@ function Post({ post }: PostProps) {
       setHeartClick(!heartClick);
     } else {
       // 재게시버튼 누를 시
+      if (repostClick) {
+        setRepostClick(false);
+        return deleteRepost(post.id);
+      }
       setIsModalOpen();
       const currentBtn = e.currentTarget.getBoundingClientRect();
       setModal({
@@ -83,19 +100,21 @@ function Post({ post }: PostProps) {
         </div>
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
         {tags && <PostTag tagList={tags} />}
-        <div className="flex gap-6 mt-3">
+        <div className="flex gap-6 mt-3 items-center">
           {/* 댓글 */}
-          <button className="flex rounded-full p-1 hover:bg-gray-300">
-            <Image
-              alt="icon"
-              width={18}
-              height={18}
-              src={"/icons/post_chat.svg"}
-            />
-            <p>{}</p>
-          </button>
+          <div className="flex">
+            <button className="flex rounded-full p-1 hover:bg-gray-300">
+              <Image
+                alt="icon"
+                width={18}
+                height={18}
+                src={"/icons/post_chat.svg"}
+              />
+            </button>
+            <p>{post.comments?.length}</p>
+          </div>
           {/* 재게시 */}
-          <div className="relative">
+          <div className="relative flex">
             <button
               onClick={(e) => handleReactClick(e, post.id, "repost")}
               className="flex rounded-full p-1 hover:bg-gray-300"
@@ -106,26 +125,30 @@ function Post({ post }: PostProps) {
                 height={18}
                 src={`/icons/post_repeat${repostClick ? "_click" : ""}.svg`}
               />
-              <p>{}</p>
             </button>
+            <p className={`${repostClick ? "text-mint" : "text-black"}`}>
+              {post.reposts?.length}
+            </p>
           </div>
           {/* 하트 */}
-          <button
-            className="flex rounded-full p-1 hover:bg-gray-300"
-            onClick={(e) => handleReactClick(e, post.id, "heart")}
-          >
-            <Image
-              alt="icon"
-              width={18}
-              height={18}
-              src={
-                heartClick
-                  ? "/icons/post_heart_fill.svg"
-                  : "/icons/post_heart_line.svg"
-              }
-            />
-            <p>{}</p>
-          </button>
+          <div className="flex">
+            <button
+              className="flex rounded-full p-1 hover:bg-gray-300"
+              onClick={(e) => handleReactClick(e, post.id, "heart")}
+            >
+              <Image
+                alt="icon"
+                width={18}
+                height={18}
+                src={
+                  heartClick
+                    ? "/icons/post_heart_fill.svg"
+                    : "/icons/post_heart_line.svg"
+                }
+              />
+            </button>
+            <p>{post.likes?.length}</p>
+          </div>
         </div>
       </div>
     </div>
