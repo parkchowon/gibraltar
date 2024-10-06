@@ -2,6 +2,7 @@ import { deleteRepost } from "@/apis/post.api";
 import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,6 +20,29 @@ function Post({ post }: PostProps) {
   const [heartClick, setHeartClick] = useState<boolean>(false);
   const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
+
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: () => deleteRepost(post.id),
+    // 낙관적 업데이트
+    onMutate: async () => {
+      // 업데이트 전 타임라인 데이터
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      // overwrite 방지를 위해 취소시킴
+      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+
+      // 미리 UI 적용
+      queryClient.setQueryData(["timelineData"], "");
+
+      // 에러나면 이전 것을..
+      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["timelineData"],
+      });
+    },
+  });
 
   useEffect(() => {
     if (isInitialized && user) {
@@ -56,7 +80,7 @@ function Post({ post }: PostProps) {
       // 재게시버튼 누를 시
       if (repostClick) {
         setRepostClick(false);
-        return deleteRepost(post.id);
+        return mutate();
       }
       setIsModalOpen();
       const currentBtn = e.currentTarget.getBoundingClientRect();

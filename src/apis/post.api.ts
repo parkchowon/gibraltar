@@ -104,10 +104,20 @@ export const getTagList = async()=>{
   return data;
 }
 
-export const insertRepost = async(postId: string, userId: string, comment?: string)=>{
-  const {data, error} = await supabase.from('reposts').insert({post_id:postId, reposted_by: userId, comment: comment })
+export const insertRepost = async(postId: string, userId: string|undefined, comment?: string) =>{
+  if(userId){
+    const {data, error} = await supabase.from('reposts').insert({post_id:postId, reposted_by: userId, comment: comment })
+    if(error){
+      throw new Error(error.message)
+    }
+  }
 }
 
 export const deleteRepost = async(postId: string)=>{
   const {data, error} = await supabase.from('reposts').delete().eq('post_id', postId)
+  if(error){
+    throw new Error(error.message)
+  }
+  if(data)
+  return data;
 }

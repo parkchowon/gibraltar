@@ -1,6 +1,7 @@
 import { insertRepost } from "@/apis/post.api";
 import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const REPOST_LIST = [
   {
@@ -16,6 +17,29 @@ export const REPOST_LIST = [
 function RepostModal() {
   const { setIsModalOpen, modal } = usePostStore();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: () => insertRepost(modal.postId, user?.id),
+    // 낙관적 업데이트
+    onMutate: async () => {
+      // 업데이트 전 타임라인 데이터
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      // overwrite 방지를 위해 취소시킴
+      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+
+      // 미리 UI 적용
+      queryClient.setQueryData(["timelineData"], "");
+
+      // 에러나면 이전 것을..
+      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["timelineData"],
+      });
+    },
+  });
 
   const handleRepostClick = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -24,7 +48,7 @@ function RepostModal() {
     e.stopPropagation();
     if (user) {
       if (text === "재게시") {
-        await insertRepost(modal.postId, user.id);
+        mutate();
       }
     }
     setIsModalOpen();
