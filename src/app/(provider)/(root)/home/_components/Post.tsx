@@ -1,8 +1,7 @@
-import { deleteRepost } from "@/apis/post.api";
 import { useAuth } from "@/contexts/auth.context";
+import { useLikeMutation, useRepostMutation } from "@/hooks/usePostMutation";
 import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,34 +20,23 @@ function Post({ post }: PostProps) {
   const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
 
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: () => deleteRepost(post.id),
-    // 낙관적 업데이트
-    onMutate: async () => {
-      // 업데이트 전 타임라인 데이터
-      const prevTimeline = queryClient.getQueryData(["timelineData"]);
-      // overwrite 방지를 위해 취소시킴
-      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+  // repost, like 낙관적 업데이트
+  const { mutate: repostMutate } = useRepostMutation(post.id);
+  const { mutate: likeClickMutate } = useLikeMutation();
+  const { mutate: likeCancelMutate } = useLikeMutation();
 
-      // 미리 UI 적용
-      queryClient.setQueryData(["timelineData"], "");
-
-      // 에러나면 이전 것을..
-      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["timelineData"],
-      });
-    },
-  });
-
+  // 이미 내가 클릭한 repost, heart 표시
   useEffect(() => {
+    console.log(post.likes);
     if (isInitialized && user) {
       post.reposts?.map((repost) => {
         if (repost.reposted_by === user.id) {
           setRepostClick(true);
+        }
+      });
+      post.likes?.map((like) => {
+        if (like.user_id === user.id) {
+          setHeartClick(true);
         }
       });
     }
@@ -63,7 +51,6 @@ function Post({ post }: PostProps) {
   const handleProfileClick = (e: React.MouseEvent<HTMLImageElement>) => {
     e.stopPropagation();
     router.push(`/${post.user_id}`);
-    console.log("프로필 클릭");
   };
 
   // 하트와 재게시 누를 시
@@ -75,12 +62,18 @@ function Post({ post }: PostProps) {
     e.stopPropagation();
     // 마음 누를 시 로직
     if (tag === "heart") {
-      setHeartClick(!heartClick);
+      if (!heartClick) {
+        setHeartClick(true);
+        return likeClickMutate({ postId, userId: user?.id });
+      } else {
+        setHeartClick(false);
+        return likeCancelMutate({ postId, state: false });
+      }
     } else {
       // 재게시버튼 누를 시
       if (repostClick) {
         setRepostClick(false);
-        return mutate();
+        return repostMutate();
       }
       setIsModalOpen();
       const currentBtn = e.currentTarget.getBoundingClientRect();
@@ -94,7 +87,7 @@ function Post({ post }: PostProps) {
 
   if (!post.user) {
     return (
-      <div className="w-[736px] min-h-[209px] px-[25px] py-7 rounded-[30px]  bg-gray-200">
+      <div className="w-[736px] min-h-[209px] px-[25px] py-7 rounded-[30px]">
         <div className="w-[46px] h-[46px] rounded-full bg-white" />
         <div>
           <p className="w-25 bg-gray-600" />
@@ -106,7 +99,7 @@ function Post({ post }: PostProps) {
   return (
     <div
       onClick={handlePostClick}
-      className="flex w-full px-[50px] py-[15px] cursor-pointer bg-gray-200 hover:brightness-[102%]"
+      className="flex w-full px-[50px] py-[15px] cursor-pointer hover:bg-gray-100"
     >
       <Image
         width={46}
@@ -164,14 +157,12 @@ function Post({ post }: PostProps) {
                 alt="icon"
                 width={18}
                 height={18}
-                src={
-                  heartClick
-                    ? "/icons/post_heart_fill.svg"
-                    : "/icons/post_heart_line.svg"
-                }
+                src={`/icons/post_heart_${heartClick ? "fill" : "line"}.svg`}
               />
             </button>
-            <p>{post.likes?.length}</p>
+            <p className={`${heartClick ? "text-warning" : "text-black"}`}>
+              {post.likes?.length}
+            </p>
           </div>
         </div>
       </div>

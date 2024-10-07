@@ -23,7 +23,7 @@ function TimeLine() {
   if (isPending) return <p>loading...</p>;
 
   return (
-    <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300">
+    <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300 bg-gray-200">
       {posts &&
         posts.map((post) => {
           return <Post key={post.id} post={post} />;

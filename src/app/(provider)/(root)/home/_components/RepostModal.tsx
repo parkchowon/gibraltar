@@ -27,10 +27,8 @@ function RepostModal() {
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
       // overwrite 방지를 위해 취소시킴
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
-
       // 미리 UI 적용
       queryClient.setQueryData(["timelineData"], "");
-
       // 에러나면 이전 것을..
       return () => queryClient.setQueryData(["timelineData"], prevTimeline);
     },

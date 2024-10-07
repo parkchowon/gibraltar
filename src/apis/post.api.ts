@@ -1,5 +1,6 @@
 import supabase from "@/supabase/client";
 import { PostType, TagRow } from "@/types/database";
+import { LikesFnType } from "@/types/home.type";
 
 // post를 생성하기
 export const createPost = async(post:PostType, tags: TagRow[]) =>{
@@ -33,7 +34,7 @@ export const getPost = async(userId: string)=> {
 
   const [repostsResult, likesResult, commentsResult] = await Promise.all([
     supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').in('post_id', postsId),
-    supabase.from('likes').select('post_id').in('post_id', postsId),
+    supabase.from('likes').select('post_id, user_id').in('post_id', postsId),
     supabase.from('comments').select('*').in('post_id', postsId)
   ])
   const {data:reposts, error:reactsError} =  repostsResult;
@@ -49,7 +50,7 @@ export const getPost = async(userId: string)=> {
       return {
         ...post,
         reposts: postReposts,
-        likes: postLikes, // 좋아요 수로 표시
+        likes: postLikes,
         comments: postComments
       };
     });
@@ -72,7 +73,7 @@ export const getUserPost = async(userId: string)=>{
 
   const [repostsResult, likesResult, commentsResult] = await Promise.all([
     supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').in('post_id', postsId),
-    supabase.from('likes').select('post_id').in('post_id', postsId),
+    supabase.from('likes').select('post_id, user_id').in('post_id', postsId),
     supabase.from('comments').select('*').in('post_id', postsId)
   ])
   const {data:reposts, error:reactsError} =  repostsResult;
@@ -87,7 +88,7 @@ export const getUserPost = async(userId: string)=>{
     return {
       ...post,
       reposts: postReposts,
-      likes: postLikes, // 좋아요 수로 표시
+      likes: postLikes, 
       comments: postComments
     };
   });
@@ -98,11 +99,38 @@ export const getUserPost = async(userId: string)=>{
   return enrichedPosts;
 }
 
+// 클릭한 post 정보 하나 불러오기 
+export const fetchPostDetail = async(postId: string)=>{
+  
+  const [postResult, repostsResult, likesResult, commentsResult] = await Promise.all([
+    supabase.from('posts').select("*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))").eq("id", postId).single(),
+    supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').eq('post_id', postId),
+    supabase.from('likes').select('post_id, user_id').eq('post_id', postId),
+    supabase.from('comments').select('*').eq('post_id', postId)
+  ])
+
+  const {data, error} = postResult;
+  const {data:reposts, error:reactsError} =  repostsResult;
+  const {data:likes, error:likesError} =  likesResult;
+  const {data:comments, error:commentError} =commentsResult;
+  
+  const post = Array.isArray(data) ? data[0] : data;
+
+  return {
+    ...post,
+    reposts: reposts || undefined,
+    likes: likes || undefined, 
+    comments : comments || undefined
+  }
+}
+
 // tag 리스트 불러오기
 export const getTagList = async()=>{
   const {data, error} = await supabase.from('tags').select('*');
   return data;
 }
+
+/** repost 관련 실행, 취소 */
 
 export const insertRepost = async(postId: string, userId: string|undefined, comment?: string) =>{
   if(userId){
@@ -120,4 +148,19 @@ export const deleteRepost = async(postId: string)=>{
   }
   if(data)
   return data;
+}
+
+/** like 관련 실행, 취소 */
+export const clickLike = async({postId, userId, state}: LikesFnType)=>{
+  if(state && userId){
+    const {data, error} = await supabase.from('likes').insert({post_id:postId, user_id: userId});
+    if(error){
+      throw new Error(error.message)
+    }
+  }else{
+    const {data, error} = await supabase.from('likes').delete().eq('post_id', postId)
+    if(error){
+      throw new Error(error.message)
+    }
+  }
 }
