@@ -184,7 +184,7 @@ export const fetchCommentInPost = async(postId: string) => {
   const enrichedPosts = comments?.map(comment => {
     const commentReposts = reposts?.filter(repost => repost.post_id === comment.id);
     const commentLikes = likes?.filter(like => like.post_id === comment.id);
-    const commentchildComments = childComments?.filter(comment => comment.parent_post_id === comment.id);
+    const commentchildComments = childComments?.filter(comment => comment.id === comment.id);
   
     return {
       ...comment,
