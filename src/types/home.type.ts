@@ -23,60 +23,25 @@ export type PostType = {
     user_id: string;
   }[] | undefined;
   comments: {
-    comment: string;
+    content: string;
     created_at: string;
     id: string;
-    parent_comment_id: string | null;
-    post_id: string;
+    images: Json | null;
+    parent_post_id: string | null;
     user_id: string;
-  }[] | undefined;
+}[] | undefined
   content: string;
   created_at: string;
   id: string;
   images: Json | null;
+  parent_post_id: string | null;
   user_id: string;
   user: {
     handle: string;
     nickname: string;
     profile_url: string;
   } | null;
-  post_tags: {
-    tag: { 
-      tag_name: string;
-    } | null
-  }[]
-};
-
-export type PostSingleType = {
-  reposts: {
-    post_id: string;
-    comment: string | null;
-    reposted_by: string;
-    reposted_at: string;
-  }[] | null;
-  likes: {
-    post_id: string;
-    user_id: string;
-  }[] | null;
-  comments: {
-    comment: string;
-    created_at: string;
-    id: string;
-    parent_comment_id: string | null;
-    post_id: string;
-    user_id: string;
-  }[] | null;
-  content: string;
-  created_at: string;
-  id: string;
-  images: Json | null;
-  user_id: string;
-  user: {
-    handle: string;
-    nickname: string;
-    profile_url: string;
-  } | null;
-  post_tags: {
+  post_tags?: {
     tag: { 
       tag_name: string;
     } | null
@@ -95,4 +60,11 @@ export type LikesFnType = {
   postId: string;
   userId?: string | null;
   state?: boolean;
+}
+
+export type CommentInsertProps = {
+  comment: string;
+  postId: string;
+  userId: string;
+  parentId?: string;
 }

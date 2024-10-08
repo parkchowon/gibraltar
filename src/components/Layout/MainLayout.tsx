@@ -18,7 +18,7 @@ function MainLayout({ children }: PropsWithChildren) {
           <SideBar />
         </section>
         {/* 가운데 */}
-        <section className="absolute left-1/2 transform -translate-x-1/2 w-[784px] bg-gray-300">
+        <section className="absolute left-1/2 transform -translate-x-1/2 w-[784px] min-h-screen h-auto overflow-auto bg-gray-300">
           {children}
         </section>
         {/* 오른쪽 프로필 */}

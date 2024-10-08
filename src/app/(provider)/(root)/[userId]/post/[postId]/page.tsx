@@ -1,38 +1,35 @@
 "use client";
 import MainLayout from "@/components/Layout/MainLayout";
-import { useAuth } from "@/contexts/auth.context";
 import { usePostDetail } from "@/hooks/usePostMutation";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Post from "../../../home/_components/Post";
+import CommentInput from "./_components/CommentInput";
+import PostComments from "./_components/PostComments";
 
 function DetailPostPage() {
   const pathname = usePathname();
   const postId = pathname.split("/")[3];
-  const { data } = usePostDetail(postId);
-  const { userData } = useAuth();
+  const { data: post } = usePostDetail(postId);
 
-  if (!data) {
+  if (!post) {
     return <p>loading...</p>;
   }
 
   return (
     <MainLayout>
+      {/* 헤더 */}
       <div className="flex px-6 py-[26px] gap-8">
         <Image src={"/icons/arrow.svg"} alt="back" width={15} height={14} />
         <p className="font-semibold">홈으로</p>
       </div>
-      <div className="h-fit">
-        <Post post={data} />
-        <div>
-          <Image
-            src={userData ? userData.profile_url : ""}
-            alt="profile"
-            width={46}
-            height={36}
-            className="rounded-full"
-          />
-        </div>
+      <div className="px-6 divide-y-[1px] divide-gray-400">
+        {/* 포스트 내용 */}
+        <Post post={post} />
+        {/* 댓글 작성 창 */}
+        <CommentInput postId={postId} />
+        {/* 댓글 */}
+        <PostComments post={post} />
       </div>
     </MainLayout>
   );

@@ -9,48 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      comments: {
-        Row: {
-          comment: string
-          created_at: string
-          id: string
-          parent_comment_id: string | null
-          post_id: string
-          user_id: string
-        }
-        Insert: {
-          comment: string
-          created_at?: string
-          id?: string
-          parent_comment_id?: string | null
-          post_id?: string
-          user_id?: string
-        }
-        Update: {
-          comment?: string
-          created_at?: string
-          id?: string
-          parent_comment_id?: string | null
-          post_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       followers: {
         Row: {
           created_at: string
@@ -165,6 +123,7 @@ export type Database = {
           created_at: string
           id: string
           images: Json | null
+          parent_post_id: string | null
           user_id: string
         }
         Insert: {
@@ -172,6 +131,7 @@ export type Database = {
           created_at?: string
           id?: string
           images?: Json | null
+          parent_post_id?: string | null
           user_id: string
         }
         Update: {
@@ -179,6 +139,7 @@ export type Database = {
           created_at?: string
           id?: string
           images?: Json | null
+          parent_post_id?: string | null
           user_id?: string
         }
         Relationships: [

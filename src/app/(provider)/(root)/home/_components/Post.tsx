@@ -22,12 +22,10 @@ function Post({ post }: PostProps) {
 
   // repost, like 낙관적 업데이트
   const { mutate: repostMutate } = useRepostMutation(post.id);
-  const { mutate: likeClickMutate } = useLikeMutation();
-  const { mutate: likeCancelMutate } = useLikeMutation();
+  const { mutate: likeMutate } = useLikeMutation();
 
   // 이미 내가 클릭한 repost, heart 표시
   useEffect(() => {
-    console.log(post.likes);
     if (isInitialized && user) {
       post.reposts?.map((repost) => {
         if (repost.reposted_by === user.id) {
@@ -64,10 +62,10 @@ function Post({ post }: PostProps) {
     if (tag === "heart") {
       if (!heartClick) {
         setHeartClick(true);
-        return likeClickMutate({ postId, userId: user?.id });
+        return likeMutate({ postId, userId: user?.id });
       } else {
         setHeartClick(false);
-        return likeCancelMutate({ postId, state: false });
+        return likeMutate({ postId, state: false });
       }
     } else {
       // 재게시버튼 누를 시
@@ -86,14 +84,7 @@ function Post({ post }: PostProps) {
   };
 
   if (!post.user) {
-    return (
-      <div className="w-[736px] min-h-[209px] px-[25px] py-7 rounded-[30px]">
-        <div className="w-[46px] h-[46px] rounded-full bg-white" />
-        <div>
-          <p className="w-25 bg-gray-600" />
-        </div>
-      </div>
-    );
+    return <p>loading...</p>;
   }
 
   return (

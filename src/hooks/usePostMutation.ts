@@ -46,12 +46,8 @@ export const useLikeMutation = ()=>{
 
 // post 세부 페이지 timeline에서 불러오기
 export const usePostDetail = (postId: string) =>{
-  const queryClient = useQueryClient()
-
-  const initialData = queryClient.getQueryData<PostType[]>(['timelineData'])?.find(post=>post.id === postId);
-  return useQuery({
+  return useQuery<PostType>({
     queryKey: ['post', postId],
     queryFn: () => fetchPostDetail(postId),
-    initialData: initialData,
   });
 }

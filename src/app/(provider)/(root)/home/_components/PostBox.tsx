@@ -32,7 +32,8 @@ function PostBox() {
       const post = {
         content: text,
         user_id: userData.id,
-        images: null,
+        images: null, // 나중에 이미지 넣을 때 여기에
+        parent_post_id: null, // post 생성시에는 null
       };
       resetTag();
       await createPost(post, selectedTag);
