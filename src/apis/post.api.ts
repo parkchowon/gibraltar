@@ -181,10 +181,10 @@ export const fetchCommentInPost = async(postId: string) => {
   const {data:likes, error:likesError} =  likesResult;
   const {data:childComments, error:childCommentsError} =childCommentsResult;
 
-  const enrichedPosts = comments?.map(comment => {
+  const enrichedComments = comments?.map(comment => {
     const commentReposts = reposts?.filter(repost => repost.post_id === comment.id);
     const commentLikes = likes?.filter(like => like.post_id === comment.id);
-    const commentchildComments = childComments?.filter(comment => comment.id === comment.id);
+    const commentchildComments = childComments?.filter(childComment => childComment.parent_post_id === comment.id);
   
     return {
       ...comment,
@@ -194,6 +194,6 @@ export const fetchCommentInPost = async(postId: string) => {
     };
   });
 
-  return enrichedPosts;
+  return enrichedComments;
 
 }

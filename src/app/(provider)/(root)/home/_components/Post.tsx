@@ -51,6 +51,11 @@ function Post({ post }: PostProps) {
     router.push(`/${post.user_id}`);
   };
 
+  // 멘션 누를 시
+  const handleCommentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+  };
+
   // 하트와 재게시 누를 시
   const handleReactClick = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -111,7 +116,10 @@ function Post({ post }: PostProps) {
         <div className="flex gap-6 mt-3 items-center">
           {/* 댓글 */}
           <div className="flex">
-            <button className="flex rounded-full p-1 hover:bg-gray-300">
+            <button
+              onClick={handleCommentClick}
+              className="flex rounded-full p-1 hover:bg-gray-300"
+            >
               <Image
                 alt="icon"
                 width={18}

@@ -5,6 +5,7 @@ import TimeLine from "./TimeLine";
 function Home() {
   return (
     <MainLayout>
+      {}
       <TimeLine />
     </MainLayout>
   );
