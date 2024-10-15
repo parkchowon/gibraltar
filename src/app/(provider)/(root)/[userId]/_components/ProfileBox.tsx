@@ -33,6 +33,7 @@ function ProfileBox({ countPost }: { countPost: number }) {
   const followerList = data?.followerList;
   const user = data?.user;
 
+  // TODO 팔로우, 언팔로우 기능 구현
   const buttonRender = () => {
     const isFollowing = followers.filter((follow) => {
       return follow.follower_id == user?.id;

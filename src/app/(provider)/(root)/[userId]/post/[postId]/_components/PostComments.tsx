@@ -15,8 +15,9 @@ function PostComments({ postId }: { postId: string }) {
     },
   });
 
-  console.log(postId);
   if (isPending) return <p>loading...</p>;
+
+  // TODO: 타래가 3개 이상으로 많아지면 더보기 토글 버튼 눌러서 보게하기
 
   return (
     <div className="divide-y-[1px] divide-gray-400">

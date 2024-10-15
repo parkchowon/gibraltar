@@ -49,14 +49,16 @@ function SettingTeam() {
           </label>
           {isVisible && (
             <ul className="absolute w-full top-[65px] cursor-pointer border-[1px] border-t-0 border-black rounded-b-[15px] bg-white">
-              {OWCSTeam.map((team) => {
+              {OWCSTeam.map((team, idx) => {
                 return (
                   <li
                     key={team.id}
-                    className="flex px-[18px] py-5 hover:bg-mint"
+                    className={`flex px-[18px] py-5 hover:bg-mint bg-white ${
+                      idx === OWCSTeam.length - 1 ? "rounded-b-2xl" : ""
+                    }`}
                     onClick={() => handleClickTeam(team)}
                   >
-                    <div className="relative w-[25px] h-[25px] mr-3">
+                    <div className={`relative w-[25px] h-[25px] mr-3`}>
                       <Image
                         src={team.logo}
                         fill
@@ -72,7 +74,11 @@ function SettingTeam() {
           )}
         </div>
         <div className="flex flex-col w-full items-center justify-center mt-[67px]">
-          <div className="relative w-[190px] h-[190px]">
+          <div
+            className={`relative w-[190px] h-[190px] rounded-full -z-10 ${
+              team ? "" : "border border-black"
+            }`}
+          >
             <Image
               src={team ? `${team.logo}` : ""}
               fill
@@ -80,7 +86,7 @@ function SettingTeam() {
               alt="logo"
             />
           </div>
-          <p className="mt-4 font-bold">{team?.name}</p>
+          <p className="mt-4 font-bold">{team ? team.name : "팀 이름"}</p>
         </div>
       </div>
       <NextStepButton isClickable={!!team} onClick={handleSubmit} />

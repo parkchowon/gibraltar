@@ -1,3 +1,4 @@
+import { HeroType } from "@/types/hero.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -9,8 +10,8 @@ type playStyleType = {
 };
 
 type playChampsType = {
-  position: number[];
-  champs: string[];
+  MainChamps: HeroType[];
+  selectedChamps: HeroType[];
 }
 
 type ProfileSettingProps = {
@@ -33,8 +34,8 @@ export const useProfileStore = create(
         time: []
       },
       playChamps: {
-        position: [],
-        champs: []
+        MainChamps: [],
+        selectedChamps: []
       },
       favoriteTeam: '',
       bio: '',

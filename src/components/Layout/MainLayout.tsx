@@ -14,7 +14,7 @@ function MainLayout({ children }: PropsWithChildren) {
       <div className="relative h-screen overflow-auto">
         {isModalOpen && <RepostModal />}
         {/* 사이드 바 */}
-        <section className="absolute left-[15.6%] top-[11.7%] w-[198px]">
+        <section className="fixed left-[15%] top-[11.7%] w-[198px]">
           <SideBar />
         </section>
         {/* 가운데 */}
@@ -22,7 +22,7 @@ function MainLayout({ children }: PropsWithChildren) {
           {children}
         </section>
         {/* 오른쪽 프로필 */}
-        <section className="absolute right-[6.3%] top-[7.1%] w-[352px]">
+        <section className="fixed right-[6.3%] top-[7.1%] w-[352px]">
           <SearchBar />
           <Profile />
           <PostBox />

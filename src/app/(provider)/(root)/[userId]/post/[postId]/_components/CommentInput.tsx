@@ -25,6 +25,7 @@ function CommentInput({ postId }: { postId: string }) {
     }
   }, []);
 
+  // TODO 낙관적 업데이트 적용해서 빠른 업데이트 되게 하기
   // 댓글 작성 완료 버튼
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

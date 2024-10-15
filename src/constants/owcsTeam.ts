@@ -1,5 +1,10 @@
 export const OWCSTeam = [
   {
+    id:0, 
+    name:"없음", 
+    logo:'/icons/overwatch_2_icon.png'
+  },
+  {
     id:1, 
     name:"Crazy Raccoon", 
     logo:'/team/CrazyRaccoon_logo.png'

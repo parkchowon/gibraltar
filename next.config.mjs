@@ -10,6 +10,14 @@ const nextConfig = {
       { hostname: "d15f34w2p8l1cc.cloudfront.net" },
     ],
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+    return config;
+  },
+  reactStrictMode: true,
 };
 
 export default nextConfig;

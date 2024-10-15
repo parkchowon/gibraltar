@@ -12,11 +12,11 @@ function ProfileSettingContainer({
   children,
 }: PropsWithChildren<ProfileSettingProps>) {
   return (
-    <div className="flex flex-col w-full h-screen items-center justify-center">
-      <div className="flex flex-col w-[546px] items-center">
+    <div className="flex flex-col w-full h-screen items-center justify-center overflow-y-scroll">
+      <div className="flex flex-col w-min-[546px] items-center">
         <ProgressBar />
-        <div className="flex flex-col w-full mt-[84px]">
-          <div className="pl-[70px]">
+        <div className="flex flex-col w-full mt-[84px] items-center">
+          <div>
             <p className="text-[40px] font-medium whitespace-pre-wrap">
               {title}
             </p>

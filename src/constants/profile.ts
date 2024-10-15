@@ -46,14 +46,17 @@ export const PLAY_TIME = [
 export const PLAY_POSITION = [
   {
     id: "tank",
-    name: '돌격'
+    name: '돌격',
+    color: "#f0f0f0"
   },
   {
     id: "damage",
-    name: '공격'
+    name: '공격',
+    color: "#d7d7d7"
   },
   {
     id: "support",
-    name: '지원'
+    name: '지원',
+    color: "#bcbcbc"
   },
 ]
