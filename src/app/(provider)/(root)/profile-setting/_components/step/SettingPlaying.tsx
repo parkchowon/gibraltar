@@ -5,9 +5,9 @@ import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 
 function SettingPlaying() {
-  const [modeClick, setModeClick] = useState<number[]>([]);
-  const [styleClick, setStyleClick] = useState<number>(0);
-  const [timeClick, setTimeClick] = useState<number[]>([]);
+  const [modeClick, setModeClick] = useState<string[]>([]);
+  const [styleClick, setStyleClick] = useState<string>("");
+  const [timeClick, setTimeClick] = useState<string[]>([]);
   const [checkPass, setCheckPass] = useState<boolean>(false);
   const { putPlayStyle } = useProfileStore();
 
@@ -17,7 +17,7 @@ function SettingPlaying() {
   }, [modeClick, styleClick, timeClick]);
 
   // mode 클릭 시
-  const handleModeClick = (mode: number) => {
+  const handleModeClick = (mode: string) => {
     if (modeClick.includes(mode)) {
       setModeClick(modeClick.filter((item) => item !== mode));
     } else {
@@ -26,12 +26,12 @@ function SettingPlaying() {
   };
 
   // 플레이 성향 클릭 시
-  const handleStyleClick = (style: number) => {
+  const handleStyleClick = (style: string) => {
     setStyleClick(style);
   };
 
   // 접속 시간 클릭 시
-  const handleTimeClick = (time: number) => {
+  const handleTimeClick = (time: string) => {
     if (timeClick.includes(time)) {
       setTimeClick(timeClick.filter((item) => item !== time));
     } else {
@@ -61,10 +61,12 @@ function SettingPlaying() {
             return (
               <button
                 key={mode.id}
-                onClick={() => handleModeClick(mode.id)}
-                className={`${modeClick.includes(mode.id) ? "bg-mint" : null} ${
-                  mode.id === 1 ? "rounded-l-xl" : null
-                } ${mode.id === 4 ? "rounded-r-xl" : null}`}
+                onClick={() => handleModeClick(mode.name)}
+                className={`${
+                  modeClick.includes(mode.name) ? "bg-mint" : null
+                } ${mode.id === 1 ? "rounded-l-xl" : null} ${
+                  mode.id === 4 ? "rounded-r-xl" : null
+                }`}
               >
                 {mode.name}
               </button>
@@ -81,10 +83,10 @@ function SettingPlaying() {
               return (
                 <button
                   key={style.id}
-                  className={`${styleClick === style.id ? "bg-mint" : null} ${
+                  className={`${styleClick === style.name ? "bg-mint" : null} ${
                     style.id === 1 ? "rounded-l-xl" : "rounded-r-xl"
                   }`}
-                  onClick={() => handleStyleClick(style.id)}
+                  onClick={() => handleStyleClick(style.name)}
                 >
                   {style.name}
                 </button>
@@ -98,10 +100,12 @@ function SettingPlaying() {
             return (
               <button
                 key={time.id}
-                onClick={() => handleTimeClick(time.id)}
-                className={`${timeClick.includes(time.id) ? "bg-mint" : null} ${
-                  time.id === 1 ? "rounded-l-xl" : null
-                } ${time.id === 4 ? "rounded-r-xl" : null}`}
+                onClick={() => handleTimeClick(time.name)}
+                className={`${
+                  timeClick.includes(time.name) ? "bg-mint" : null
+                } ${time.id === 1 ? "rounded-l-xl" : null} ${
+                  time.id === 4 ? "rounded-r-xl" : null
+                }`}
               >
                 {time.name}
               </button>

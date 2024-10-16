@@ -81,6 +81,64 @@ export type Database = {
           },
         ]
       }
+      play_modes: {
+        Row: {
+          created_at: string
+          id: string
+          play_mode: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          play_mode: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          play_mode?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "play_modes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      play_times: {
+        Row: {
+          created_at: string
+          id: string
+          play_time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          play_time: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          play_time?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "play_times_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_tags: {
         Row: {
           created_at: string
@@ -206,6 +264,53 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          bio: string
+          created_at: string
+          favorite_team: string
+          id: string
+          main_champs: Json | null
+          play_champs: Json | null
+          play_mode: Json
+          play_style: string
+          play_time: Json
+          user_id: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string
+          favorite_team: string
+          id?: string
+          main_champs?: Json | null
+          play_champs?: Json | null
+          play_mode: Json
+          play_style: string
+          play_time: Json
+          user_id: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          favorite_team?: string
+          id?: string
+          main_champs?: Json | null
+          play_champs?: Json | null
+          play_mode?: Json
+          play_style?: string
+          play_time?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "play_styles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string
@@ -329,4 +434,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
