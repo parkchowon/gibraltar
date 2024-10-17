@@ -1,3 +1,4 @@
+import { Json } from "./supabase";
 
 export type HeroType = {
   key: string;
@@ -43,9 +44,13 @@ export type RankedUsersType = {
     nickname: string;
     profile_url: string;
     handle: string;
-    user_profiles: {
-        bio: string;
-    }[];
+    profile: {
+            bio: string;
+            play_style: string;
+            play_mode: Json;
+            play_time: Json;
+            favorite_team: string;
+        }[];
 } | null | undefined;
   score: number;
 }

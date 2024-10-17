@@ -36,14 +36,15 @@ export const insertProfileSetting = async(profile: profileType)=>{
 export const getRecommendedUsers = async(profile: profileType): Promise<RankedUsersType[]| null> =>{
   const { data: modeResult, error: modeError } = await supabase.from('play_modes').select('user_id').in('play_mode', profile.playStyle.mode);
 
-  console.log(modeResult)
+  // TODO: modeResult가 없을 시 해야되는 로직을 추가
+
   // 중복을 없앤 게임 모드 취향이 하나라도 같은 사람들 배열
   const modeUserId = modeResult && modeResult.map(mode=>mode.user_id) || [];
   const sameModePlayer = modeUserId.filter((mode, index)=> modeUserId.indexOf(mode)===index)
 
   // 게임 모드 취향이 같은 사람들 배열에서 시간대, 게임 성향, 좋아하는 팀이 겹치는지 확인
   const [user, team, style, time] = await Promise.all([
-    supabase.from('users').select('id, nickname, profile_url, handle, user_profiles(bio)').in('id', sameModePlayer),
+    supabase.from('users').select('id, nickname, profile_url, handle, profile:user_profiles(bio, play_style, play_mode, play_time, favorite_team)').in('id', sameModePlayer),
     supabase.from('user_profiles').select('user_id').in('user_id',sameModePlayer).eq('favorite_team', profile.favoriteTeam),
     supabase.from('user_profiles').select('user_id').in('user_id', sameModePlayer).eq('play_style', profile.playStyle.style),
     supabase.from('play_times').select('user_id').in('user_id', sameModePlayer).in('play_time', profile.playStyle.time),
@@ -54,6 +55,7 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
   const { data: styleResult, error: styleError } = style;
   const { data: timeResult, error: timeError } = time;
   
+  // 추천 유저 알고리즘
   const calculateScore = (userId:string)=>{
     let score = 0;
 
@@ -86,6 +88,7 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
     score: calculateScore(userId)
   }))
 
+  // TODO: 계정 10개로 추리기
   const rankedUsers = scoredUsers ? scoredUsers.sort((a, b) => b.score - a.score) : null;
   return rankedUsers
 }
