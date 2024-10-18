@@ -11,6 +11,8 @@ function ProfileSettingContainer({
   sub,
   children,
 }: PropsWithChildren<ProfileSettingProps>) {
+  // TODO: 최초 가입의 profile setting을 나갈 수 있는 버튼을 만들어야 함
+  // TODO: x를 누르면 무조건 user_profiles 테이블에 row저장.(최초가입자인지 판별..)
   return (
     <div className="flex flex-col w-full h-screen items-center justify-center overflow-y-scroll">
       <div className="flex flex-col w-min-[546px] items-center">

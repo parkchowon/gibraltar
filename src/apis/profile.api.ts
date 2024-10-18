@@ -89,6 +89,7 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
   }))
 
   // TODO: 계정 10개로 추리기
+  // TODO: 본인 계정 빼기
   const rankedUsers = scoredUsers ? scoredUsers.sort((a, b) => b.score - a.score) : null;
   return rankedUsers
 }
