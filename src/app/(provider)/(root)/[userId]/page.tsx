@@ -1,7 +1,5 @@
 "use client";
-import { getUserPost } from "@/apis/post.api";
 import MainLayout from "@/components/Layout/MainLayout";
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
@@ -17,13 +15,6 @@ function ProfilePage() {
   const params = useSearchParams();
   const tab = params.get("tab");
 
-  const { isPending, data: posts } = useQuery({
-    queryKey: ["userPost", userId],
-    queryFn: () => {
-      return getUserPost(userId);
-    },
-  });
-
   const tabComponent = () => {
     switch (tab) {
       case "media":
@@ -31,11 +22,9 @@ function ProfilePage() {
       case "bookmark":
         return <UserLikes />;
       default:
-        return <UserPost posts={posts} />;
+        return <UserPost userId={userId} />;
     }
   };
-
-  if (isPending) return <p>loading...</p>;
 
   return (
     <MainLayout>
@@ -52,7 +41,7 @@ function ProfilePage() {
           <p className="font-semibold">홈으로</p>
         </div>
         {/* 프로필 부분 */}
-        <ProfileBox countPost={posts ? posts?.length : 0} />
+        <ProfileBox userId={userId} />
         {/* 세부프로필 부분 */}
         <ProfileDetail />
         {/* 탭 영역 */}

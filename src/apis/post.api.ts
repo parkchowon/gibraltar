@@ -22,16 +22,23 @@ export const createPost = async(post:PostType, tags?: TagRow[]) =>{
 
 }
 
+// 가져올 포스트 수
+const POST_SIZE = 10;
+
 // user가 팔로하고 있는 모든 유저의 게시글 불러오기
-export const getPost = async(userId: string)=> {
+export const getPost = async(userId: string, page: number)=> {
+  const start = (page - 1) * POST_SIZE;
+  const end = page * POST_SIZE - 1;
+
+  // 팔로우 하고 있는 사람들의 목록을 불러옴
   const {data:followings, error:followingError} = await supabase.from('followers').select('following_id').eq('follower_id', userId);
   const followingId = followings?.map(item=>item.following_id);
   const followerList = followingId ? [userId, ...followingId]: [userId];
   
-  const {data:posts, error:myError} =  await supabase.from('posts').select('*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))').in('user_id', followerList).is('parent_post_id', null);
+  // 팔로하고 있는 사람들이 쓴 포스트를 start부터 end까지 불러옴
+  const {data:posts, error:myError} =  await supabase.from('posts').select('*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))').in('user_id', followerList).is('parent_post_id', null).range(start, end).order('created_at', {ascending: false});
   const postsId = posts ? posts.map(item=>item.id) : [];
   
-
   const [repostsResult, likesResult, commentsResult] = await Promise.all([
     supabase.from('reposts').select('post_id, comment, reposted_by, reposted_at').in('post_id', postsId),
     supabase.from('likes').select('post_id, user_id').in('post_id', postsId),
@@ -67,8 +74,10 @@ export const getPost = async(userId: string)=> {
 }
 
 // user의 포스팅만 불러오기
-export const getUserPost = async(userId: string)=>{
-  const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))").eq("user_id", userId)
+export const getUserPost = async(userId: string, page: number)=>{
+  const start = (page - 1) * POST_SIZE;
+  const end = page * POST_SIZE - 1;
+  const { data, error }= await supabase.from("posts").select("*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))").eq("user_id", userId).is('parent_post_id', null).range(start, end).order('created_at', {ascending: false});
   const postsId = data ? data.map(item=>item.id) : [];
 
   const [repostsResult, likesResult, commentsResult] = await Promise.all([

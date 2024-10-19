@@ -34,7 +34,7 @@ export const insertProfileSetting = async(profile: profileType)=>{
 
 // 첫 프로필 세팅 후 추천 유저 불러오기
 export const getRecommendedUsers = async(profile: profileType): Promise<RankedUsersType[]| null> =>{
-  const { data: modeResult, error: modeError } = await supabase.from('play_modes').select('user_id').in('play_mode', profile.playStyle.mode);
+  const { data: modeResult, error: modeError } = await supabase.from('play_modes').select('user_id').in('play_mode', profile.playStyle.mode).neq('user_id', profile.userId).range(0,10);
 
   // TODO: modeResult가 없을 시 해야되는 로직을 추가
 
@@ -88,8 +88,6 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
     score: calculateScore(userId)
   }))
 
-  // TODO: 계정 10개로 추리기
-  // TODO: 본인 계정 빼기
   const rankedUsers = scoredUsers ? scoredUsers.sort((a, b) => b.score - a.score) : null;
   return rankedUsers
 }

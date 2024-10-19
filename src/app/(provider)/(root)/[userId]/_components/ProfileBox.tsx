@@ -1,8 +1,8 @@
-import { getFollower, getUser } from "@/apis/auth.api";
+import { getFollower, getPostCount, getUser } from "@/apis/auth.api";
 import { useAuth } from "@/contexts/auth.context";
+import { useFollow } from "@/hooks/useUserFollow";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type followerType = {
@@ -12,33 +12,47 @@ type followerType = {
   id: number;
 };
 
-function ProfileBox({ countPost }: { countPost: number }) {
-  const pathname = usePathname();
+function ProfileBox({ userId }: { userId: string }) {
   const { user: loginUser } = useAuth();
-  const userId = pathname.replace("/", "");
   const [followers, setFollowers] = useState<followerType[]>([]);
   const [followings, setFollowings] = useState<number>(0);
+  const [isFollowing, setIsFollowing] = useState<boolean>();
 
+  // 지금 프로필 페이지가 내 페이지인지
   const isMyProfile = loginUser && loginUser.id === userId;
 
+  // 프로필 페이지에 필요한 팔로워리스트, 유저정보, post개수를 fetch
   const { isPending, data } = useQuery({
     queryKey: ["profileData", userId],
     queryFn: async () => {
       const followerList = await getFollower(userId);
-      const user = await getUser(userId);
-      return { followerList, user };
+      const profileUser = await getUser(userId);
+      const postCount = await getPostCount(userId);
+      return { followerList, profileUser, postCount };
     },
   });
 
+  // 팔로우, 언팔로우 업데이트를 위한 mutation
+  const { followMutation, unFollowMutation } = useFollow();
+
+  // 팔로우 할 시
   const followerList = data?.followerList;
-  const user = data?.user;
+  const profileUser = data?.profileUser;
+  const postCount = data?.postCount || 0;
 
-  // TODO 팔로우, 언팔로우 기능 구현
+  // 팔로우/언팔로우 로직
+  const handleFollowClick = () => {
+    console.log("팔로우 버튼 클릭");
+    if (isFollowing && loginUser) {
+      console.log("언팔할게요");
+      unFollowMutation.mutate({ userId: loginUser.id, followingId: userId });
+    } else if (!isFollowing && loginUser) {
+      console.log("팔로할게요");
+      followMutation.mutate({ userId: loginUser.id, followingId: userId });
+    }
+  };
+
   const buttonRender = () => {
-    const isFollowing = followers.filter((follow) => {
-      return follow.follower_id == user?.id;
-    });
-
     if (isMyProfile) {
       return (
         <button className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50">
@@ -48,13 +62,14 @@ function ProfileBox({ countPost }: { countPost: number }) {
     } else {
       return (
         <button
+          onClick={() => handleFollowClick()}
           className={`${
-            isFollowing.length
-              ? "bg-transparent border-[1px] border-gray-400"
+            isFollowing
+              ? "bg-transparent border-[1px] border-gray-400 hover:bg-warning"
               : "bg-gray-50"
           } ml-auto h-[35px] px-[15px] text-sm rounded-full `}
         >
-          {isFollowing.length ? "팔로잉" : "팔로우"}
+          {isFollowing ? "팔로잉" : "팔로우"}
         </button>
       );
     }
@@ -70,8 +85,14 @@ function ProfileBox({ countPost }: { countPost: number }) {
       setFollowings(
         follower ? followerList.length - follower.length : followerList.length
       );
+      // 지금 프로필 페이지의 팔로워중에 본인이 있는지에 대해
+      const isFollowing = followerList.find(
+        (follower) => loginUser && follower.follower_id === loginUser.id
+      );
+      console.log(followerList, isFollowing);
+      setIsFollowing(!!isFollowing);
     }
-  }, [followerList]);
+  }, [data, followerList]);
 
   if (isPending) return <p>loading...</p>;
 
@@ -81,19 +102,19 @@ function ProfileBox({ countPost }: { countPost: number }) {
         alt="profile"
         width={166}
         height={166}
-        src={user ? user.profile_url : ""}
+        src={profileUser ? profileUser.profile_url : ""}
         className="rounded-full mr-[95px]"
       />
       <div className="flex-grow">
         <div className="flex mb-[52px] ">
           <div>
-            <p className="font-semibold text-lg">{user?.nickname}</p>
-            <p>{user?.handle}</p>
+            <p className="font-semibold text-lg">{profileUser?.nickname}</p>
+            <p>{profileUser?.handle}</p>
           </div>
           {buttonRender()}
         </div>
         <div className="flex gap-14 text-xs font-bold">
-          <p>포스트 {countPost}</p>
+          <p>포스트 {postCount}</p>
           <p>팔로워 {followings}</p>
           <p>팔로우 {followers.length}</p>
         </div>
