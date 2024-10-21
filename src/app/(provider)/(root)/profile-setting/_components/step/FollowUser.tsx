@@ -33,12 +33,18 @@ function FollowUser() {
     },
   });
 
+  // 카드 넘기는 버튼 누를 시
   const handleClickArrow = (state: boolean) => {
     if (state && FollowingList && cardIndex !== FollowingList.length - 1) {
       setCardIndex(cardIndex + 1);
     } else if (!state && cardIndex !== 0) {
       setCardIndex(cardIndex - 1);
     }
+  };
+
+  // 팔로우, 언팔로우 버튼
+  const handleFollowClick = () => {
+    // TODO: 팔로우 hook 가져다가 쓰기
   };
 
   if (isPending && !FollowingList) {
@@ -134,7 +140,10 @@ function FollowUser() {
                   ) : null}
                   {/* TODO: 같은 게임 성향(즐겜/빡겜) */}
                   {/* TODO: 팔로우 로직 hook에 만들기 */}
-                  <button className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint">
+                  <button
+                    onClick={handleFollowClick}
+                    className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
+                  >
                     팔로우
                   </button>
                   <div className="absolute bottom-[22px] flex gap-[8px]">
