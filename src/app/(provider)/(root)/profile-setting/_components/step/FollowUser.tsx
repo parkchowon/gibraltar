@@ -8,6 +8,7 @@ import { useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import SearchingPage from "../SearchingPage";
+import { useFollow } from "@/hooks/useUserFollow";
 
 function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
@@ -15,6 +16,8 @@ function FollowUser() {
 
   const { userData } = useAuth();
   const { bio, favoriteTeam, playChamps, playStyle } = useProfileStore();
+
+  const { followMutation, unFollowMutation} = useFollow()
 
   const { isPending, data: FollowingList } = useQuery({
     queryKey: ["recommendedUsers"],
@@ -43,8 +46,14 @@ function FollowUser() {
   };
 
   // 팔로우, 언팔로우 버튼
-  const handleFollowClick = () => {
-    // TODO: 팔로우 hook 가져다가 쓰기
+  const handleFollowClick = (idx: number) => {
+    if(FollowingList && userData && FollowingList[idx].user){
+      if(FollowingList[idx].isFollowing){
+        return unFollowMutation.mutate({followingId: userData.id, userId:FollowingList[idx].user.id})
+      }else {
+        return followMutation.mutate({followingId: userData.id, userId:FollowingList[idx].user.id})
+      }
+    }
   };
 
   if (isPending && !FollowingList) {
@@ -139,12 +148,11 @@ function FollowUser() {
                     </p>
                   ) : null}
                   {/* TODO: 같은 게임 성향(즐겜/빡겜) */}
-                  {/* TODO: 팔로우 로직 hook에 만들기 */}
                   <button
-                    onClick={handleFollowClick}
+                    onClick={()=>handleFollowClick(idx)}
                     className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
                   >
-                    팔로우
+                    {follow.isFollowing ? "언팔로우": "팔로우"}
                   </button>
                   <div className="absolute bottom-[22px] flex gap-[8px]">
                     {FollowingList.map((card, index) => (

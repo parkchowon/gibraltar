@@ -42,12 +42,9 @@ function ProfileBox({ userId }: { userId: string }) {
 
   // 팔로우/언팔로우 로직
   const handleFollowClick = () => {
-    console.log("팔로우 버튼 클릭");
     if (isFollowing && loginUser) {
-      console.log("언팔할게요");
       unFollowMutation.mutate({ userId: loginUser.id, followingId: userId });
     } else if (!isFollowing && loginUser) {
-      console.log("팔로할게요");
       followMutation.mutate({ userId: loginUser.id, followingId: userId });
     }
   };

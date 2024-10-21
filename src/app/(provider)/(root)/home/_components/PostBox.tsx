@@ -59,20 +59,24 @@ function PostBox() {
           onChange={handleTextChange}
           value={text}
         />
-        <button
-          onClick={handleTagAddClick}
-          className={`flex justify-between w-full px-1 ${
-            tagOpen ? "pt-7" : "py-3.5 border-b-[1px]"
-          } text-left font-semibold  border-[#B2B2B2] z-20`}
-        >
-          {tagOpen ? "태그 목록" : "태그 추가하기"}
-          <Image
-            alt="icon"
-            width={24}
-            height={24}
-            src={"/icons/drop-down.svg"}
-          />
-        </button>
+        <div className={`w-full ${tagOpen? "": "border-b-[1px] border-[#B2B2B2]"} z-20`}>
+          <button
+            onClick={handleTagAddClick}
+            className={`flex w-fit px-1 ${
+              tagOpen ? "pt-7" : "py-3.5"
+            } text-left font-semibold`}
+            >
+            {tagOpen ? "태그 목록" : "태그 추가하기"}
+            <Image
+              alt="icon"
+              width={24}
+              height={24}
+              src={"/icons/drop-down.svg"}
+              className="ml-6"
+              />
+            {/* TODO: 이미지 넣는 버튼 */}
+          </button>
+        </div>
         {tagOpen && <TagBox tagList={tagList} />}
         <SelectTag />
       </div>

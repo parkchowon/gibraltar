@@ -52,5 +52,6 @@ export type RankedUsersType = {
             favorite_team: string;
         }[];
 } | null | undefined;
+isFollowing: boolean;
   score: number;
 }

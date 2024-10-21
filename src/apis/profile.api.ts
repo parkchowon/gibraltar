@@ -43,17 +43,19 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
   const sameModePlayer = modeUserId.filter((mode, index)=> modeUserId.indexOf(mode)===index)
 
   // 게임 모드 취향이 같은 사람들 배열에서 시간대, 게임 성향, 좋아하는 팀이 겹치는지 확인
-  const [user, team, style, time] = await Promise.all([
+  const [user, team, style, time, follow] = await Promise.all([
     supabase.from('users').select('id, nickname, profile_url, handle, profile:user_profiles(bio, play_style, play_mode, play_time, favorite_team)').in('id', sameModePlayer),
     supabase.from('user_profiles').select('user_id').in('user_id',sameModePlayer).eq('favorite_team', profile.favoriteTeam),
     supabase.from('user_profiles').select('user_id').in('user_id', sameModePlayer).eq('play_style', profile.playStyle.style),
     supabase.from('play_times').select('user_id').in('user_id', sameModePlayer).in('play_time', profile.playStyle.time),
+    supabase.from('followers').select('*').in('following_id', sameModePlayer).eq('follower_id',profile.userId).limit(1)
   ])
 
   const { data: userResult, error: userError } = user;
   const { data: teamResult, error: teamError } = team;
   const { data: styleResult, error: styleError } = style;
   const { data: timeResult, error: timeError } = time;
+  const { data: followResult, error: followError} = follow;
   
   // 추천 유저 알고리즘
   const calculateScore = (userId:string)=>{
@@ -85,6 +87,7 @@ export const getRecommendedUsers = async(profile: profileType): Promise<RankedUs
 
   const scoredUsers = sameModePlayer.map(userId=>({
     user: userResult ? userResult.find((user)=> user.id === userId) : null,
+    isFollowing: !!followResult,
     score: calculateScore(userId)
   }))
 
