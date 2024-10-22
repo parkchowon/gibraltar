@@ -10,7 +10,10 @@ import SelectTag from "./SelectTag";
 import TagBox from "./TagBox";
 import PhotoBtn from "@/assets/icons/photo.svg";
 import Cancel from "@/assets/icons/cancel_x.svg";
-import { current } from "immer";
+import { error } from "console";
+
+const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
+const VIDEO_MAX_SIZE = 300 * 1024 * 1024; // 300mb
 
 function PostBox() {
   const { userData } = useAuth();
@@ -18,6 +21,7 @@ function PostBox() {
   const [text, setText] = useState<string>("");
   // 포스트 사진 첨부
   const [postImg, setPostImg] = useState<string[]>([]);
+  const [postVideo, setPostVideo] = useState<string | null>(null);
   const [imgClick, setImgClick] = useState<boolean>(false);
   // 태그
   const [tagOpen, setTagOpen] = useState<boolean>(false);
@@ -72,24 +76,45 @@ function PostBox() {
   const handleMediaChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
+    const video = Array.from(files).filter((file) =>
+      file.type.startsWith("video/")
+    ).length;
 
+    // 동영상 일 시
+    if (video) {
+      if (video > 1) {
+        return alert("동영상은 하나씩만 올릴 수 있습니다.");
+      } else if (postImg.length > 0 || files.length > 1) {
+        return alert("사진과 동영상을 같이 올릴 수 없습니다.");
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPostVideo(reader.result as string);
+        };
+        reader.onerror = () => {
+          alert("동영상 게시 중에 오류가 발생했습니다. 다시 시도해주세요.");
+        };
+        return reader.readAsDataURL(files[0]);
+      }
+    }
+
+    // 이미지 일 시
     if (postImg.length + files.length > 4) {
       return alert("사진은 최대 4개 까지 게시 가능합니다.");
     }
 
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      if (file.type.startsWith("image/") || file.type.startsWith("video/")) {
-        reader.onloadend = () => {
-          return setPostImg((prevImages) => [
-            ...prevImages,
-            reader.result as string,
-          ]);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert("이미지나 동영상 파일만 업로드할 수 있습니다.");
+      if (file.size > IMAGE_MAX_SIZE) {
+        return alert("이미지의 용량이 너무 큽니다.");
       }
+      reader.onloadend = () => {
+        return setPostImg((prevImages) => [
+          ...prevImages,
+          reader.result as string,
+        ]);
+      };
+      reader.readAsDataURL(file);
     });
   };
 
@@ -130,27 +155,34 @@ function PostBox() {
           value={text}
         />
         <div className="flex w-full py-2 overflow-x-hidden gap-x-3">
-          {postImg.map((image, idx) => {
-            return (
-              <div
-                key={idx}
-                className="relative rounded-lg w-[100px] h-[100px] aspect-square"
-              >
-                <button
-                  className="absolute top-1 right-1 z-20"
-                  onClick={() => handleDeleteImage(idx)}
+          {postImg.length !== 0 &&
+            postImg.map((image, idx) => {
+              return (
+                <div
+                  key={idx}
+                  className="relative rounded-lg w-[100px] h-[100px] aspect-square"
                 >
-                  <Cancel width={15} height={15} />
-                </button>
-                <Image
-                  src={image}
-                  fill
-                  className="rounded-lg object-cover"
-                  alt="image or video"
-                />
-              </div>
-            );
-          })}
+                  <button
+                    className="absolute top-1 right-1 z-20"
+                    onClick={() => handleDeleteImage(idx)}
+                  >
+                    <Cancel width={15} height={15} />
+                  </button>
+                  <Image
+                    src={image}
+                    fill
+                    className="rounded-lg object-cover"
+                    alt="image or video"
+                  />
+                </div>
+              );
+            })}
+          {postVideo && (
+            <video className="w-full" controls>
+              <source src={postVideo} type="video/mp4" />
+              해당 브라우저가 video를 보여줄 수 없습니다.
+            </video>
+          )}
         </div>
         <div
           ref={tagBoxRef}
