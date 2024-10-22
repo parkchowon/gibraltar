@@ -3,9 +3,12 @@ import { TagRow } from "@/types/database";
 import SelectTag from "./SelectTag";
 import Tag from "./Tag";
 
-function TagBox({ tagList }: { tagList: TagRow[] }) {
+function TagBox({ tagList, top }: { tagList: TagRow[]; top: number }) {
   return (
-    <div className="absolute flex flex-col left-0 top-[280px] w-full h-[435px] px-8 pt-[86px] pb-5 rounded-[30px] bg-white shadow-lg z-10">
+    <div
+      className="absolute flex flex-col left-0 w-full h-[435px] px-8 pt-[86px] pb-5 rounded-[30px] bg-white shadow-lg z-10"
+      style={{ top: `${top}px` }}
+    >
       <div
         className={`${styles.customScrollbar} overflow-auto overscroll-x-hidden h-[233px] pr-6`}
       >

@@ -38,7 +38,6 @@ function SettingProfile() {
     setFile(file);
     const reader = new FileReader();
     if (file) {
-      console.log(file);
       reader.onloadend = () => {
         setProfileImg(reader.result as string);
       };
