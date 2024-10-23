@@ -20,6 +20,9 @@ function Post({ post }: PostProps) {
   const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
 
+  const jsonString = JSON.stringify(post.images);
+  const images = JSON.parse(jsonString) as string[];
+
   // repost, like 낙관적 업데이트
   const { mutate: repostMutate } = useRepostMutation(post.id);
   const { mutate: likeMutate } = useLikeMutation();
@@ -106,12 +109,29 @@ function Post({ post }: PostProps) {
         className="rounded-full max-h-[46px]"
         onClick={handleProfileClick}
       />
-      <div className="ml-6">
+      <div className="ml-6 w-full">
         <div className="flex items-center">
           <p className="font-semibold">{post.user.nickname}</p>
           <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
         </div>
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
+        {images && (
+          // TODO: image 비율에 관해 물어보고 css 적용하기
+          <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
+            {images.map((image) => {
+              return (
+                <div key={image} className="relative w-full h-full max-h-full">
+                  <Image
+                    src={image}
+                    alt="image"
+                    fill
+                    className="absolute object-contain inset-0"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
         {tags && <PostTag tagList={tags} />}
         <div className="flex gap-6 mt-3 items-center">
           {/* 댓글 */}

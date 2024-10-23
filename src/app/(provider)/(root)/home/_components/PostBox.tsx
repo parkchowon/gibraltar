@@ -10,7 +10,6 @@ import SelectTag from "./SelectTag";
 import TagBox from "./TagBox";
 import PhotoBtn from "@/assets/icons/photo.svg";
 import Cancel from "@/assets/icons/cancel_x.svg";
-import { error } from "console";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 300 * 1024 * 1024; // 300mb
@@ -23,6 +22,8 @@ function PostBox() {
   const [postImg, setPostImg] = useState<string[]>([]);
   const [postVideo, setPostVideo] = useState<string | null>(null);
   const [imgClick, setImgClick] = useState<boolean>(false);
+  // 포스트 사진, 동영상 파일
+  const [postFile, setPostFile] = useState<File[]>([]);
   // 태그
   const [tagOpen, setTagOpen] = useState<boolean>(false);
   const [tagList, setTagList] = useState<TagRow[]>([]);
@@ -42,6 +43,7 @@ function PostBox() {
     getTag();
   }, []);
 
+  // post에 image 갯수 제한을 위한 상태로직
   useEffect(() => {
     if (postImg.length > 3) {
       setImgClick(true);
@@ -57,7 +59,7 @@ function PostBox() {
       const post = {
         content: text,
         user_id: userData.id,
-        images: null, // 나중에 이미지 넣을 때 여기에
+        images: postFile.length === 0 ? null : postFile, // 나중에 이미지 넣을 때 여기에
         parent_post_id: null, // post 생성시에는 null
       };
       resetTag();
@@ -88,6 +90,7 @@ function PostBox() {
       } else if (postImg.length > 0 || files.length > 1) {
         return alert("사진과 동영상을 같이 올릴 수 없습니다.");
       } else {
+        setPostFile([...Array.from(files)]);
         const reader = new FileReader();
         reader.onloadend = () => {
           setPostVideo(reader.result as string);
@@ -109,6 +112,7 @@ function PostBox() {
       if (file.size > IMAGE_MAX_SIZE) {
         return alert("이미지의 용량이 너무 큽니다.");
       }
+      setPostFile([...postFile, ...Array.from(files)]);
       reader.onloadend = () => {
         return setPostImg((prevImages) => [
           ...prevImages,
@@ -126,14 +130,19 @@ function PostBox() {
 
   // 사진 배열에서 지우기
   const handleDeleteImage = (idx?: number) => {
-    if(idx){
-
+    if (idx?.toString) {
       const deletedList = postImg.filter((img, index) => {
         return index !== idx;
       });
+      const deletedFiles = postFile.filter((file, index) => {
+        return index !== idx;
+      });
+
+      setPostFile(deletedFiles);
       setPostImg(deletedList);
-    }else{
-      setPostVideo(null)
+    } else {
+      setPostFile([]);
+      setPostVideo(null);
     }
   };
 
@@ -169,6 +178,7 @@ function PostBox() {
                   className="relative rounded-lg w-[100px] h-[100px] aspect-square"
                 >
                   <button
+                    type="button"
                     className="absolute top-1 right-1 z-20"
                     onClick={() => handleDeleteImage(idx)}
                   >
@@ -185,15 +195,17 @@ function PostBox() {
             })}
           {postVideo && (
             <div className="relative">
-              <button 
+              <button
+                type="button"
                 className="absolute top-2 right-2 z-20"
-                onClick={()=>handleDeleteImage()}>
-                  <Cancel width={20} height={20}/>
+                onClick={() => handleDeleteImage()}
+              >
+                <Cancel width={20} height={20} />
               </button>
-            <video className="w-full rounded-lg" controls>
-              <source src={postVideo} type="video/mp4" />
-              해당 브라우저가 video를 보여줄 수 없습니다.
-            </video>
+              <video className="w-full rounded-lg" controls>
+                <source src={postVideo} type="video/mp4" />
+                해당 브라우저가 video를 보여줄 수 없습니다.
+              </video>
             </div>
           )}
         </div>
@@ -204,6 +216,7 @@ function PostBox() {
           } z-20`}
         >
           <button
+            type="button"
             onClick={handleTagAddClick}
             className={`flex w-fit px-1 ${
               tagOpen ? "pt-7" : "py-3.5"
@@ -221,6 +234,7 @@ function PostBox() {
           {/* image 버튼 */}
           {!tagOpen && (
             <button
+              type="button"
               onClick={handleMediaClick}
               disabled={imgClick}
               className="ml-auto"
@@ -243,6 +257,7 @@ function PostBox() {
         <SelectTag />
       </div>
       <button
+        type="submit"
         className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300 ${
           text ? "cursor-pointer" : "cursor-not-allowed"
         }`}
