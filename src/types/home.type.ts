@@ -48,6 +48,13 @@ export type PostType = {
   }[]
 };
 
+export type CreatePostType = {
+  content: string;
+  images: File[] | null;
+  parent_post_id: string | null;
+  user_id: string;
+}
+
 type Tag = {
   tag_name: string;
 }

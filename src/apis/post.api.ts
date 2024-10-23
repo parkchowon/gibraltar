@@ -1,19 +1,47 @@
+import { error } from 'console';
 import supabase from "@/supabase/client";
 import { PostType, TagRow } from "@/types/database";
-import { LikesFnType } from "@/types/home.type";
+import { CreatePostType, LikesFnType } from "@/types/home.type";
 
 // post를 생성하기
-export const createPost = async(post:PostType, tags?: TagRow[]) =>{
-  const {data, error} = await supabase.from('posts').upsert([post]).select().single()
-  if(error){
-    console.error('포스팅 저장 실패: ',error.message)
-  }
-  console.log("포스팅 저장 성공",data)
+export const createPost = async(post:CreatePostType, tags?: TagRow[]) =>{
+  
+  let postMediaURLs = null;
+  
+  try{
+    // image가 있는 post일 시
+    if(post.images){
+        const filePaths = post.images.map((image)=> `${post.user_id}/${Date.now()}_${image.name}`);
+        const uploadPromises = filePaths.map((filePath, idx)=>{
+          if(post.images)
+            return supabase.storage.from('posts').upload(filePath, post.images[idx])
+        })
+        
+        const uploadResults = await Promise.all(uploadPromises);
+
+        postMediaURLs = filePaths.map((filePath)=> supabase.storage.from('posts').getPublicUrl(filePath).data.publicUrl)
+
+        return uploadResults;
+      }else{
+        
+      }
+    } catch(error){ // 오류, 실패 시 catch해서 끝냄.
+      throw error;
+    }
+    
+      const {data, error} = await supabase.from('posts').update({content: post.content, images: postMediaURLs, user_id: post.user_id, parent_post_id: post.parent_post_id }).select().single()
+      if(error){
+        console.error('포스팅 저장 실패: ',error.message)
+      }
+
+  // tag가 있을 시,
   if(tags && data){
+    // post_tags에 들어갈 row
     const postTagTableRow = tags.map((tag)=>({
       post_id: data.id,
       tag_id: tag.id
     }))
+    // post_tags에도 저장
     const {data: tagData, error: tagError} = await supabase.from('post_tags').insert(postTagTableRow)
     if(tagError){
       console.error(tagError)

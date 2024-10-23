@@ -62,6 +62,7 @@ function PostBox() {
       };
       resetTag();
       await createPost(post, selectedTag);
+      // TODO: loading 넣기
     }
     setText("");
   };
@@ -124,11 +125,16 @@ function PostBox() {
   };
 
   // 사진 배열에서 지우기
-  const handleDeleteImage = (idx: number) => {
-    const deletedList = postImg.filter((img, index) => {
-      return index !== idx;
-    });
-    setPostImg(deletedList);
+  const handleDeleteImage = (idx?: number) => {
+    if(idx){
+
+      const deletedList = postImg.filter((img, index) => {
+        return index !== idx;
+      });
+      setPostImg(deletedList);
+    }else{
+      setPostVideo(null)
+    }
   };
 
   // 선택한 tag list
@@ -172,16 +178,23 @@ function PostBox() {
                     src={image}
                     fill
                     className="rounded-lg object-cover"
-                    alt="image or video"
+                    alt="image"
                   />
                 </div>
               );
             })}
           {postVideo && (
-            <video className="w-full" controls>
+            <div className="relative">
+              <button 
+                className="absolute top-2 right-2 z-20"
+                onClick={()=>handleDeleteImage()}>
+                  <Cancel width={20} height={20}/>
+              </button>
+            <video className="w-full rounded-lg" controls>
               <source src={postVideo} type="video/mp4" />
               해당 브라우저가 video를 보여줄 수 없습니다.
             </video>
+            </div>
           )}
         </div>
         <div
