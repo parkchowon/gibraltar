@@ -1,7 +1,7 @@
 import styles from "@/styles/postbox.module.css";
 import { TagRow } from "@/types/database";
 import SelectTag from "./SelectTag";
-import Tag from "./Tag";
+import Tag from "../Tag/Tag";
 
 function TagBox({ tagList, top }: { tagList: TagRow[]; top: number }) {
   return (

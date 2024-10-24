@@ -5,8 +5,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
 import ProfileDetail from "./_components/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
-import UserLikes from "./_components/UserLikes";
-import UserMedia from "./_components/UserMedia";
 import UserPost from "./_components/UserPost";
 
 function ProfilePage() {
@@ -14,17 +12,6 @@ function ProfilePage() {
   const userId = pathname.replace("/", "");
   const params = useSearchParams();
   const tab = params.get("tab");
-
-  const tabComponent = () => {
-    switch (tab) {
-      case "media":
-        return <UserMedia />;
-      case "bookmark":
-        return <UserLikes />;
-      default:
-        return <UserPost userId={userId} />;
-    }
-  };
 
   return (
     <MainLayout>
@@ -45,7 +32,9 @@ function ProfilePage() {
         {/* 세부프로필 부분 */}
         <ProfileDetail />
         {/* 탭 영역 */}
-        <TabContainer>{tabComponent()}</TabContainer>
+        <TabContainer>
+          <UserPost userId={userId} type={tab} />
+        </TabContainer>
       </div>
     </MainLayout>
   );

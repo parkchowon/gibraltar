@@ -1,16 +1,22 @@
-import Post from "../../home/_components/Post";
+import Post from "../../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
-import { getUserPost } from "@/apis/post.api";
+import { getUserBookmark, getUserMedia, getUserPost } from "@/apis/post.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-function UserPost({ userId }: { userId: string }) {
+function UserPost({ userId, type }: { userId: string; type: string | null }) {
   const loadMoreRef = useRef(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
-      queryKey: ["userPost", userId],
+      queryKey: ["userPost", userId, type],
       queryFn: ({ pageParam = 1 }) => {
-        return getUserPost(userId, pageParam);
+        if (type === "media") {
+          return getUserMedia(userId, pageParam);
+        } else if (type === "bookmark") {
+          return getUserBookmark(userId, pageParam);
+        } else {
+          return getUserPost(userId, pageParam);
+        }
       },
       getNextPageParam: (lastPage, allPages) => {
         if (!lastPage || lastPage.length === 0) {
@@ -47,13 +53,22 @@ function UserPost({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col h-fit divide-y-2 divide-gray-300">
-      {data?.pages.map((page) => {
-        return page?.map((post) => {
-          return <Post key={post.id} post={post} />;
-        });
-      })}
-      {isPending && <p>loading...</p>}
+      {status === "pending" ? (
+        <p>loading...</p>
+      ) : data && data.pages.flatMap((page) => page).length === 0 ? (
+        <p>아직 {type ? type : "포스트"}가 없어요</p>
+      ) : (
+        <>
+          {data &&
+            data.pages.map((page) => {
+              return page?.map((post) => {
+                return <Post key={post.id} post={post} />;
+              });
+            })}
+        </>
+      )}
       <div ref={loadMoreRef} className="h-5" />
+      {isFetchingNextPage && <p>loading more...</p>}
     </div>
   );
 }

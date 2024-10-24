@@ -6,13 +6,13 @@ import { useTagStore } from "@/stores/tag.store";
 import { TagRow } from "@/types/database";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import SelectTag from "./SelectTag";
-import TagBox from "./TagBox";
 import PhotoBtn from "@/assets/icons/photo.svg";
 import Cancel from "@/assets/icons/cancel_x.svg";
+import TagBox from "./TagBox";
+import SelectTag from "./SelectTag";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
-const VIDEO_MAX_SIZE = 300 * 1024 * 1024; // 300mb
+const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
 
 function PostBox() {
   const { userData } = useAuth();
@@ -67,6 +67,9 @@ function PostBox() {
       // TODO: loading 넣기
     }
     setText("");
+    setPostVideo(null);
+    setPostImg([]);
+    setPostFile([]);
   };
 
   // post 글
@@ -90,6 +93,9 @@ function PostBox() {
       } else if (postImg.length > 0 || files.length > 1) {
         return alert("사진과 동영상을 같이 올릴 수 없습니다.");
       } else {
+        if (files[0].size > VIDEO_MAX_SIZE) {
+          return alert("동영상 크기가 너무 큽니다. 50mb이하로 올려주세요");
+        }
         setPostFile([...Array.from(files)]);
         const reader = new FileReader();
         reader.onloadend = () => {

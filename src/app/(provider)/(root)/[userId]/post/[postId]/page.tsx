@@ -3,7 +3,7 @@ import MainLayout from "@/components/Layout/MainLayout";
 import { usePostDetail } from "@/hooks/usePostMutation";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import Post from "../../../home/_components/Post";
+import Post from "../../../home/_components/Post/Post";
 import CommentInput from "./_components/CommentInput";
 import PostComments from "./_components/PostComments";
 

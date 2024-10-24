@@ -5,7 +5,7 @@ import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import PostTag from "./PostTag";
+import PostTag from "../Tag/PostTag";
 
 type PostProps = {
   post: PostType;
@@ -22,6 +22,7 @@ function Post({ post }: PostProps) {
 
   const jsonString = JSON.stringify(post.images);
   const images = JSON.parse(jsonString) as string[];
+  const isImageType = images && images[0].includes("image");
 
   // repost, like 낙관적 업데이트
   const { mutate: repostMutate } = useRepostMutation(post.id);
@@ -118,18 +119,35 @@ function Post({ post }: PostProps) {
         {images && (
           // TODO: image 비율에 관해 물어보고 css 적용하기
           <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-            {images.map((image) => {
-              return (
-                <div key={image} className="relative w-full h-full max-h-full">
-                  <Image
-                    src={image}
-                    alt="image"
-                    fill
-                    className="absolute object-contain inset-0"
-                  />
-                </div>
-              );
-            })}
+            {isImageType
+              ? images.map((image) => {
+                  return (
+                    <div
+                      key={image}
+                      className="relative w-full h-full max-h-full"
+                    >
+                      <Image
+                        src={image}
+                        alt="image"
+                        fill
+                        className="absolute object-contain inset-0"
+                      />
+                    </div>
+                  );
+                })
+              : images.map((image) => {
+                  return (
+                    <div
+                      key={image}
+                      className="relative w-full h-full max-h-full"
+                    >
+                      <video controls className="w-full h-full">
+                        <source src={image} type="video/mp4" />
+                        해당 브라우저는 비디오를 지원하지 않습니다.
+                      </video>
+                    </div>
+                  );
+                })}
           </div>
         )}
         {tags && <PostTag tagList={tags} />}

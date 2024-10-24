@@ -1,5 +1,5 @@
 import { fetchCommentInPost } from "@/apis/post.api";
-import Post from "@/app/(provider)/(root)/home/_components/Post";
+import Post from "@/app/(provider)/(root)/home/_components/Post/Post";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 

@@ -1,7 +1,7 @@
 "use client";
-import PostBox from "@/app/(provider)/(root)/home/_components/PostBox";
+import PostBox from "@/app/(provider)/(root)/home/_components/PostBox/PostBox";
 import Profile from "@/app/(provider)/(root)/home/_components/Profile";
-import RepostModal from "@/app/(provider)/(root)/home/_components/RepostModal";
+import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
 import SearchBar from "@/app/(provider)/(root)/home/_components/SearchBar";
 import { usePostStore } from "@/stores/post.store";
 import { PropsWithChildren } from "react";

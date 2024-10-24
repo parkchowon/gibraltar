@@ -1,5 +1,5 @@
 import { useTagStore } from "@/stores/tag.store";
-import Chips from "./Chips";
+import Chips from "../Tag/Chips";
 
 function SelectTag() {
   const { selectedTag } = useTagStore();

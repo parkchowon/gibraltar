@@ -32,6 +32,11 @@ function ProfileBox({ userId }: { userId: string }) {
     },
   });
 
+  // 본인일 시 프로필 편집 로직
+  const handleEditClick = () => {
+    // TODO: 프로필 편집
+  };
+
   // 팔로우, 언팔로우 업데이트를 위한 mutation
   const { followMutation, unFollowMutation } = useFollow();
 
@@ -52,7 +57,10 @@ function ProfileBox({ userId }: { userId: string }) {
   const buttonRender = () => {
     if (isMyProfile) {
       return (
-        <button className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50">
+        <button
+          onClick={handleEditClick}
+          className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50"
+        >
           프로필 편집
         </button>
       );
@@ -86,7 +94,6 @@ function ProfileBox({ userId }: { userId: string }) {
       const isFollowing = followerList.find(
         (follower) => loginUser && follower.follower_id === loginUser.id
       );
-      console.log(followerList, isFollowing);
       setIsFollowing(!!isFollowing);
     }
   }, [data, followerList]);

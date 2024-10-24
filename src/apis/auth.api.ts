@@ -27,7 +27,7 @@ export const getPostCount = async (userId: string) => {
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
   if (error) {
-    return console.log(error);
+    return console.error(error);
   }
   return count || 0;
 };

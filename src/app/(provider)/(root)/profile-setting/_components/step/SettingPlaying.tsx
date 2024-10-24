@@ -40,8 +40,6 @@ function SettingPlaying() {
   };
 
   const handleSubmit = () => {
-    console.log("step2 is clicked");
-    console.log(modeClick, styleClick, timeClick);
     putPlayStyle({
       mode: modeClick,
       style: styleClick,
