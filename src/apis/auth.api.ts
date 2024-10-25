@@ -101,3 +101,13 @@ export const profileUpdate = async ({
     console.error(updateError);
   }
 };
+
+export const userStatusUpdate = async (userId: string, status: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ status: status })
+    .eq("id", userId);
+  if (error) {
+    console.error(error);
+  }
+};

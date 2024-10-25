@@ -109,11 +109,11 @@ function ProfileBox({ userId }: { userId: string }) {
         src={profileUser ? profileUser.profile_url : ""}
         className="rounded-full mr-[95px]"
       />
-      <div className="flex-grow">
-        <div className="flex mb-[52px] ">
+      <div className="flex flex-col flex-grow justify-between">
+        <div className="flex">
           <div>
             <p className="font-semibold text-lg">{profileUser?.nickname}</p>
-            <p>{profileUser?.handle}</p>
+            <p className="text-sm">{profileUser?.handle}</p>
           </div>
           {buttonRender()}
         </div>

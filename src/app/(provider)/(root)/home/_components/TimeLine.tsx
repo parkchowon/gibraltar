@@ -54,6 +54,7 @@ function TimeLine() {
   return (
     <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300 bg-gray-200">
       {status === "pending" ? (
+        // TODO: 로딩페이지 컴포넌트로 만들기
         <p>loading...</p>
       ) : data && data.pages.flatMap((page) => page).length === 0 ? (
         // TODO: 팔로한 유저가 없을 시 보여주는 화면

@@ -116,6 +116,7 @@ function Post({ post }: PostProps) {
           <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
         </div>
         <p className="mt-[9px] mb-[6px] leading-snug">{post.content}</p>
+        {/* TODO: image나 video 컴포넌트로 관리해서 코드 가독성 높이기 */}
         {images && (
           // TODO: image 비율에 관해 물어보고 css 적용하기
           <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
@@ -152,6 +153,7 @@ function Post({ post }: PostProps) {
         )}
         {tags && <PostTag tagList={tags} />}
         <div className="flex gap-6 mt-3 items-center">
+          {/* TODO: map으로 컴포넌트 돌려서 코드 간결성 높이기 */}
           {/* 댓글 */}
           <div className="flex">
             <button

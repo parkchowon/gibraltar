@@ -1,9 +1,25 @@
 "use client";
+import StatusModal from "@/components/Status/StatusModal";
+import UserStatus from "@/components/Status/UserStatus";
+import { USER_STATUS } from "@/constants/status";
 import { useAuth } from "@/contexts/auth.context";
 import Image from "next/image";
+import { useState } from "react";
 
 function Profile() {
   const { userData, isPending } = useAuth();
+  const [statusClick, setStatusClick] = useState<boolean>(false);
+  const userState = userData?.status || "상태 표시 안 함";
+  const status = {
+    state: userState,
+    color:
+      USER_STATUS.find((state) => state.state === userState)?.color ||
+      "#D4D4D4",
+  };
+
+  const handleStatusClick = () => {
+    setStatusClick(!statusClick);
+  };
 
   if (isPending) {
     return (
@@ -13,7 +29,6 @@ function Profile() {
           <p className="bg-gray-300 h-5 w-20 rounded-md"></p>
           <p className="bg-gray-300 h-5 w-40 rounded-md"></p>
         </div>
-        <button></button>
       </div>
     );
   }
@@ -33,9 +48,16 @@ function Profile() {
           <p className="font-bold text-base">{userData?.nickname}</p>
           <p className="text-sm ml-1.5 text-gray-400">{userData?.handle}</p>
         </div>
-        <div className="flex items-center gap-x-1.5">
-          <div className="w-[9px] h-[9px] rounded-full bg-mint" />
-          <p className="text-xs text-gray-400">오버워치 하는 중</p>
+        <div className="relative">
+          {statusClick && userData && (
+            <StatusModal userId={userData.id} setStatusClick={setStatusClick} />
+          )}
+          <button
+            className="flex items-center gap-x-1.5"
+            onClick={handleStatusClick}
+          >
+            <UserStatus status={status} intent={"side"} />
+          </button>
         </div>
       </div>
       <button className="ml-auto">
