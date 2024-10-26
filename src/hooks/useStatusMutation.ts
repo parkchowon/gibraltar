@@ -8,7 +8,9 @@ export const useStatusMutation = (userId: string) => {
     mutationFn: (status: string) => userStatusUpdate(userId, status),
     onMutate: async (newStatus: string) => {
       const prevUserData = queryClient.getQueryData(["userData"]);
+      const prevProfileData = queryClient.getQueryData(["profileData"]);
       await queryClient.cancelQueries({ queryKey: ["userData"] });
+      await queryClient.cancelQueries({ queryKey: ["profileData"] });
 
       if (prevUserData) {
         queryClient.setQueryData(["userData"], {
@@ -16,11 +18,21 @@ export const useStatusMutation = (userId: string) => {
           status: newStatus,
         });
       }
-      return prevUserData;
+
+      if (prevProfileData) {
+        queryClient.setQueryData(["profileData"], {
+          ...prevProfileData,
+          status: newStatus,
+        });
+      }
+      return { prevUserData, prevProfileData };
     },
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["userData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["profileData"],
       });
     },
   });

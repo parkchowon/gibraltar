@@ -99,7 +99,7 @@ function Post({ post }: PostProps) {
   return (
     <div
       onClick={handlePostClick}
-      className="flex w-full px-[50px] py-[15px] cursor-pointer hover:bg-gray-100"
+      className="flex w-full px-[50px] py-[15px] cursor-pointer bg-gray-200 hover:bg-gray-100"
     >
       <Image
         width={46}

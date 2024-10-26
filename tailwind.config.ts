@@ -11,8 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        'mint' : '#A2D5C6',
-        'warning' : '#FF6F61'
+        mint: "#A2D5C6",
+        warning: "#FF6F61",
       },
     },
   },

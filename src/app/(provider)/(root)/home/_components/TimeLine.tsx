@@ -52,7 +52,7 @@ function TimeLine() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300 bg-gray-200">
+    <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300 bg-gray-300">
       {status === "pending" ? (
         // TODO: 로딩페이지 컴포넌트로 만들기
         <p>loading...</p>

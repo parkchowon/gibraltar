@@ -1,4 +1,6 @@
 import { getFollower, getPostCount, getUser } from "@/apis/auth.api";
+import UserStatus from "@/components/Status/UserStatus";
+import { USER_STATUS } from "@/constants/status";
 import { useAuth } from "@/contexts/auth.context";
 import { useFollow } from "@/hooks/useUserFollow";
 import { useQuery } from "@tanstack/react-query";
@@ -44,6 +46,13 @@ function ProfileBox({ userId }: { userId: string }) {
   const followerList = data?.followerList;
   const profileUser = data?.profileUser;
   const postCount = data?.postCount || 0;
+
+  const status = {
+    state: profileUser?.status || "상태 표시 안 함",
+    color:
+      USER_STATUS.find((state) => state.state === profileUser?.status)?.color ||
+      "#D4D4D4",
+  };
 
   // 팔로우/언팔로우 로직
   const handleFollowClick = () => {
@@ -113,7 +122,8 @@ function ProfileBox({ userId }: { userId: string }) {
         <div className="flex">
           <div>
             <p className="font-semibold text-lg">{profileUser?.nickname}</p>
-            <p className="text-sm">{profileUser?.handle}</p>
+            <p className="text-sm mb-2">{profileUser?.handle}</p>
+            <UserStatus status={status} intent={"page"} />
           </div>
           {buttonRender()}
         </div>
