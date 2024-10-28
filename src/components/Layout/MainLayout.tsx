@@ -1,6 +1,6 @@
 "use client";
 import PostBox from "@/app/(provider)/(root)/home/_components/PostBox/PostBox";
-import Profile from "@/app/(provider)/(root)/home/_components/Profile";
+import SideProfile from "@/app/(provider)/(root)/home/_components/SideProfile";
 import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
 import SearchBar from "@/app/(provider)/(root)/home/_components/SearchBar";
 import { usePostStore } from "@/stores/post.store";
@@ -18,13 +18,13 @@ function MainLayout({ children }: PropsWithChildren) {
           <SideBar />
         </section>
         {/* 가운데 */}
-        <section className="absolute left-1/2 transform -translate-x-1/2 w-[784px] min-h-screen h-auto overflow-auto bg-gray-300">
+        <section className="absolute left-1/2 transform -translate-x-1/2 w-[784px] min-h-screen h-auto overflow-auto bg-gray-200">
           {children}
         </section>
         {/* 오른쪽 프로필 */}
         <section className="fixed right-[6.3%] top-[7.1%] w-[352px]">
           <SearchBar />
-          <Profile />
+          <SideProfile />
           <PostBox />
         </section>
       </div>

@@ -29,6 +29,16 @@ function UserPost({ userId, type }: { userId: string; type: string | null }) {
       initialPageParam: 1,
     });
 
+  useEffect(() => {
+    data?.pages.map((page) => {
+      const ordered = page?.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      console.log(ordered);
+    });
+  }, [data]);
+
   // observer로 스크롤 감지
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -61,9 +71,15 @@ function UserPost({ userId, type }: { userId: string; type: string | null }) {
         <>
           {data &&
             data.pages.map((page) => {
-              return page?.map((post) => {
-                return <Post key={post.id} post={post} />;
-              });
+              return page
+                ?.sort(
+                  (a, b) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+                )
+                .map((post) => {
+                  return <Post key={post.id} post={post} />;
+                });
             })}
         </>
       )}

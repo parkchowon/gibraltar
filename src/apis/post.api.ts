@@ -2,7 +2,7 @@ import supabase from "@/supabase/client";
 import { TagRow } from "@/types/database";
 import { CreatePostType, LikesFnType } from "@/types/home.type";
 
-// post를 생성하기
+/** post를 생성하기 */
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   let postMediaURLs = null;
 
@@ -73,10 +73,13 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   }
 };
 
+/**  user가 팔로하고 있는 모든 유저의 게시글 불러오기 */
+
 // 가져올 포스트 수
 const POST_SIZE = 10;
 
-// user가 팔로하고 있는 모든 유저의 게시글 불러오기
+// TODO: 팔로하고 있는 사람이 rt한 post까지 불러오기
+// 근데 다른 유저가 같은 post를 rt했을 때..
 export const getPost = async (userId: string, page: number) => {
   const start = (page - 1) * POST_SIZE;
   const end = page * POST_SIZE - 1;
@@ -138,19 +141,28 @@ export const getPost = async (userId: string, page: number) => {
   return enrichedPosts;
 };
 
-// user의 포스팅만 불러오기
+/** user의 포스팅만 불러오기 */
+// TODO: 유저가 rt한 글도 불러오기
 export const getUserPost = async (userId: string, page: number) => {
   const start = (page - 1) * POST_SIZE;
   const end = page * POST_SIZE - 1;
+
+  const { data: repostPosts, error: repostError } = await supabase
+    .from("reposts")
+    .select("post_id")
+    .eq("reposted_by", userId);
+  const repostList = repostPosts?.map((repost) => repost.post_id) ?? [];
+
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_at), likes (post_id, user_id)"
     )
     .eq("user_id", userId)
     .is("parent_post_id", null)
     .range(start, end)
     .order("created_at", { ascending: false });
+
   const postsId = data ? data.map((item) => item.id) : [];
 
   const [repostsResult, likesResult, commentsResult] = await Promise.all([
@@ -166,6 +178,13 @@ export const getUserPost = async (userId: string, page: number) => {
   const { data: comments, error: commentError } = commentsResult;
 
   const enrichedPosts = data?.map((post) => {
+    // const repostedPost = post.reposts.findIndex(
+    //   (repost) => repost.reposted_by === userId
+    // );
+    // if (repostedPost > -1) {
+    //   post.created_at = post.reposts[repostedPost].reposted_at;
+    // }
+
     const postReposts = reposts?.filter((repost) => repost.post_id === post.id);
     const postLikes = likes?.filter((like) => like.post_id === post.id);
     const postComments = comments?.filter(
@@ -183,6 +202,7 @@ export const getUserPost = async (userId: string, page: number) => {
   if (error) {
     console.error("post 불러오는 중 오류");
   }
+  console.log(data);
   return enrichedPosts;
 };
 

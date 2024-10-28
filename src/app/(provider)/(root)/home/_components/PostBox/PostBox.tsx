@@ -10,12 +10,13 @@ import PhotoBtn from "@/assets/icons/photo.svg";
 import Cancel from "@/assets/icons/cancel_x.svg";
 import TagBox from "./TagBox";
 import SelectTag from "./SelectTag";
+import PostBoxLoading from "@/components/Loading/PostBoxLoading";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
 
 function PostBox() {
-  const { userData } = useAuth();
+  const { userData, isPending } = useAuth();
   // 포스트 글
   const [text, setText] = useState<string>("");
   // 포스트 사진 첨부
@@ -162,6 +163,8 @@ function PostBox() {
       setTagTop(relativeTop);
     }
   };
+
+  if (isPending) return <PostBoxLoading />;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">

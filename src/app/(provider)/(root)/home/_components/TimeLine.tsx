@@ -69,25 +69,28 @@ function TimeLine() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <div className="flex flex-col h-fit pt-[77px] divide-y-2 divide-gray-300 bg-gray-300">
-      {isLoading ? (
-        <TimeLineLoading />
-      ) : data && data.pages.flatMap((page) => page).length === 0 ? (
-        // TODO: 팔로한 유저가 없을 시 보여주는 화면
-        <p>아직 포스트가 없습니다.</p>
-      ) : (
-        <>
-          {data &&
-            data.pages.map((page) =>
-              page?.map((post) => {
-                return <Post key={post.id} post={post} />;
-              })
-            )}
-        </>
-      )}
-      <div ref={loadMoreRef} style={{ height: "20px" }} />
-      {isFetchingNextPage && <p>loading more...</p>}
-    </div>
+    <>
+      <div className="w-full h-[77px] bg-gray-300" />
+      <div className="flex flex-col h-fit px-6 divide-y-2 divide-gray-300 bg-gray-200">
+        {isLoading ? (
+          <TimeLineLoading />
+        ) : data && data.pages.flatMap((page) => page).length === 0 ? (
+          // TODO: 팔로한 유저가 없을 시 보여주는 화면
+          <p>아직 포스트가 없습니다.</p>
+        ) : (
+          <>
+            {data &&
+              data.pages.map((page) =>
+                page?.map((post) => {
+                  return <Post key={post.id} post={post} />;
+                })
+              )}
+          </>
+        )}
+        <div ref={loadMoreRef} style={{ height: "20px" }} />
+        {isFetchingNextPage && <p>loading more...</p>}
+      </div>
+    </>
   );
 }
 

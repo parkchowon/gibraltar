@@ -11,14 +11,19 @@ function DetailPostPage() {
   const router = useRouter();
   const pathname = usePathname();
   const postId = pathname.split("/")[3];
-  const { data: post } = usePostDetail(postId);
+  // useQuery 접근
+  const { data: post, isPending } = usePostDetail(postId);
 
   const handleClickBack = () => {
     router.back();
   };
 
-  if (!post) {
+  if (isPending) {
     return <p>loading...</p>;
+  }
+
+  if (!post) {
+    return router.back();
   }
 
   return (
