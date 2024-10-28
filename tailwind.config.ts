@@ -14,6 +14,15 @@ const config: Config = {
         mint: "#A2D5C6",
         warning: "#FF6F61",
       },
+      keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1.5s infinite",
+      },
     },
   },
   plugins: [],
