@@ -96,7 +96,7 @@ export const getPost = async (userId: string, page: number) => {
   const { data: posts, error: myError } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
     .in("user_id", followerList)
     .is("parent_post_id", null)
@@ -104,29 +104,15 @@ export const getPost = async (userId: string, page: number) => {
     .order("created_at", { ascending: false });
   const postsId = posts ? posts.map((item) => item.id) : [];
 
-  const [repostsResult, likesResult, commentsResult] = await Promise.all([
-    supabase
-      .from("reposts")
-      .select("post_id, comment, reposted_by, reposted_at")
-      .in("post_id", postsId),
-    supabase.from("likes").select("post_id, user_id").in("post_id", postsId),
-    supabase.from("posts").select("*").in("parent_post_id", postsId),
-  ]);
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: comments, error: commentError } = commentsResult;
+  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
 
   const enrichedPosts = posts?.map((post) => {
-    const postReposts = reposts?.filter((repost) => repost.post_id === post.id);
-    const postLikes = likes?.filter((like) => like.post_id === post.id);
     const postComments = comments?.filter(
       (comment) => comment.parent_post_id === post.id
     );
 
     return {
       ...post,
-      reposts: postReposts,
-      likes: postLikes,
       comments: postComments,
     };
   });
@@ -138,7 +124,7 @@ export const getPost = async (userId: string, page: number) => {
     console.error("팔로잉 목록 불러오는 중 에러:", followingError);
   }
 
-  return enrichedPosts;
+  return enrichedPosts||[];
 };
 
 /** user의 포스팅만 불러오기 */
@@ -156,7 +142,7 @@ export const getUserPost = async (userId: string, page: number) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_at), likes (post_id, user_id)"
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
     .eq("user_id", userId)
     .is("parent_post_id", null)
@@ -165,36 +151,15 @@ export const getUserPost = async (userId: string, page: number) => {
 
   const postsId = data ? data.map((item) => item.id) : [];
 
-  const [repostsResult, likesResult, commentsResult] = await Promise.all([
-    supabase
-      .from("reposts")
-      .select("post_id, comment, reposted_by, reposted_at")
-      .in("post_id", postsId),
-    supabase.from("likes").select("post_id, user_id").in("post_id", postsId),
-    supabase.from("posts").select("*").in("parent_post_id", postsId),
-  ]);
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: comments, error: commentError } = commentsResult;
+  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
 
   const enrichedPosts = data?.map((post) => {
-    // const repostedPost = post.reposts.findIndex(
-    //   (repost) => repost.reposted_by === userId
-    // );
-    // if (repostedPost > -1) {
-    //   post.created_at = post.reposts[repostedPost].reposted_at;
-    // }
-
-    const postReposts = reposts?.filter((repost) => repost.post_id === post.id);
-    const postLikes = likes?.filter((like) => like.post_id === post.id);
     const postComments = comments?.filter(
       (comment) => comment.parent_post_id === post.id
     );
 
     return {
       ...post,
-      reposts: postReposts,
-      likes: postLikes,
       comments: postComments,
     };
   });
@@ -202,8 +167,7 @@ export const getUserPost = async (userId: string, page: number) => {
   if (error) {
     console.error("post 불러오는 중 오류");
   }
-  console.log(data);
-  return enrichedPosts;
+  return enrichedPosts || [];
 };
 
 // user의 media만 불러오기
@@ -213,7 +177,7 @@ export const getUserMedia = async (userId: string, page: number) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
     .eq("user_id", userId)
     .not("images", "is", null)
@@ -222,29 +186,15 @@ export const getUserMedia = async (userId: string, page: number) => {
     .order("created_at", { ascending: false });
   const postsId = data ? data.map((item) => item.id) : [];
 
-  const [repostsResult, likesResult, commentsResult] = await Promise.all([
-    supabase
-      .from("reposts")
-      .select("post_id, comment, reposted_by, reposted_at")
-      .in("post_id", postsId),
-    supabase.from("likes").select("post_id, user_id").in("post_id", postsId),
-    supabase.from("posts").select("*").in("parent_post_id", postsId),
-  ]);
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: comments, error: commentError } = commentsResult;
+      const { data: comments, error: commentError } =await supabase.from("posts").select("*").in("parent_post_id", postsId);
 
   const enrichedPosts = data?.map((post) => {
-    const postReposts = reposts?.filter((repost) => repost.post_id === post.id);
-    const postLikes = likes?.filter((like) => like.post_id === post.id);
     const postComments = comments?.filter(
       (comment) => comment.parent_post_id === post.id
     );
 
     return {
       ...post,
-      reposts: postReposts,
-      likes: postLikes,
       comments: postComments,
     };
   });
@@ -252,7 +202,7 @@ export const getUserMedia = async (userId: string, page: number) => {
   if (error) {
     console.error("post 불러오는 중 오류");
   }
-  return enrichedPosts;
+  return enrichedPosts || [];
 };
 
 // user의 bookmark한 것 불러오기
@@ -271,7 +221,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
     .in("id", likedPostsId)
     .is("parent_post_id", null)
@@ -280,29 +230,15 @@ export const getUserBookmark = async (userId: string, page: number) => {
 
   const postsId = data ? data.map((item) => item.id) : [];
 
-  const [repostsResult, likesResult, commentsResult] = await Promise.all([
-    supabase
-      .from("reposts")
-      .select("post_id, comment, reposted_by, reposted_at")
-      .in("post_id", postsId),
-    supabase.from("likes").select("post_id, user_id").in("post_id", postsId),
-    supabase.from("posts").select("*").in("parent_post_id", postsId),
-  ]);
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: comments, error: commentError } = commentsResult;
+      const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
 
   const enrichedPosts = data?.map((post) => {
-    const postReposts = reposts?.filter((repost) => repost.post_id === post.id);
-    const postLikes = likes?.filter((like) => like.post_id === post.id);
     const postComments = comments?.filter(
       (comment) => comment.parent_post_id === post.id
     );
 
     return {
       ...post,
-      reposts: postReposts,
-      likes: postLikes,
       comments: postComments,
     };
   });
@@ -310,7 +246,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
   if (error) {
     console.error("post 불러오는 중 오류");
   }
-  return enrichedPosts;
+  return enrichedPosts|| [];
 };
 
 // 클릭한 post 정보 하나 불러오기

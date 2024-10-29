@@ -19,7 +19,7 @@ function Post({ post }: PostProps) {
   const [heartClick, setHeartClick] = useState<boolean>(false);
   const [repostClick, setRepostClick] = useState<boolean>(false);
   const tags = post.post_tags ? post.post_tags : [];
-
+  
   const jsonString = JSON.stringify(post.images);
   const images = JSON.parse(jsonString) as string[];
   const isImageType = images && images[0].includes("image");
