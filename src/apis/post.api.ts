@@ -285,89 +285,102 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
 
 // user의 media만 불러오기
 export const getUserMedia = async (userId: string, page: number) => {
-  const start = (page - 1) * POST_SIZE;
-  const end = page * POST_SIZE - 1;
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
-    )
-    .eq("user_id", userId)
-    .not("images", "is", null)
-    .is("parent_post_id", null)
-    .range(start, end)
-    .order("created_at", { ascending: false });
-  const postsId = data ? data.map((item) => item.id) : [];
+  try {
+    const start = (page - 1) * POST_SIZE;
+    const end = page * POST_SIZE - 1;
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+      )
+      .eq("user_id", userId)
+      .not("images", "is", null)
+      .is("parent_post_id", null)
+      .range(start, end)
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
 
-  const { data: comments, error: commentError } = await supabase
-    .from("posts")
-    .select("*")
-    .in("parent_post_id", postsId);
+    const postsId = data ? data.map((item) => item.id) : [];
 
-  const enrichedPosts = data?.map((post) => {
-    const postComments = comments?.filter(
-      (comment) => comment.parent_post_id === post.id
-    );
+    const { data: comments, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .in("parent_post_id", postsId);
+    if (commentError) throw new Error(commentError.message);
 
-    return {
-      ...post,
-      isReposted: false,
-      reposted_by: userId,
-      comments: postComments,
-    };
-  });
+    const enrichedPosts = data?.map((post) => {
+      const postComments = comments?.filter(
+        (comment) => comment.parent_post_id === post.id
+      );
 
-  if (error) {
-    console.error("post 불러오는 중 오류");
+      return {
+        ...post,
+        isReposted: false,
+        reposted_by: userId,
+        comments: postComments,
+      };
+    });
+
+    return enrichedPosts || [];
+  } catch (error) {
+    console.log(error);
+    return [];
   }
-  return enrichedPosts || [];
 };
 
 // user의 bookmark한 것 불러오기
 export const getUserBookmark = async (userId: string, page: number) => {
-  const start = (page - 1) * POST_SIZE;
-  const end = page * POST_SIZE - 1;
+  try {
+    const start = (page - 1) * POST_SIZE;
+    const end = page * POST_SIZE - 1;
 
-  const { data: likedPostsData, error: likedPostsError } = await supabase
-    .from("likes")
-    .select("post_id")
-    .eq("user_id", userId);
-  const likedPostsId = likedPostsData
-    ? likedPostsData.map((post) => post.post_id)
-    : [];
+    const { data: likedPostsData, error: likedPostsError } = await supabase
+      .from("likes")
+      .select("post_id")
+      .eq("user_id", userId);
+    if (likedPostsError) throw new Error(likedPostsError.message);
 
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
-    )
-    .in("id", likedPostsId)
-    .is("parent_post_id", null)
-    .range(start, end)
-    .order("created_at", { ascending: false });
+    const likedPostsId = likedPostsData
+      ? likedPostsData.map((post) => post.post_id)
+      : [];
 
-  const postsId = data ? data.map((item) => item.id) : [];
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+      )
+      .in("id", likedPostsId)
+      .is("parent_post_id", null)
+      .range(start, end)
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
 
-  const { data: comments, error: commentError } = await supabase
-    .from("posts")
-    .select("*")
-    .in("parent_post_id", postsId);
+    const postsId = data ? data.map((item) => item.id) : [];
 
-  const enrichedPosts = data?.map((post) => {
-    const postComments = comments?.filter(
-      (comment) => comment.parent_post_id === post.id
-    );
+    const { data: comments, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .in("parent_post_id", postsId);
+    if (commentError) throw new Error(commentError.message);
 
-    return {
-      ...post,
-      comments: postComments,
-    };
-  });
+    const enrichedPosts = data?.map((post) => {
+      const postComments = comments?.filter(
+        (comment) => comment.parent_post_id === post.id
+      );
 
-  if (error) {
-    console.error("post 불러오는 중 오류");
+      return {
+        ...post,
+        isReposted: false,
+        reposted_by: userId,
+        comments: postComments,
+      };
+    });
+
+    return enrichedPosts || [];
+  } catch (error) {
+    console.log(error);
+    return [];
   }
-  return enrichedPosts || [];
 };
 
 // 클릭한 post 정보 하나 불러오기
@@ -462,40 +475,30 @@ export const fetchCommentInPost = async (postId: string) => {
   //가장 상단에 있는 post에 대한 comment 리스트들
   const { data: comments, error } = await supabase
     .from("posts")
-    .select("*, user:users (nickname, profile_url, handle)")
+    .select(
+      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+    )
     .eq("parent_post_id", postId);
+
   const commentsId = comments ? comments.map((item) => item.id) : [];
 
-  const [repostsResult, likesResult, childCommentsResult] = await Promise.all([
-    supabase
-      .from("reposts")
-      .select("post_id, comment, reposted_by, reposted_at")
-      .in("post_id", commentsId),
-    supabase.from("likes").select("post_id, user_id").in("post_id", commentsId),
-    supabase.from("posts").select("*").in("parent_post_id", commentsId),
-  ]);
-
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: childComments, error: childCommentsError } =
-    childCommentsResult;
+  const { data: childComments, error: childCommentsError } = await supabase
+    .from("posts")
+    .select("*")
+    .in("parent_post_id", commentsId);
 
   const enrichedComments = comments?.map((comment) => {
-    const commentReposts = reposts?.filter(
-      (repost) => repost.post_id === comment.id
-    );
-    const commentLikes = likes?.filter((like) => like.post_id === comment.id);
     const commentchildComments = childComments?.filter(
       (childComment) => childComment.parent_post_id === comment.id
     );
 
     return {
       ...comment,
-      reposts: commentReposts,
-      likes: commentLikes,
-      comments: commentchildComments,
+      isReposted: false,
+      reposted_by: null,
+      comments: commentchildComments || [],
     };
   });
 
-  return enrichedComments;
+  return enrichedComments || [];
 };

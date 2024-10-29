@@ -3,13 +3,10 @@ import Post from "@/app/(provider)/(root)/home/_components/Post/Post";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
 function PostComments({ postId }: { postId: string }) {
   const pathname = usePathname();
   const topPostId = pathname.split("/")[3];
-
-  const [commentList, setCommentList] = useState<string[]>([]);
 
   const { data: comments, isPending } = useQuery({
     queryKey: ["timelineData", postId],
