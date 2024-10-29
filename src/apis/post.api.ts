@@ -79,114 +79,208 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
 // 가져올 포스트 수
 const POST_SIZE = 10;
 
-// TODO: 팔로하고 있는 사람이 rt한 post까지 불러오기
-// 근데 다른 유저가 같은 post를 rt했을 때..
-export const getPost = async (userId: string, page: number) => {
-  const start = (page - 1) * POST_SIZE;
-  const end = page * POST_SIZE - 1;
+// TODO: 근데 다른 유저가 같은 post를 rt했을 때..
+export const getPost = async (userId: string | null, cursor: string | null) => {
+  try {
+    if (!userId) throw new Error("로그인된 유저가 아님");
 
-  // 팔로우 하고 있는 사람들의 목록을 불러옴
-  const { data: followings, error: followingError } = await supabase
-    .from("followers")
-    .select("following_id")
-    .eq("follower_id", userId);
-  const followingId = followings?.map((item) => item.following_id);
-  const followerList = followingId ? [userId, ...followingId] : [userId];
+    // 팔로우 하고 있는 사람들의 목록을 불러옴
+    const { data: followings, error: followingError } = await supabase
+      .from("followers")
+      .select("following_id")
+      .eq("follower_id", userId);
 
-  // 팔로하고 있는 사람들이 쓴 포스트를 start부터 end까지 불러옴
-  const { data: posts, error: myError } = await supabase
-    .from("posts")
-    .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
-    )
-    .in("user_id", followerList)
-    .is("parent_post_id", null)
-    .range(start, end)
-    .order("created_at", { ascending: false });
-  const postsId = posts ? posts.map((item) => item.id) : [];
+    if (followingError)
+      throw new Error("팔로잉 목록 불러오는 중 에러:" + followingError.message);
 
-  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
+    const followingId = followings?.map((item) => item.following_id);
+    const followerList = followingId ? [userId, ...followingId] : [userId];
 
-  const enrichedPosts = posts?.map((post) => {
-    const postComments = comments?.filter(
-      (comment) => comment.parent_post_id === post.id
+    const { data: nicknames, error: nicknameError } = await supabase
+      .from("users")
+      .select("id, nickname")
+      .in("id", followingId);
+    if (nicknameError) throw new Error(nicknameError.message);
+
+    // 팔로하고 있는 사람들(본인 포함)이 rt한 postId 목록
+    let repostsQuery = supabase
+      .from("reposts")
+      .select("post_id, reposted_at, reposted_by")
+      .in("reposted_by", followerList)
+      .order("reposted_at", { ascending: false })
+      .limit(POST_SIZE);
+
+    // 팔로하고 있는 사람(본임 포함)들의 포스팅
+    let postsQuery = supabase
+      .from("posts")
+      .select("id, created_at")
+      .in("user_id", followerList)
+      .is("parent_post_id", null)
+      .order("created_at", { ascending: false })
+      .limit(POST_SIZE);
+
+    // 첫번째면 최신순으로 위에서 10개, cursor가 있으면 거기서 부터 10개
+    if (cursor) {
+      postsQuery = postsQuery.lt("created_at", cursor);
+      repostsQuery = repostsQuery.lt("reposted_at", cursor);
+    }
+
+    const [postsResult, repostsResult] = await Promise.all([
+      postsQuery,
+      repostsQuery,
+    ]);
+
+    // post와 repost 불러오는데 에러처리
+    if (postsResult.error || repostsResult.error) {
+      throw new Error("포스트와 리포스트 불러오는 중 에러");
+    }
+
+    // 시간순으로 정렬한 뒤 10개로 만든 배열
+    const orderedPost = sortDataByTime({
+      reposts: repostsResult.data || [],
+      posts: postsResult.data || [],
+    });
+
+    // 최신순 post의 id값의 배열
+    const orderedPostId = orderedPost.map((post) => post.id);
+
+    // 최신순의 post와 repost id 배열
+    const { data: posts, error: postError } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
+      )
+      .in("id", orderedPostId)
+      .is("parent_post_id", null)
+      .order("created_at", { ascending: false });
+
+    if (postError)
+      throw new Error(
+        "최신 타임라인 포스팅 불러오는 중 에러: " + postError.message
+      );
+
+    const { data: comments, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .in("parent_post_id", orderedPostId);
+
+    if (commentError)
+      throw new Error("댓글 갯수 불러오는 중 에러: " + commentError.message);
+
+    const enrichedPosts = posts?.map((post) => {
+      // post와 repost 순서를 맞추기 위해 reposted_at을 created_at으로 병합
+      const repostedCheck = orderedPost.find((order) => order.id === post.id);
+      let repostedUser = null;
+      if (repostedCheck?.isReposted) {
+        repostedUser =
+          nicknames.find((nick) => nick.id === repostedCheck.reposted_by)
+            ?.nickname || userId;
+      }
+
+      const postComments = comments?.filter(
+        (comment) => comment.parent_post_id === post.id
+      );
+
+      return {
+        ...post,
+        isReposted: repostedCheck?.isReposted,
+        reposted_by: repostedUser,
+        comments: postComments,
+      };
+    });
+
+    // TODO: post랑 repost 순서 로직 세우기 (지금은 그냥 post의 created_at 순으로되어있음)
+    enrichedPosts?.sort(
+      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
     );
 
-    return {
-      ...post,
-      comments: postComments,
-    };
-  });
-
-  if (myError) {
-    console.error("로그인 유저의 포스팅 불러오는 중 에러: ", myError);
+    return enrichedPosts || [];
+  } catch (error) {
+    console.error(error);
+    return [];
   }
-  if (followingError) {
-    console.error("팔로잉 목록 불러오는 중 에러:", followingError);
-  }
-
-  return enrichedPosts||[];
 };
 
-/** user의 포스팅만 불러오기 */
-// TODO: 유저가 rt한 글도 불러오기
-export const getUserPost = async (userId: string, page: string | null) => {
+/** user의 포스팅과 리포스트 불러오기 */
+export const getUserPost = async (userId: string, cursor: string | null) => {
+  try {
+    let repostsQuery = supabase
+      .from("reposts")
+      .select("post_id, reposted_at, reposted_by")
+      .eq("reposted_by", userId)
+      .order("reposted_at", { ascending: false })
+      .limit(POST_SIZE);
 
-  let repostsQuery = supabase.from('reposts').select(
-    "post_id, reposted_at"
-  ).order('reposted_at', {ascending: false}).limit(POST_SIZE)
+    let postsQuery = supabase
+      .from("posts")
+      .select("id, created_at")
+      .eq("user_id", userId)
+      .is("parent_post_id", null)
+      .order("created_at", { ascending: false })
+      .limit(POST_SIZE);
 
-  let postsQuery = supabase.from('posts').select("id, created_at")
-  .eq("user_id", userId)
-  .is("parent_post_id", null)
-  .order('created_at', {ascending: false})
+    if (cursor) {
+      postsQuery = postsQuery.lt("created_at", cursor);
+      repostsQuery = repostsQuery.lt("reposted_at", cursor);
+    }
 
-  if(page){
-    postsQuery = postsQuery.lt("created_at", page);
-    repostsQuery = repostsQuery.lt('reposted_at', page)
-  }
+    const [postsResult, repostsResult] = await Promise.all([
+      postsQuery,
+      repostsQuery,
+    ]);
 
-  const [postsResult, repostsResult] = await Promise.all([
-    postsQuery,
-    repostsQuery
-  ])
+    if (postsResult.error || repostsResult.error) {
+      throw new Error("post와 repost를 불러오는 도중 에러");
+    }
 
-  if(postsResult.error || repostsResult.error){
-    return console.error("post와 repost를 불러오는 도중 에러")
-  }
+    const orderedPost = sortDataByTime({
+      reposts: repostsResult.data || [],
+      posts: postsResult.data || [],
+    });
 
-  const orderedPost = sortDataByTime({
-    reposts : repostsResult.data || [],
-    posts: postsResult.data || []
-  })
+    const orderedPostId = orderedPost.map((post) => post.id);
 
-  const orderedPostId = orderedPost.map((post)=> post.id);
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+      )
+      .in("id", orderedPostId);
 
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
-    )
-    .in('id', orderedPostId);
+    if (error) throw new Error(error.message);
 
-  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", orderedPostId);
+    const { data: comments, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .in("parent_post_id", orderedPostId);
+    if (commentError) throw new Error(commentError.message);
 
-  const enrichedPosts = data?.map((post) => {
+    const enrichedPosts = data?.map((post) => {
+      // TODO: post랑 repost 순서 로직 세우기
+      const postCreatedAt = orderedPost.find((order) => order.id === post.id);
+      post.created_at = postCreatedAt
+        ? postCreatedAt.created_at
+        : post.created_at;
+      const postComments = comments?.filter(
+        (comment) => comment.parent_post_id === post.id
+      );
 
-    const postComments = comments?.filter(
-      (comment) => comment.parent_post_id === post.id
+      return {
+        ...post,
+        isReposted: postCreatedAt?.isReposted, // TODO: 내 트윗이 다 알티 표시되는 것 수정
+        reposted_by: userId,
+        comments: postComments,
+      };
+    });
+
+    enrichedPosts?.sort(
+      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
     );
-
-    return {
-      ...post,
-      comments: postComments,
-    };
-  });
-
-  if (error || commentError) {
-    console.error("post 불러오는 중 오류");
+    return enrichedPosts || [];
+  } catch (error) {
+    console.error(error);
+    return [];
   }
-  return enrichedPosts || [];
 };
 
 // user의 media만 불러오기
@@ -205,7 +299,10 @@ export const getUserMedia = async (userId: string, page: number) => {
     .order("created_at", { ascending: false });
   const postsId = data ? data.map((item) => item.id) : [];
 
-      const { data: comments, error: commentError } =await supabase.from("posts").select("*").in("parent_post_id", postsId);
+  const { data: comments, error: commentError } = await supabase
+    .from("posts")
+    .select("*")
+    .in("parent_post_id", postsId);
 
   const enrichedPosts = data?.map((post) => {
     const postComments = comments?.filter(
@@ -214,6 +311,8 @@ export const getUserMedia = async (userId: string, page: number) => {
 
     return {
       ...post,
+      isReposted: false,
+      reposted_by: userId,
       comments: postComments,
     };
   });
@@ -249,7 +348,10 @@ export const getUserBookmark = async (userId: string, page: number) => {
 
   const postsId = data ? data.map((item) => item.id) : [];
 
-      const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
+  const { data: comments, error: commentError } = await supabase
+    .from("posts")
+    .select("*")
+    .in("parent_post_id", postsId);
 
   const enrichedPosts = data?.map((post) => {
     const postComments = comments?.filter(
@@ -265,7 +367,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
   if (error) {
     console.error("post 불러오는 중 오류");
   }
-  return enrichedPosts|| [];
+  return enrichedPosts || [];
 };
 
 // 클릭한 post 정보 하나 불러오기

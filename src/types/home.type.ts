@@ -44,7 +44,7 @@ export type PostType = Awaited<ReturnType<typeof getPost>>[number];
 //     profile_url: string;
 //   } | null;
 //   post_tags?: {
-//     tag: { 
+//     tag: {
 //       tag_name: string;
 //     } | null
 //   }[]
@@ -55,25 +55,25 @@ export type CreatePostType = {
   images: File[] | null;
   parent_post_id: string | null;
   user_id: string;
-}
+};
 
 type Tag = {
   tag_name: string;
-}
+};
 
 type PostTags = {
   tag: Tag | null;
-}
+};
 
 export type LikesFnType = {
   postId: string;
   userId?: string | null;
   state?: boolean;
-}
+};
 
 export type CommentInsertProps = {
   comment: string;
   postId: string;
   userId: string;
   parentId?: string;
-}
+};

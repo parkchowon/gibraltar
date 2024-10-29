@@ -8,27 +8,27 @@ import { useEffect, useRef, useState } from "react";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 
 function TimeLine() {
-  const { userData } = useAuth();
+  const { userData, isPending } = useAuth();
   const loadMoreRef = useRef(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: userData ? ["timelineData", userData.id] : ["timelineData"],
-      queryFn: ({ pageParam = 1 }) => {
-        if (userData) {
-          return getPost(userData.id, pageParam);
-        }
+      queryFn: ({ pageParam = null }: { pageParam: string | null }) => {
+        if (isPending) return;
+        return getPost(userData ? userData.id : null, pageParam);
       },
-      getNextPageParam: (lastPage, allPages) => {
+      getNextPageParam: (lastPage) => {
         if (!lastPage || lastPage.length === 0) {
           return undefined;
         }
-
-        return allPages.length + 1;
+        const lastPost = lastPage[lastPage.length - 1];
+        const lastTime = lastPost.created_at;
+        return lastTime;
       },
       refetchInterval: 10000,
-      initialPageParam: 1,
+      initialPageParam: null,
     });
 
   // pending이 200ms 이상일 때만 보여주기
@@ -74,7 +74,7 @@ function TimeLine() {
       <div className="flex flex-col h-fit px-6 divide-y-2 divide-gray-300 bg-gray-200">
         {isLoading ? (
           <TimeLineLoading />
-        ) : data && data.pages.flatMap((page) => page).length === 0 ? (
+        ) : data && data.pages.length === 0 ? (
           // TODO: 팔로한 유저가 없을 시 보여주는 화면
           <p>아직 포스트가 없습니다.</p>
         ) : (

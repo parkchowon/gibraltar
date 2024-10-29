@@ -3,18 +3,19 @@ import { useEffect, useRef } from "react";
 import { getUserPost } from "@/apis/post.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-function UserPost({ userId }: { userId: string; }) {
+function UserPost({ userId }: { userId: string }) {
   const loadMoreRef = useRef(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isPending } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
     useInfiniteQuery({
       queryKey: ["userPost", userId],
-      queryFn: ({ pageParam = null }: {pageParam: string| null}) => getUserPost(userId, pageParam),
+      queryFn: ({ pageParam = null }: { pageParam: string | null }) =>
+        getUserPost(userId, pageParam),
       getNextPageParam: (lastPage) => {
-        if(!lastPage){
+        if (!lastPage || lastPage.length === 0) {
           return undefined;
         }
-        const lastPost = lastPage[lastPage.length-1];
+        const lastPost = lastPage[lastPage.length - 1];
         const lastTime = lastPost.created_at;
         return lastTime;
       },
@@ -55,8 +56,8 @@ function UserPost({ userId }: { userId: string; }) {
           {data &&
             data.pages.map((page) => {
               return page?.map((post) => {
-                  return <Post key={post.id} post={post} />;
-                });
+                return <Post key={post.id} post={post} />;
+              });
             })}
         </>
       )}
