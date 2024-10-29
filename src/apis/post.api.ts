@@ -1,6 +1,7 @@
 import supabase from "@/supabase/client";
 import { TagRow } from "@/types/database";
 import { CreatePostType, LikesFnType } from "@/types/home.type";
+import { sortDataByTime } from "@/utils/sortDataByTime";
 
 /** post를 생성하기 */
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
@@ -129,31 +130,49 @@ export const getPost = async (userId: string, page: number) => {
 
 /** user의 포스팅만 불러오기 */
 // TODO: 유저가 rt한 글도 불러오기
-export const getUserPost = async (userId: string, page: number) => {
-  const start = (page - 1) * POST_SIZE;
-  const end = page * POST_SIZE - 1;
+export const getUserPost = async (userId: string, page: string | null) => {
 
-  const { data: repostPosts, error: repostError } = await supabase
-    .from("reposts")
-    .select("post_id")
-    .eq("reposted_by", userId);
-  const repostList = repostPosts?.map((repost) => repost.post_id) ?? [];
+  let repostsQuery = supabase.from('reposts').select(
+    "post_id, reposted_at"
+  ).order('reposted_at', {ascending: false}).limit(POST_SIZE)
+
+  let postsQuery = supabase.from('posts').select("id, created_at")
+  .eq("user_id", userId)
+  .is("parent_post_id", null)
+  .order('created_at', {ascending: false})
+
+  if(page){
+    postsQuery = postsQuery.lt("created_at", page);
+    repostsQuery = repostsQuery.lt('reposted_at', page)
+  }
+
+  const [postsResult, repostsResult] = await Promise.all([
+    postsQuery,
+    repostsQuery
+  ])
+
+  if(postsResult.error || repostsResult.error){
+    return console.error("post와 repost를 불러오는 도중 에러")
+  }
+
+  const orderedPost = sortDataByTime({
+    reposts : repostsResult.data || [],
+    posts: postsResult.data || []
+  })
+
+  const orderedPostId = orderedPost.map((post)=> post.id);
 
   const { data, error } = await supabase
     .from("posts")
     .select(
       "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
-    .eq("user_id", userId)
-    .is("parent_post_id", null)
-    .range(start, end)
-    .order("created_at", { ascending: false });
+    .in('id', orderedPostId);
 
-  const postsId = data ? data.map((item) => item.id) : [];
-
-  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", postsId);
+  const { data: comments, error: commentError } = await supabase.from("posts").select("*").in("parent_post_id", orderedPostId);
 
   const enrichedPosts = data?.map((post) => {
+
     const postComments = comments?.filter(
       (comment) => comment.parent_post_id === post.id
     );
@@ -164,7 +183,7 @@ export const getUserPost = async (userId: string, page: number) => {
     };
   });
 
-  if (error) {
+  if (error || commentError) {
     console.error("post 불러오는 중 오류");
   }
   return enrichedPosts || [];

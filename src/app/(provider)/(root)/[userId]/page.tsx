@@ -6,6 +6,7 @@ import ProfileBox from "./_components/ProfileBox";
 import ProfileDetail from "./_components/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
 import UserPost from "./_components/UserPost";
+import UserTab from "./_components/UserTab";
 
 function ProfilePage() {
   const pathname = usePathname();
@@ -33,7 +34,8 @@ function ProfilePage() {
         <ProfileDetail />
         {/* 탭 영역 */}
         <TabContainer>
-          <UserPost userId={userId} type={tab} />
+          {tab ? <UserTab userId={userId} type={tab}/> : <UserPost userId={userId} /> }
+          
         </TabContainer>
       </div>
     </MainLayout>

@@ -1,43 +1,26 @@
 import Post from "../../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
-import { getUserBookmark, getUserMedia, getUserPost } from "@/apis/post.api";
+import { getUserPost } from "@/apis/post.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-function UserPost({ userId, type }: { userId: string; type: string | null }) {
+function UserPost({ userId }: { userId: string; }) {
   const loadMoreRef = useRef(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isPending } =
     useInfiniteQuery({
-      queryKey: ["userPost", userId, type],
-      queryFn: ({ pageParam = 1 }) => {
-        if (type === "media") {
-          return getUserMedia(userId, pageParam);
-        } else if (type === "bookmark") {
-          return getUserBookmark(userId, pageParam);
-        } else {
-          return getUserPost(userId, pageParam);
-        }
-      },
-      getNextPageParam: (lastPage, allPages) => {
-        if (!lastPage || lastPage.length === 0) {
+      queryKey: ["userPost", userId],
+      queryFn: ({ pageParam = null }: {pageParam: string| null}) => getUserPost(userId, pageParam),
+      getNextPageParam: (lastPage) => {
+        if(!lastPage){
           return undefined;
         }
-
-        return allPages.length + 1;
+        const lastPost = lastPage[lastPage.length-1];
+        const lastTime = lastPost.created_at;
+        return lastTime;
       },
       refetchInterval: 10000,
-      initialPageParam: 1,
+      initialPageParam: null,
     });
-
-  useEffect(() => {
-    data?.pages.map((page) => {
-      const ordered = page?.sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      console.log(ordered);
-    });
-  }, [data]);
 
   // observer로 스크롤 감지
   useEffect(() => {
@@ -63,21 +46,15 @@ function UserPost({ userId, type }: { userId: string; type: string | null }) {
 
   return (
     <div className="flex flex-col h-fit divide-y-2 divide-gray-300">
-      {status === "pending" ? (
+      {isPending ? (
         <p>loading...</p>
-      ) : data && data.pages.flatMap((page) => page).length === 0 ? (
-        <p>아직 {type ? type : "포스트"}가 없어요</p>
+      ) : data && data.pages.length === 0 ? (
+        <p>아직 포스트가 없어요</p>
       ) : (
         <>
           {data &&
             data.pages.map((page) => {
-              return page
-                ?.sort(
-                  (a, b) =>
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
-                )
-                .map((post) => {
+              return page?.map((post) => {
                   return <Post key={post.id} post={post} />;
                 });
             })}
