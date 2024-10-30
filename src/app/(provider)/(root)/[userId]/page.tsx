@@ -16,7 +16,7 @@ function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className="px-6 pt-[50px]">
+      <div className="px-6 pt-[4%]">
         <div className="flex gap-8 items-center">
           <button>
             <Image

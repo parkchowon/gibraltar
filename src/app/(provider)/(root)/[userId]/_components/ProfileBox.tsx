@@ -111,13 +111,14 @@ function ProfileBox({ userId }: { userId: string }) {
 
   return (
     <div className="flex pt-[50px] pb-[68px] px-[95px]">
+      <div className="relative w-[21.1%] h-[21.1%] mr-[95px] aspect-square">
       <Image
         alt="profile"
-        width={166}
-        height={166}
+        fill
         src={profileUser ? profileUser.profile_url : ""}
-        className="rounded-full mr-[95px]"
-      />
+        className="absolute rounded-full object-cover"
+        />
+        </div>
       <div className="flex flex-col flex-grow justify-between">
         <div className="flex">
           <div>
