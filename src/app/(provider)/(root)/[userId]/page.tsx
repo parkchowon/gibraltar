@@ -34,8 +34,11 @@ function ProfilePage() {
         <ProfileDetail />
         {/* 탭 영역 */}
         <TabContainer>
-          {tab ? <UserTab userId={userId} type={tab}/> : <UserPost userId={userId} /> }
-          
+          {tab ? (
+            <UserTab userId={userId} type={tab} />
+          ) : (
+            <UserPost userId={userId} />
+          )}
         </TabContainer>
       </div>
     </MainLayout>

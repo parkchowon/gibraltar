@@ -255,6 +255,13 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
       .in("parent_post_id", orderedPostId);
     if (commentError) throw new Error(commentError.message);
 
+    const { data: userName, error: userError } = await supabase
+      .from("users")
+      .select("nickname")
+      .eq("id", userId)
+      .single();
+    if (userError) throw new Error(userError.message);
+
     const enrichedPosts = data?.map((post) => {
       // TODO: post랑 repost 순서 로직 세우기
       const postCreatedAt = orderedPost.find((order) => order.id === post.id);
@@ -268,7 +275,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
       return {
         ...post,
         isReposted: postCreatedAt?.isReposted, // TODO: 내 트윗이 다 알티 표시되는 것 수정
-        reposted_by: userId,
+        reposted_by: userName.nickname || "",
         comments: postComments,
       };
     });

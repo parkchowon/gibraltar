@@ -110,20 +110,20 @@ function ProfileBox({ userId }: { userId: string }) {
   if (isPending) return <p>loading...</p>;
 
   return (
-    <div className="flex pt-[50px] pb-[68px] px-[95px]">
+    <div className="flex pt-[50px] pb-[5.5%] px-[95px]">
       <div className="relative w-[21.1%] h-[21.1%] mr-[95px] aspect-square">
-      <Image
-        alt="profile"
-        fill
-        src={profileUser ? profileUser.profile_url : ""}
-        className="absolute rounded-full object-cover"
+        <Image
+          alt="profile"
+          fill
+          src={profileUser ? profileUser.profile_url : ""}
+          className="absolute rounded-full object-cover"
         />
-        </div>
+      </div>
       <div className="flex flex-col flex-grow justify-between">
         <div className="flex">
           <div>
             <p className="font-semibold text-lg">{profileUser?.nickname}</p>
-            <p className="text-sm mb-2">{profileUser?.handle}</p>
+            <p className="text-sm mb-1">{profileUser?.handle}</p>
             <UserStatus status={status} intent={"page"} />
           </div>
           {buttonRender()}

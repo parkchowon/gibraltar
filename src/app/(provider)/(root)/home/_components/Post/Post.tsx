@@ -34,10 +34,10 @@ function Post({ post }: PostProps) {
   // 이미 내가 클릭한 repost, heart 표시
   useEffect(() => {
     if (isInitialized && user) {
-      if (post.reposted_by === user.id) {
+      if (post.isReposted && post.reposted_by === user.id) {
         setRepostClick(true);
       }
-      
+
       post.likes?.map((like) => {
         if (like.user_id === user.id) {
           setHeartClick(true);
@@ -107,22 +107,22 @@ function Post({ post }: PostProps) {
     >
       {post.isReposted && (
         <p className="text-sm ml-16 text-gray-400">
-          {post.reposted_by !== user?.id
+          {post.reposted_by !== userData?.nickname
             ? `${post.reposted_by} 님이 리트윗 함`
             : "재게시했습니다"}
         </p>
       )}
       <div className="flex">
         <div className="relative w-[46px] h-[46px] aspect-square rounded-full">
-        <Image
-        fill
-          src={post.user.profile_url}
-          alt="profile"
-          objectFit="cover"
-          className="absolute rounded-full max-h-[46px]"
-          onClick={handleProfileClick}
+          <Image
+            fill
+            src={post.user.profile_url}
+            alt="profile"
+            objectFit="cover"
+            className="absolute rounded-full max-h-[46px]"
+            onClick={handleProfileClick}
           />
-          </div>
+        </div>
 
         <div className="ml-6 w-full">
           <div className="flex items-center">
