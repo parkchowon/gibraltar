@@ -8,6 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        'l-side' : '12.38rem', // 198px
+        'timeline' : '49rem', // 784px
+        'r-side' : '22rem', // 352px
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

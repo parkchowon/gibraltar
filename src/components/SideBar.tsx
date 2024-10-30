@@ -23,16 +23,16 @@ function SideBar() {
           <button
             key={item.id}
             onClick={() => handleClick(item.path)}
-            className="flex justify-center items-center h-[58px]"
+            className="flex justify-left items-center w-full h-[58px]"
           >
             <Image
               width={24}
               height={24}
               alt="icon"
               src={path === item.path ? item.icon.fill : item.icon.line}
-              className="mx-10"
+              className="ml-5 mr-10"
             />
-            <p className={`${path === item.path ? "font-extrabold" : ""}`}>
+            <p className={`${path === item.path ? "font-extrabold" : ""} text-sm text-left`}>
               {item.name}
             </p>
           </button>

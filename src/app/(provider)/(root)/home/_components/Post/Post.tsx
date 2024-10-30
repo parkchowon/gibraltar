@@ -37,11 +37,7 @@ function Post({ post }: PostProps) {
       if (post.reposted_by === user.id) {
         setRepostClick(true);
       }
-      // post.reposts?.map((repost) => {
-      //   if (repost.reposted_by === user.id) {
-      //     setRepostClick(true);
-      //   }
-      // });
+      
       post.likes?.map((like) => {
         if (like.user_id === user.id) {
           setHeartClick(true);
@@ -117,15 +113,16 @@ function Post({ post }: PostProps) {
         </p>
       )}
       <div className="flex">
+        <div className="relative w-[46px] h-[46px] aspect-square rounded-full">
         <Image
-          width={46}
-          height={46}
+        fill
           src={post.user.profile_url}
           alt="profile"
           objectFit="cover"
-          className="rounded-full max-h-[46px]"
+          className="absolute rounded-full max-h-[46px]"
           onClick={handleProfileClick}
-        />
+          />
+          </div>
 
         <div className="ml-6 w-full">
           <div className="flex items-center">
