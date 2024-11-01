@@ -51,13 +51,12 @@ function CommentInput({ postId }: { postId: string }) {
       onSubmit={(e) => handleCommentSubmit(e)}
       className="flex gap-[25px] px-6 py-[14px]"
     >
-      <div className="relative">
+      <div className="relative h-[46px] w-[46px]">
         <Image
           src={userData ? userData.profile_url : ""}
           alt="profile"
-          width={46}
-          height={46}
-          className="rounded-full"
+          fill
+          className="absolute rounded-full object-cover"
         />
       </div>
       <div className="flex-grow">

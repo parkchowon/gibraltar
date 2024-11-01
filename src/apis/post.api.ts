@@ -174,7 +174,7 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
       if (repostedCheck?.isReposted) {
         repostedUser =
           nicknames.find((nick) => nick.id === repostedCheck.reposted_by)
-            ?.nickname || userId;
+            ?.nickname || "";
       }
 
       const postComments = comments?.filter(
@@ -274,7 +274,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
 
       return {
         ...post,
-        isReposted: postCreatedAt?.isReposted, // TODO: 내 트윗이 다 알티 표시되는 것 수정
+        isReposted: postCreatedAt?.isReposted || false,
         reposted_by: userName.nickname || "",
         comments: postComments,
       };

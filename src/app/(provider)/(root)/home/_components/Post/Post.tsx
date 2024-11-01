@@ -6,6 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PostTag from "../Tag/PostTag";
+import PostImage from "./PostImage";
+import PostVideo from "./PostVideo";
+import PostReactButton from "./PostReactButton";
 
 type PostProps = {
   post: PostType;
@@ -13,38 +16,32 @@ type PostProps = {
 };
 
 function Post({ post }: PostProps) {
-  const { setIsModalOpen, setModal } = usePostStore();
   const router = useRouter();
-  const { isInitialized, user, userData } = useAuth();
-  const [heartClick, setHeartClick] = useState<boolean>(false);
-  const [repostClick, setRepostClick] = useState<boolean>(false);
+  const { user, userData } = useAuth();
+
+  // tag 배열
   const tags = post.post_tags ? post.post_tags : [];
 
+  // post 날짜
   const postDate = post.created_at.split("T")[0];
   const postTime = post.created_at.split("T")[1].slice(0, 8);
 
+  // post 배열
   const jsonString = JSON.stringify(post.images);
   const images = JSON.parse(jsonString) as string[];
   const isImageType = images && images[0].includes("image");
 
-  // repost, like 낙관적 업데이트
-  const { mutate: repostMutate } = useRepostMutation(post.id);
-  const { mutate: likeMutate } = useLikeMutation();
+  const repostReaction = {
+    number: post.reposts.length,
+    type: "repost",
+    byMe: post.isReposted || false,
+  };
 
-  // 이미 내가 클릭한 repost, heart 표시
-  useEffect(() => {
-    if (isInitialized && user) {
-      if (post.isReposted && post.reposted_by === user.id) {
-        setRepostClick(true);
-      }
-
-      post.likes?.map((like) => {
-        if (like.user_id === user.id) {
-          setHeartClick(true);
-        }
-      });
-    }
-  }, [post]);
+  const likeReaction = {
+    number: post.likes.length,
+    type: "like",
+    byMe: post.likes.some((like) => like.user_id === user?.id),
+  };
 
   // 포스트 클릭 시
   const handlePostClick = () => {
@@ -62,37 +59,9 @@ function Post({ post }: PostProps) {
     e.stopPropagation();
   };
 
-  // 하트와 재게시 누를 시
-  const handleReactClick = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    postId: string,
-    tag: string
-  ) => {
-    e.stopPropagation();
-    // 마음 누를 시 로직
-    if (tag === "heart") {
-      if (!heartClick) {
-        setHeartClick(true);
-        return likeMutate({ postId, userId: user?.id });
-      } else {
-        setHeartClick(false);
-        return likeMutate({ postId, state: false });
-      }
-    } else {
-      // 재게시버튼 누를 시
-      if (repostClick) {
-        setRepostClick(false);
-        return repostMutate();
-      }
-      setIsModalOpen();
-      const currentBtn = e.currentTarget.getBoundingClientRect();
-      setModal({
-        postId: postId,
-        top: currentBtn.top,
-        left: currentBtn.left,
-      });
-    }
-  };
+  if (!user) {
+    router.push("/login");
+  }
 
   if (!post.user) {
     return <p>loading...</p>;
@@ -107,9 +76,9 @@ function Post({ post }: PostProps) {
     >
       {post.isReposted && (
         <p className="text-sm ml-16 text-gray-400">
-          {post.reposted_by !== userData?.nickname
-            ? `${post.reposted_by} 님이 리트윗 함`
-            : "재게시했습니다"}
+          {post.reposted_by === "" || post.reposted_by === userData?.nickname
+            ? "재게시했습니다"
+            : `${post.reposted_by} 님이 리트윗 함`}
         </p>
       )}
       <div className="flex">
@@ -131,44 +100,20 @@ function Post({ post }: PostProps) {
             {/* <p>{postDate.split("-").join("/")}</p> */}
           </div>
           <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
-          {/* TODO: image나 video 컴포넌트로 관리해서 코드 가독성 높이기 */}
+          {/* 미디어 */}
           {images && (
             // TODO: image 비율에 관해 물어보고 css 적용하기
             <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-              {isImageType
-                ? images.map((image) => {
-                    return (
-                      <div
-                        key={image}
-                        className="relative w-full h-full max-h-full"
-                      >
-                        <Image
-                          src={image}
-                          alt="image"
-                          fill
-                          className="absolute object-contain inset-0"
-                        />
-                      </div>
-                    );
-                  })
-                : images.map((image) => {
-                    return (
-                      <div
-                        key={image}
-                        className="relative w-full h-full max-h-full"
-                      >
-                        <video controls className="w-full h-full">
-                          <source src={image} type="video/mp4" />
-                          해당 브라우저는 비디오를 지원하지 않습니다.
-                        </video>
-                      </div>
-                    );
-                  })}
+              {isImageType ? (
+                <PostImage images={images} />
+              ) : (
+                <PostVideo images={images} />
+              )}
             </div>
           )}
+          {/* 태그 */}
           {tags.length !== 0 && <PostTag tagList={tags} />}
           <div className="flex gap-6 mt-[7px] items-center">
-            {/* TODO: map으로 컴포넌트 돌려서 코드 간결성 높이기 */}
             {/* 댓글 */}
             <div className="flex">
               <button
@@ -185,39 +130,17 @@ function Post({ post }: PostProps) {
               <p>{post.comments?.length}</p>
             </div>
             {/* 재게시 */}
-            <div className="relative flex">
-              <button
-                onClick={(e) => handleReactClick(e, post.id, "repost")}
-                className="flex rounded-full p-1 hover:bg-gray-300"
-              >
-                <Image
-                  alt="icon"
-                  width={18}
-                  height={18}
-                  src={`/icons/post_repeat${repostClick ? "_click" : ""}.svg`}
-                />
-              </button>
-              <p className={`${repostClick ? "text-mint" : "text-black"}`}>
-                {post.reposts?.length}
-              </p>
-            </div>
+            <PostReactButton
+              postId={post.id}
+              userId={user?.id}
+              reaction={repostReaction}
+            />
             {/* 하트 */}
-            <div className="flex">
-              <button
-                className="flex rounded-full p-1 hover:bg-gray-300"
-                onClick={(e) => handleReactClick(e, post.id, "heart")}
-              >
-                <Image
-                  alt="icon"
-                  width={18}
-                  height={18}
-                  src={`/icons/post_heart_${heartClick ? "fill" : "line"}.svg`}
-                />
-              </button>
-              <p className={`${heartClick ? "text-warning" : "text-black"}`}>
-                {post.likes?.length}
-              </p>
-            </div>
+            <PostReactButton
+              postId={post.id}
+              userId={user?.id}
+              reaction={likeReaction}
+            />
           </div>
         </div>
       </div>
