@@ -168,13 +168,14 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
       throw new Error("댓글 갯수 불러오는 중 에러: " + commentError.message);
 
     const enrichedPosts = posts?.map((post) => {
-      // post와 repost 순서를 맞추기 위해 reposted_at을 created_at으로 병합
       const repostedCheck = orderedPost.find((order) => order.id === post.id);
       let repostedUser = null;
+      let repostedTime = post.created_at;
       if (repostedCheck?.isReposted) {
         repostedUser =
           nicknames.find((nick) => nick.id === repostedCheck.reposted_by)
             ?.nickname || "";
+        repostedTime = repostedCheck.created_at;
       }
 
       const postComments = comments?.filter(
@@ -185,13 +186,13 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
         ...post,
         isReposted: repostedCheck?.isReposted,
         reposted_by: repostedUser,
+        timeline_at: repostedTime,
         comments: postComments,
       };
     });
 
-    // TODO: post랑 repost 순서 로직 세우기 (지금은 그냥 post의 created_at 순으로되어있음)
     enrichedPosts?.sort(
-      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+      (a, b) => Date.parse(b.timeline_at) - Date.parse(a.timeline_at)
     );
 
     return enrichedPosts || [];

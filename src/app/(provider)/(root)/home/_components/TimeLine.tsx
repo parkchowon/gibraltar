@@ -24,7 +24,7 @@ function TimeLine() {
           return undefined;
         }
         const lastPost = lastPage[lastPage.length - 1];
-        const lastTime = lastPost.created_at;
+        const lastTime = lastPost.timeline_at;
         return lastTime;
       },
       refetchInterval: 10000,
@@ -48,6 +48,7 @@ function TimeLine() {
 
   // observer로 스크롤 감지
   useEffect(() => {
+    console.log(data);
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
