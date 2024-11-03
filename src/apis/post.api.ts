@@ -275,6 +275,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
         ...post,
         isReposted: postCreatedAt?.isReposted || false,
         reposted_by: userName.nickname || "",
+        timeline_at: post.created_at,
         comments: postComments,
       };
     });
@@ -323,6 +324,7 @@ export const getUserMedia = async (userId: string, page: number) => {
         ...post,
         isReposted: false,
         reposted_by: userId,
+        timeline_at: post.created_at,
         comments: postComments,
       };
     });
@@ -378,6 +380,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
         ...post,
         isReposted: false,
         reposted_by: userId,
+        timeline_at: post.created_at,
         comments: postComments,
       };
     });
