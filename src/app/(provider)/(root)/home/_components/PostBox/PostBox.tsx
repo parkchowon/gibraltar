@@ -65,7 +65,7 @@ function PostBox() {
       };
       resetTag();
       await createPost(post, selectedTag);
-      // TODO: loading 넣기
+      // TODO: post 올라가는 시간동안 loading 화면 넣기(아직 화면이없음)
     }
     setText("");
     setPostVideo(null);

@@ -29,10 +29,21 @@ function SideBar() {
               width={24}
               height={24}
               alt="icon"
-              src={path === item.path ? item.icon.fill : item.icon.line}
+              src={
+                path === item.path ||
+                (item.path === "/mypage" && path === `/${user?.id}`)
+                  ? item.icon.fill
+                  : item.icon.line
+              }
               className="ml-5 mr-10"
             />
-            <p className={`${path === item.path ? "font-extrabold" : ""} text-sm text-left`}>
+            <p
+              className={`${path === item.path ? "font-extrabold" : ""} ${
+                item.path === "/mypage" && path === `/${user?.id}`
+                  ? "font-extrabold"
+                  : ""
+              } text-sm text-left`}
+            >
               {item.name}
             </p>
           </button>

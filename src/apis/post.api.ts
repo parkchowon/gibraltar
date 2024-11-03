@@ -79,7 +79,6 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
 // 가져올 포스트 수
 const POST_SIZE = 10;
 
-// TODO: 근데 다른 유저가 같은 post를 rt했을 때..
 export const getPost = async (userId: string | null, cursor: string | null) => {
   try {
     if (!userId) throw new Error("로그인된 유저가 아님");
@@ -264,7 +263,6 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
     if (userError) throw new Error(userError.message);
 
     const enrichedPosts = data?.map((post) => {
-      // TODO: post랑 repost 순서 로직 세우기
       const postCreatedAt = orderedPost.find((order) => order.id === post.id);
       post.created_at = postCreatedAt
         ? postCreatedAt.created_at
@@ -504,6 +502,7 @@ export const fetchCommentInPost = async (postId: string) => {
       ...comment,
       isReposted: false,
       reposted_by: null,
+      timeline_at: comment.created_at,
       comments: commentchildComments || [],
     };
   });

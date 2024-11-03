@@ -5,9 +5,11 @@ import UserStatus from "@/components/Status/UserStatus";
 import { USER_STATUS } from "@/constants/status";
 import { useAuth } from "@/contexts/auth.context";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 function SideProfile() {
+  const router = useRouter();
   const { userData, isPending } = useAuth();
   const [statusClick, setStatusClick] = useState<boolean>(false);
   const userState = userData?.status || "상태 표시 안 함";
@@ -16,6 +18,10 @@ function SideProfile() {
     color:
       USER_STATUS.find((state) => state.state === userState)?.color ||
       "#D4D4D4",
+  };
+
+  const handleProfileClick = () => {
+    router.push(`/${userData?.id}`);
   };
 
   const handleStatusClick = () => {
@@ -53,7 +59,7 @@ function SideProfile() {
           </button>
         </div>
       </div>
-      <button className="ml-auto">
+      <button onClick={handleProfileClick} className="ml-auto">
         <Image
           width={30}
           height={30}

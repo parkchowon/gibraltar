@@ -34,7 +34,10 @@ function Post({ post }: PostProps) {
   const repostReaction = {
     number: post.reposts.length,
     type: "repost",
-    byMe: post.isReposted || false,
+    byMe:
+      (post.isReposted && post.reposted_by === "") ||
+      !!post.reposts.find((post) => post.reposted_by === user?.id) ||
+      false,
   };
 
   const likeReaction = {
@@ -102,7 +105,7 @@ function Post({ post }: PostProps) {
           <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
           {/* 미디어 */}
           {images && (
-            // TODO: image 비율에 관해 물어보고 css 적용하기
+            // TODO: image (아직 화면이 없음)
             <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
               {isImageType ? (
                 <PostImage images={images} />

@@ -36,7 +36,7 @@ function ProfileBox({ userId }: { userId: string }) {
 
   // 본인일 시 프로필 편집 로직
   const handleEditClick = () => {
-    // TODO: 프로필 편집
+    // TODO: 프로필 편집 (화면이 없음)
   };
 
   // 팔로우, 언팔로우 업데이트를 위한 mutation
