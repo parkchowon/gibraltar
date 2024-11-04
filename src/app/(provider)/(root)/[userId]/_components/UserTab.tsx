@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Post from "../../home/_components/Post/Post";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUserBookmark, getUserMedia } from "@/apis/post.api";
+import PostLoading from "@/components/Loading/PostLoading";
 
 function UserTab({ userId, type }: { userId: string; type: string }) {
   const loadMoreRef = useRef(null);
@@ -52,7 +53,7 @@ function UserTab({ userId, type }: { userId: string; type: string }) {
   return (
     <div className="flex flex-col h-fit divide-y-2 divide-gray-300">
       {isPending ? (
-        <p>loading...</p>
+        <PostLoading />
       ) : data && data.pages.flatMap((page) => page).length === 0 ? (
         <p>아직 {type ? type : "포스트"}가 없어요</p>
       ) : (

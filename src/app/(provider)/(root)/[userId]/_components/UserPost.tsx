@@ -2,6 +2,7 @@ import Post from "../../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
 import { getUserPost } from "@/apis/post.api";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import PostLoading from "@/components/Loading/PostLoading";
 
 function UserPost({ userId }: { userId: string }) {
   const loadMoreRef = useRef(null);
@@ -48,7 +49,7 @@ function UserPost({ userId }: { userId: string }) {
   return (
     <div className="flex flex-col h-fit divide-y-2 divide-gray-300">
       {isPending ? (
-        <p>loading...</p>
+        <PostLoading />
       ) : data && data.pages.length === 0 ? (
         <p>아직 포스트가 없어요</p>
       ) : (

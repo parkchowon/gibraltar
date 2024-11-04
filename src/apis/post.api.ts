@@ -147,7 +147,7 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
     const { data: posts, error: postError } = await supabase
       .from("posts")
       .select(
-        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
       )
       .in("id", orderedPostId)
       .is("parent_post_id", null)
@@ -243,7 +243,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
       )
       .in("id", orderedPostId);
 
@@ -298,7 +298,7 @@ export const getUserMedia = async (userId: string, page: number) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
       )
       .eq("user_id", userId)
       .not("images", "is", null)
@@ -331,7 +331,7 @@ export const getUserMedia = async (userId: string, page: number) => {
 
     return enrichedPosts || [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -355,7 +355,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
       )
       .in("id", likedPostsId)
       .is("parent_post_id", null)
@@ -387,7 +387,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
 
     return enrichedPosts || [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 };
@@ -399,7 +399,7 @@ export const fetchPostDetail = async (postId: string) => {
       supabase
         .from("posts")
         .select(
-          "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
+          "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
         )
         .eq("id", postId)
         .single(),
@@ -460,21 +460,48 @@ export const deleteRepost = async (postId: string) => {
 };
 
 /** like 관련 실행, 취소 */
-export const clickLike = async ({ postId, userId, state }: LikesFnType) => {
-  if (state && userId) {
+export const clickLike = async ({
+  postId,
+  userId,
+  state,
+  postUserId,
+}: LikesFnType) => {
+  if (!!userId == false) return;
+
+  if (userId && state) {
     const { data, error } = await supabase
       .from("likes")
       .insert({ post_id: postId, user_id: userId });
-    if (error) {
-      throw new Error(error.message);
+
+    const { data: notiData, error: notiError } = await supabase
+      .from("notifications")
+      .insert({
+        reacted_user_id: userId,
+        type: "like",
+        related_post_id: postId,
+        user_id: postUserId,
+        is_read: false,
+      });
+
+    if (error || notiError) {
+      throw new Error(error?.message || notiError?.message);
     }
-  } else {
+  } else if (userId && state == false) {
     const { data, error } = await supabase
       .from("likes")
       .delete()
       .eq("post_id", postId);
-    if (error) {
-      throw new Error(error.message);
+
+    const { data: notiData, error: notiError } = await supabase
+      .from("notifications")
+      .delete()
+      .eq("related_post_id", postId)
+      .eq("reacted_user_id", userId)
+      .eq("user_id", postUserId)
+      .eq("type", "like");
+
+    if (error || notiError) {
+      throw new Error(error?.message || notiError?.message);
     }
   }
 };
@@ -485,7 +512,7 @@ export const fetchCommentInPost = async (postId: string) => {
   const { data: comments, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+      "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
     )
     .eq("parent_post_id", postId);
 

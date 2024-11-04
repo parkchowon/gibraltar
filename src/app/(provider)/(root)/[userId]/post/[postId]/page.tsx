@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Post from "../../../home/_components/Post/Post";
 import CommentInput from "./_components/CommentInput";
 import PostComments from "./_components/PostComments";
+import PostLoading from "@/components/Loading/PostLoading";
 
 function DetailPostPage() {
   const router = useRouter();
@@ -19,7 +20,17 @@ function DetailPostPage() {
   };
 
   if (isPending) {
-    return <p>loading...</p>;
+    return (
+      <MainLayout>
+        <div className="flex px-6 py-[26px] gap-8">
+          <button onClick={handleClickBack}>
+            <Image src={"/icons/arrow.svg"} alt="back" width={15} height={14} />
+          </button>
+          <p className="font-semibold">홈으로</p>
+        </div>
+        <PostLoading />
+      </MainLayout>
+    );
   }
 
   if (!post) {

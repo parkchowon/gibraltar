@@ -68,6 +68,7 @@ type PostTags = {
 export type LikesFnType = {
   postId: string;
   userId?: string | null;
+  postUserId: string;
   state?: boolean;
 };
 

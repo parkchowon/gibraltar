@@ -1,6 +1,6 @@
 import React from "react";
 
-function NotificationItem() {
+function RepostItem() {
   return (
     <div className="flex w-full px-[25px] py-[15px] gap-6">
       <div className="w-[46px] h-[46px] rounded-full bg-gray-50 flex-shrink-0"></div>
@@ -18,4 +18,4 @@ function NotificationItem() {
   );
 }
 
-export default NotificationItem;
+export default RepostItem;

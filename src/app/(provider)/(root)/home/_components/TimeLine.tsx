@@ -48,7 +48,6 @@ function TimeLine() {
 
   // observer로 스크롤 감지
   useEffect(() => {
-    console.log(data);
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {

@@ -36,8 +36,8 @@ export const useRepostMutation = (postId: string) => {
 export const useLikeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ postId, userId, state = true }: LikesFnType) =>
-      clickLike({ postId, userId, state }),
+    mutationFn: ({ postId, userId, state = true, postUserId }: LikesFnType) =>
+      clickLike({ postId, userId, state, postUserId }),
     onMutate: async (newState) => {
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });

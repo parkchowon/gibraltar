@@ -6,13 +6,19 @@ import React, { useEffect, useState } from "react";
 type PostReactionProps = {
   postId: string;
   userId: string | undefined;
+  postUserId: string;
   reaction: {
     number: number;
     type: string;
     byMe: boolean;
   };
 };
-function PostReactButton({ postId, userId, reaction }: PostReactionProps) {
+function PostReactButton({
+  postId,
+  userId,
+  postUserId,
+  reaction,
+}: PostReactionProps) {
   const { setIsModalOpen, setModal } = usePostStore();
 
   const [reactionClick, setReactionClick] = useState<boolean>(false);
@@ -38,10 +44,10 @@ function PostReactButton({ postId, userId, reaction }: PostReactionProps) {
     if (tag === "like") {
       if (!reactionClick) {
         setReactionClick(true);
-        return likeMutate({ postId, userId: userId });
+        return likeMutate({ postId, userId: userId, postUserId });
       } else {
         setReactionClick(false);
-        return likeMutate({ postId, state: false });
+        return likeMutate({ postId, userId: userId, state: false, postUserId });
       }
     } else {
       // 재게시버튼 누를 시

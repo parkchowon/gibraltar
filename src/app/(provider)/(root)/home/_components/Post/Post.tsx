@@ -1,14 +1,14 @@
 import { useAuth } from "@/contexts/auth.context";
-import { useLikeMutation, useRepostMutation } from "@/hooks/usePostMutation";
-import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import PostTag from "../Tag/PostTag";
 import PostImage from "./PostImage";
 import PostVideo from "./PostVideo";
 import PostReactButton from "./PostReactButton";
+import PostLoading from "@/components/Loading/PostLoading";
+import { useEffect } from "react";
+import { getNotification } from "@/apis/notification.api";
 
 type PostProps = {
   post: PostType;
@@ -62,12 +62,21 @@ function Post({ post }: PostProps) {
     e.stopPropagation();
   };
 
+  useEffect(() => {
+    if (post.user) {
+      const unsubscribe = getNotification(post.user.id);
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [post.user]);
+
   if (!user) {
     router.push("/login");
   }
 
   if (!post.user) {
-    return <p>loading...</p>;
+    return <PostLoading />;
   }
 
   return (
@@ -135,12 +144,14 @@ function Post({ post }: PostProps) {
             {/* 재게시 */}
             <PostReactButton
               postId={post.id}
+              postUserId={post.user.id}
               userId={user?.id}
               reaction={repostReaction}
             />
             {/* 하트 */}
             <PostReactButton
               postId={post.id}
+              postUserId={post.user.id}
               userId={user?.id}
               reaction={likeReaction}
             />
