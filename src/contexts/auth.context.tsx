@@ -41,6 +41,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<AuthContextValue["user"]>(null);
   const isLoggedIn = !!user;
 
+  // user 상태 관리
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange(
       (event: AuthChangeEvent, session: Session | null) => {

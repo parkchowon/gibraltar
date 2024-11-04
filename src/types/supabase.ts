@@ -88,7 +88,7 @@ export type Database = {
           is_read: boolean
           mentioned_post_id: string | null
           reacted_user_id: string
-          related_post_id: string
+          related_post_id: string | null
           type: string
           user_id: string
         }
@@ -98,7 +98,7 @@ export type Database = {
           is_read?: boolean
           mentioned_post_id?: string | null
           reacted_user_id: string
-          related_post_id: string
+          related_post_id?: string | null
           type: string
           user_id: string
         }
@@ -108,7 +108,7 @@ export type Database = {
           is_read?: boolean
           mentioned_post_id?: string | null
           reacted_user_id?: string
-          related_post_id?: string
+          related_post_id?: string | null
           type?: string
           user_id?: string
         }

@@ -4,6 +4,7 @@ import RepostItem from "./_components/RepostItem";
 import FollowItem from "./_components/FollowItem";
 
 function NotificationPage() {
+  // TODO: notifications에서 본인 알림 불러와서 보여주기
   return (
     <MainLayout>
       <div className="w-full h-[77px] bg-gray-300" />
