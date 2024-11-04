@@ -24,7 +24,7 @@ function PostReactButton({
   const [reactionClick, setReactionClick] = useState<boolean>(false);
 
   // repost, like 낙관적 업데이트
-  const { mutate: repostMutate } = useRepostMutation(postId);
+  const { mutate: repostMutate } = useRepostMutation();
   const { mutate: likeMutate } = useLikeMutation();
 
   useEffect(() => {
@@ -53,12 +53,13 @@ function PostReactButton({
       // 재게시버튼 누를 시
       if (reactionClick) {
         setReactionClick(false);
-        return repostMutate();
+        return repostMutate({ postId, userId: userId, postUserId });
       }
       setIsModalOpen();
       const currentBtn = e.currentTarget.getBoundingClientRect();
       setModal({
         postId: postId,
+        postUserId: postUserId,
         top: currentBtn.top,
         left: currentBtn.left,
       });

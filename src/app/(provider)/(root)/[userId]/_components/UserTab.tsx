@@ -67,7 +67,7 @@ function UserTab({ userId, type }: { userId: string; type: string }) {
         </>
       )}
       <div ref={loadMoreRef} className="h-5" />
-      {isFetchingNextPage && <p>loading more...</p>}
+      {isFetchingNextPage && <PostLoading />}
     </div>
   );
 }

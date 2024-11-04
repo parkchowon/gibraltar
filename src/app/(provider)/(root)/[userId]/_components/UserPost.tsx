@@ -63,7 +63,7 @@ function UserPost({ userId }: { userId: string }) {
         </>
       )}
       <div ref={loadMoreRef} className="h-5" />
-      {isFetchingNextPage && <p>loading more...</p>}
+      {isFetchingNextPage && <PostLoading />}
     </div>
   );
 }

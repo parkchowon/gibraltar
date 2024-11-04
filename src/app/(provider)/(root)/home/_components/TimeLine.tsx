@@ -6,6 +6,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import Post from "./Post/Post";
 import { useEffect, useRef, useState } from "react";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
+import PostLoading from "@/components/Loading/PostLoading";
 
 function TimeLine() {
   const { userData, isPending } = useAuth();
@@ -88,7 +89,7 @@ function TimeLine() {
           </>
         )}
         <div ref={loadMoreRef} style={{ height: "20px" }} />
-        {isFetchingNextPage && <p>loading more...</p>}
+        {isFetchingNextPage && <PostLoading />}
       </div>
     </>
   );

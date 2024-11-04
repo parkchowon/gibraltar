@@ -1,13 +1,14 @@
 import { clickLike, deleteRepost, fetchPostDetail } from "@/apis/post.api";
-import { LikesFnType, PostType } from "@/types/home.type";
+import { LikesFnType, PostType, RepostFnType } from "@/types/home.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // post 리포스트 mutation
-export const useRepostMutation = (postId: string) => {
+export const useRepostMutation = () => {
   const queryClient = useQueryClient();
   // repost 상태 낙관적 업데이트
   return useMutation({
-    mutationFn: () => deleteRepost(postId),
+    mutationFn: ({ postId, userId, postUserId }: RepostFnType) =>
+      deleteRepost({ postId, userId, postUserId }),
     onMutate: async (newState) => {
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
       // overwrite 방지를 위해 취소시킴

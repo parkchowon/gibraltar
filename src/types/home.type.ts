@@ -65,6 +65,14 @@ type PostTags = {
   tag: Tag | null;
 };
 
+// supabase reposts, notifications 테이블 추가, 삭제 로직 매개변수 타입
+export type RepostFnType = {
+  postId: string;
+  userId: string | undefined;
+  postUserId: string;
+};
+
+// supabase likes, notifications 테이블 추가, 삭제 로직 매개변수 타입
 export type LikesFnType = {
   postId: string;
   userId?: string | null;

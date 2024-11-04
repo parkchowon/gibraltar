@@ -1,6 +1,6 @@
 import supabase from "@/supabase/client";
 import { TagRow } from "@/types/database";
-import { CreatePostType, LikesFnType } from "@/types/home.type";
+import { CreatePostType, LikesFnType, RepostFnType } from "@/types/home.type";
 import { sortDataByTime } from "@/utils/sortDataByTime";
 
 /** post를 생성하기 */
@@ -436,27 +436,53 @@ export const getTagList = async () => {
 export const insertRepost = async (
   postId: string,
   userId: string | undefined,
+  postUserId: string,
   comment?: string
 ) => {
   if (userId) {
     const { data, error } = await supabase
       .from("reposts")
       .insert({ post_id: postId, reposted_by: userId, comment: comment });
-    if (error) {
-      throw new Error(error.message);
+
+    const { data: notiData, error: notiError } = await supabase
+      .from("notifications")
+      .insert({
+        reacted_user_id: userId,
+        type: "repost",
+        related_post_id: postId,
+        user_id: postUserId,
+        is_read: false,
+      });
+
+    if (error || notiError) {
+      throw new Error(error?.message || notiError?.message);
     }
   }
 };
 
-export const deleteRepost = async (postId: string) => {
-  const { data, error } = await supabase
-    .from("reposts")
-    .delete()
-    .eq("post_id", postId);
-  if (error) {
-    throw new Error(error.message);
+export const deleteRepost = async ({
+  postId,
+  userId,
+  postUserId,
+}: RepostFnType) => {
+  if (userId) {
+    const { data, error } = await supabase
+      .from("reposts")
+      .delete()
+      .eq("post_id", postId);
+
+    const { data: notiData, error: notiError } = await supabase
+      .from("notifications")
+      .delete()
+      .eq("related_post_id", postId)
+      .eq("reacted_user_id", userId)
+      .eq("user_id", postUserId)
+      .eq("type", "repost");
+
+    if (error) {
+      throw new Error(error.message);
+    }
   }
-  if (data) return data;
 };
 
 /** like 관련 실행, 취소 */

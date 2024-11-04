@@ -14,13 +14,13 @@ export const REPOST_LIST = [
   },
 ];
 
-function RepostModal() {
+function RepostModal({ postUserId }: { postUserId: string }) {
   const { setIsModalOpen, modal } = usePostStore();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: () => insertRepost(modal.postId, user?.id),
+    mutationFn: () => insertRepost(modal.postId, user?.id, postUserId),
     // 낙관적 업데이트
     onMutate: async () => {
       // 업데이트 전 타임라인 데이터

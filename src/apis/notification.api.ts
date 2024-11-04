@@ -16,9 +16,11 @@ export const getNotification = (userId: string) => {
       }
     )
     .subscribe((state) => {
-      console.log("구독상태: ", state);
+      // console.log("구독상태: ", state);
     });
   return () => {
     supabase.removeChannel(channel);
   };
 };
+
+const getLikeNoti = () => {};
