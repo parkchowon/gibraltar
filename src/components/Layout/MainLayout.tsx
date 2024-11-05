@@ -1,17 +1,13 @@
 "use client";
 import PostBox from "@/app/(provider)/(root)/home/_components/PostBox/PostBox";
 import SideProfile from "@/app/(provider)/(root)/home/_components/SideProfile";
-import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
 import SearchBar from "@/app/(provider)/(root)/home/_components/SearchBar";
-import { usePostStore } from "@/stores/post.store";
 import { PropsWithChildren } from "react";
 import SideBar from "../SideBar";
 
 function MainLayout({ children }: PropsWithChildren) {
-  const { isModalOpen, modal } = usePostStore();
   return (
     <div className="relative w-screen w-m-[1920px] h-screen overflow-auto">
-      {isModalOpen && <RepostModal postUserId={modal.postUserId} />}
       {/* 사이드 바 */}
       <section className="fixed left-[15.5%] top-[11.7%] w-[10.3%]">
         <SideBar />

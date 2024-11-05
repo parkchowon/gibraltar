@@ -9,16 +9,13 @@ type ModalType = {
 
 type PostType = {
   isModalOpen: boolean;
-  isRepostClick: boolean;
   modal: ModalType;
   setIsModalOpen: () => void;
   setModal: (value: ModalType) => void;
-  setRepostClick: () => void;
 };
 
 export const usePostStore = create<PostType>((set) => ({
   isModalOpen: false,
-  isRepostClick: false,
   modal: { postId: "", postUserId: "", top: 0, left: 0 },
   setIsModalOpen: () =>
     set((prev) => {
@@ -27,9 +24,5 @@ export const usePostStore = create<PostType>((set) => ({
   setModal: (position) =>
     set(() => {
       return { modal: position };
-    }),
-  setRepostClick: () =>
-    set((prev) => {
-      return { isRepostClick: !prev.isRepostClick };
     }),
 }));

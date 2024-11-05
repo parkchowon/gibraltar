@@ -1,7 +1,7 @@
 import { useLikeMutation, useRepostMutation } from "@/hooks/usePostMutation";
 import { usePostStore } from "@/stores/post.store";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type PostReactionProps = {
   postId: string;
@@ -22,7 +22,7 @@ function PostReactButton({
   const { setIsModalOpen, setModal } = usePostStore();
 
   const [reactionClick, setReactionClick] = useState<boolean>(false);
-  
+
   // repost, like 낙관적 업데이트
   const { mutate: repostMutate } = useRepostMutation();
   const { mutate: likeMutate } = useLikeMutation();
@@ -56,8 +56,8 @@ function PostReactButton({
         setReactionClick(false);
         return repostMutate({ postId, userId: userId, postUserId });
       }
-      setIsModalOpen();
       const currentBtn = e.currentTarget.getBoundingClientRect();
+      setIsModalOpen();
       setModal({
         postId: postId,
         postUserId: postUserId,

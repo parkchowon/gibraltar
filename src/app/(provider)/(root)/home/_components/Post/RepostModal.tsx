@@ -1,6 +1,7 @@
 import { insertRepost } from "@/apis/post.api";
 import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
+import ReactDOM from "react-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const REPOST_LIST = [
@@ -14,13 +15,13 @@ export const REPOST_LIST = [
   },
 ];
 
-function RepostModal({ postUserId }: { postUserId: string }) {
-  const { setIsModalOpen, modal } = usePostStore();
+function RepostModal() {
+  const { modal, setIsModalOpen } = usePostStore();
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: () => insertRepost(modal.postId, user?.id, postUserId),
+    mutationFn: () => insertRepost(modal.postId, user?.id, modal.postUserId),
     // 낙관적 업데이트
     onMutate: async () => {
       // 업데이트 전 타임라인 데이터
@@ -46,14 +47,17 @@ function RepostModal({ postUserId }: { postUserId: string }) {
     e.stopPropagation();
     if (user) {
       if (text === "재게시") {
+        setIsModalOpen();
         mutate();
       }
     }
-    setIsModalOpen();
   };
 
-  return (
-    <div onClick={setIsModalOpen} className={`fixed w-screen h-full z-30`}>
+  return ReactDOM.createPortal(
+    <div
+      onClick={() => setIsModalOpen()}
+      className={`fixed inset-0 w-screen h-full z-30`}
+    >
       <div
         className="absolute flex flex-col w-[80px] h-fit rounded-xl bg-white"
         style={{ top: `${modal.top}px`, left: `${modal.left}px` }}
@@ -70,7 +74,8 @@ function RepostModal({ postUserId }: { postUserId: string }) {
           );
         })}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

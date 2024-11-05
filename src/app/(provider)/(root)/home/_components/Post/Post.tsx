@@ -9,6 +9,8 @@ import PostReactButton from "./PostReactButton";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useState } from "react";
 import PostCommentModal from "./PostCommentModal";
+import RepostModal from "./RepostModal";
+import { usePostStore } from "@/stores/post.store";
 
 type PostProps = {
   post: PostType;
@@ -18,6 +20,7 @@ type PostProps = {
 function Post({ post }: PostProps) {
   const router = useRouter();
   const { user, userData } = useAuth();
+  const { isModalOpen } = usePostStore();
 
   // comment modal 여닫기
   const [commentClick, setCommentClick] = useState<boolean>(false);
@@ -78,6 +81,7 @@ function Post({ post }: PostProps) {
 
   return (
     <>
+      {isModalOpen && <RepostModal />}
       {commentClick && (
         <PostCommentModal post={post} setCommentClick={setCommentClick} />
       )}
