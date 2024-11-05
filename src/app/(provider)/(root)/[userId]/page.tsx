@@ -1,12 +1,12 @@
 "use client";
 import MainLayout from "@/components/Layout/MainLayout";
-import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
 import ProfileDetail from "./_components/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
 import UserPost from "./_components/UserPost";
 import UserTab from "./_components/UserTab";
+import ArrowBtn from "@/assets/icons/arrow.svg";
 
 function ProfilePage() {
   const pathname = usePathname();
@@ -19,12 +19,7 @@ function ProfilePage() {
       <div className="px-6 pt-[4%]">
         <div className="flex gap-8 items-center">
           <button>
-            <Image
-              alt="arrow"
-              width={15}
-              height={13.7}
-              src={"/icons/arrow.svg"}
-            />
+            <ArrowBtn width="15" height="13.7" />
           </button>
           <p className="font-semibold">홈으로</p>
         </div>

@@ -7,9 +7,8 @@ import PostImage from "./PostImage";
 import PostVideo from "./PostVideo";
 import PostReactButton from "./PostReactButton";
 import PostLoading from "@/components/Loading/PostLoading";
-import { useEffect } from "react";
-import { getNotification } from "@/apis/notification.api";
-import { useNotifications } from "@/hooks/useNotifiactions";
+import { useState } from "react";
+import PostCommentModal from "./PostCommentModal";
 
 type PostProps = {
   post: PostType;
@@ -20,6 +19,9 @@ function Post({ post }: PostProps) {
   const router = useRouter();
   const { user, userData } = useAuth();
 
+  // comment modal 여닫기
+  const [commentClick, setCommentClick] = useState<boolean>(false);
+
   // tag 배열
   const tags = post.post_tags ? post.post_tags : [];
 
@@ -27,11 +29,12 @@ function Post({ post }: PostProps) {
   const postDate = post.created_at.split("T")[0];
   const postTime = post.created_at.split("T")[1].slice(0, 8);
 
-  // post 배열
+  // post media 배열
   const jsonString = JSON.stringify(post.images);
   const images = JSON.parse(jsonString) as string[];
   const isImageType = images && images[0].includes("image");
 
+  // repost 클릭 data
   const repostReaction = {
     number: post.reposts.length,
     type: "repost",
@@ -41,6 +44,7 @@ function Post({ post }: PostProps) {
       false,
   };
 
+  // like 클릭 data
   const likeReaction = {
     number: post.likes.length,
     type: "like",
@@ -61,7 +65,8 @@ function Post({ post }: PostProps) {
   // 멘션 누를 시
   const handleCommentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-  }; 
+    setCommentClick(true);
+  };
 
   if (!user) {
     router.push("/login");
@@ -72,85 +77,90 @@ function Post({ post }: PostProps) {
   }
 
   return (
-    <div
-      onClick={handlePostClick}
-      className={`flex flex-col w-full px-6 ${
-        post.isReposted ? "pt-1 pb-4" : "py-4"
-      }  cursor-pointer bg-gray-200 hover:bg-gray-100`}
-    >
-      {post.isReposted && (
-        <p className="text-sm ml-16 text-gray-400">
-          {post.reposted_by === "" || post.reposted_by === userData?.nickname
-            ? "재게시했습니다"
-            : `${post.reposted_by} 님이 리트윗 함`}
-        </p>
+    <>
+      {commentClick && (
+        <PostCommentModal post={post} setCommentClick={setCommentClick} />
       )}
-      <div className="flex">
-        <div className="relative w-[46px] h-[46px] aspect-square rounded-full">
-          <Image
-            fill
-            src={post.user.profile_url}
-            alt="profile"
-            objectFit="cover"
-            className="absolute rounded-full max-h-[46px]"
-            onClick={handleProfileClick}
-          />
-        </div>
-
-        <div className="ml-6 w-full">
-          <div className="flex items-center">
-            <p className="font-semibold">{post.user.nickname}</p>
-            <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
-            {/* <p>{postDate.split("-").join("/")}</p> */}
+      <div
+        onClick={handlePostClick}
+        className={`flex flex-col w-full px-6 ${
+          post.isReposted ? "pt-1 pb-4" : "py-4"
+        }  cursor-pointer bg-gray-200 hover:bg-gray-100`}
+      >
+        {post.isReposted && (
+          <p className="text-sm ml-16 text-gray-400">
+            {post.reposted_by === "" || post.reposted_by === userData?.nickname
+              ? "재게시했습니다"
+              : `${post.reposted_by} 님이 리트윗 함`}
+          </p>
+        )}
+        <div className="flex">
+          <div className="relative w-[46px] h-[46px] aspect-square rounded-full">
+            <Image
+              fill
+              src={post.user.profile_url}
+              alt="profile"
+              objectFit="cover"
+              className="absolute rounded-full max-h-[46px]"
+              onClick={handleProfileClick}
+            />
           </div>
-          <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
-          {/* 미디어 */}
-          {images && (
-            // TODO: image (아직 화면이 없음)
-            <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-              {isImageType ? (
-                <PostImage images={images} />
-              ) : (
-                <PostVideo images={images} />
-              )}
+
+          <div className="ml-6 w-full">
+            <div className="flex items-center">
+              <p className="font-semibold">{post.user.nickname}</p>
+              <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
+              {/* <p>{postDate.split("-").join("/")}</p> */}
             </div>
-          )}
-          {/* 태그 */}
-          {tags.length !== 0 && <PostTag tagList={tags} />}
-          <div className="flex gap-6 mt-[7px] items-center">
-            {/* 댓글 */}
-            <div className="flex">
-              <button
-                onClick={handleCommentClick}
-                className="flex rounded-full p-1 hover:bg-gray-300"
-              >
-                <Image
-                  alt="icon"
-                  width={18}
-                  height={18}
-                  src={"/icons/post_chat.svg"}
-                />
-              </button>
-              <p>{post.comments?.length}</p>
+            <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
+            {/* 미디어 */}
+            {images && (
+              // TODO: image (아직 화면이 없음)
+              <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
+                {isImageType ? (
+                  <PostImage images={images} />
+                ) : (
+                  <PostVideo images={images} />
+                )}
+              </div>
+            )}
+            {/* 태그 */}
+            {tags.length !== 0 && <PostTag tagList={tags} />}
+            <div className="flex gap-6 mt-[7px] items-center">
+              {/* 댓글 */}
+              <div className="flex">
+                <button
+                  onClick={handleCommentClick}
+                  className="flex rounded-full p-1 hover:bg-gray-300"
+                >
+                  <Image
+                    alt="icon"
+                    width={18}
+                    height={18}
+                    src={"/icons/post_chat.svg"}
+                  />
+                </button>
+                <p>{post.comments?.length}</p>
+              </div>
+              {/* 재게시 */}
+              <PostReactButton
+                postId={post.id}
+                postUserId={post.user.id}
+                userId={user?.id}
+                reaction={repostReaction}
+              />
+              {/* 하트 */}
+              <PostReactButton
+                postId={post.id}
+                postUserId={post.user.id}
+                userId={user?.id}
+                reaction={likeReaction}
+              />
             </div>
-            {/* 재게시 */}
-            <PostReactButton
-              postId={post.id}
-              postUserId={post.user.id}
-              userId={user?.id}
-              reaction={repostReaction}
-            />
-            {/* 하트 */}
-            <PostReactButton
-              postId={post.id}
-              postUserId={post.user.id}
-              userId={user?.id}
-              reaction={likeReaction}
-            />
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

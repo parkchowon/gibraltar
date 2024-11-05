@@ -1,5 +1,5 @@
 import { getRecommendedUsers } from "@/apis/profile.api";
-import ArrowBtn from "@/assets/icons/arrow.svg";
+import ArrowBtn from "@/assets/icons/arrow_head.svg";
 import { useAuth } from "@/contexts/auth.context";
 import { useProfileStore } from "@/stores/profile.store";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ function FollowUser() {
   const { userData } = useAuth();
   const { bio, favoriteTeam, playChamps, playStyle } = useProfileStore();
 
-  const { followMutation, unFollowMutation} = useFollow()
+  const { followMutation, unFollowMutation } = useFollow();
 
   const { isPending, data: FollowingList } = useQuery({
     queryKey: ["recommendedUsers"],
@@ -47,11 +47,17 @@ function FollowUser() {
 
   // 팔로우, 언팔로우 버튼
   const handleFollowClick = (idx: number) => {
-    if(FollowingList && userData && FollowingList[idx].user){
-      if(FollowingList[idx].isFollowing){
-        return unFollowMutation.mutate({followingId: userData.id, userId:FollowingList[idx].user.id})
-      }else {
-        return followMutation.mutate({followingId: userData.id, userId:FollowingList[idx].user.id})
+    if (FollowingList && userData && FollowingList[idx].user) {
+      if (FollowingList[idx].isFollowing) {
+        return unFollowMutation.mutate({
+          followingId: userData.id,
+          userId: FollowingList[idx].user.id,
+        });
+      } else {
+        return followMutation.mutate({
+          followingId: userData.id,
+          userId: FollowingList[idx].user.id,
+        });
       }
     }
   };
@@ -149,10 +155,10 @@ function FollowUser() {
                   ) : null}
                   {/* TODO: 같은 게임 성향(즐겜/빡겜) */}
                   <button
-                    onClick={()=>handleFollowClick(idx)}
+                    onClick={() => handleFollowClick(idx)}
                     className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
                   >
-                    {follow.isFollowing ? "언팔로우": "팔로우"}
+                    {follow.isFollowing ? "언팔로우" : "팔로우"}
                   </button>
                   <div className="absolute bottom-[22px] flex gap-[8px]">
                     {FollowingList.map((card, index) => (

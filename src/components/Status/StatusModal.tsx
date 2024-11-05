@@ -1,18 +1,6 @@
 import { USER_STATUS } from "@/constants/status";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import UserStatus from "./UserStatus";
-import { userStatusUpdate } from "@/apis/auth.api";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
 import { useStatusMutation } from "@/hooks/useStatusMutation";
 
 function StatusModal({
