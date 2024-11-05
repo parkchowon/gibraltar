@@ -12,9 +12,11 @@ function PostCommentModal({
   post: PostType;
   setCommentClick: Dispatch<SetStateAction<boolean>>;
 }) {
+  // 홈으로 버튼 누르면
   const handleBackClick = () => {
     setCommentClick(false);
   };
+
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex justify-center">
       <div
@@ -29,7 +31,7 @@ function PostCommentModal({
           <p>홈으로</p>
         </div>
         <Post post={post} />
-        <CommentInput postId={post.id} />
+        <CommentInput postId={post.id} setCommentClick={setCommentClick} />
       </div>
     </div>,
     document.body

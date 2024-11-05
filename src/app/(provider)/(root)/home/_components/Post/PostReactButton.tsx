@@ -1,7 +1,7 @@
 import { useLikeMutation, useRepostMutation } from "@/hooks/usePostMutation";
 import { usePostStore } from "@/stores/post.store";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type PostReactionProps = {
   postId: string;

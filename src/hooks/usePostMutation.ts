@@ -1,5 +1,15 @@
-import { clickLike, deleteRepost, fetchPostDetail } from "@/apis/post.api";
-import { LikesFnType, PostType, RepostFnType } from "@/types/home.type";
+import {
+  clickLike,
+  createPost,
+  deleteRepost,
+  fetchPostDetail,
+} from "@/apis/post.api";
+import {
+  CreatePostType,
+  LikesFnType,
+  PostType,
+  RepostFnType,
+} from "@/types/home.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // post 리포스트 mutation
@@ -46,6 +56,31 @@ export const useLikeMutation = () => {
         queryClient.setQueryData(["timelineData"], {
           ...prevTimeline,
           likes: newState,
+        });
+      }
+      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["timelineData"],
+      });
+    },
+  });
+};
+
+// comments useMutation
+export const useCommentMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ comment }: { comment: CreatePostType }) =>
+      createPost(comment),
+    onMutate: async (newState) => {
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+      if (prevTimeline) {
+        queryClient.setQueryData(["timelineData"], {
+          ...prevTimeline,
+          comments: newState,
         });
       }
       return () => queryClient.setQueryData(["timelineData"], prevTimeline);
