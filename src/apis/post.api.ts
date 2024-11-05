@@ -7,6 +7,7 @@ import { sortDataByTime } from "@/utils/sortDataByTime";
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   let postMediaURLs = null;
 
+  // storage 저장 먼저
   try {
     // image가 있는 post일 시
     if (post.images && post.images.length > 0) {
@@ -52,6 +53,7 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
     })
     .select()
     .single();
+
   if (error) {
     console.error("포스팅 저장 실패: ", error.message);
   }
@@ -63,6 +65,7 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       post_id: data.id,
       tag_id: tag.id,
     }));
+
     // post_tags에도 저장
     const { data: tagData, error: tagError } = await supabase
       .from("post_tags")
@@ -70,6 +73,8 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
     if (tagError) {
       console.error(tagError);
     }
+
+    // TODO: comment일 시, notification에 insert 하는 로직 추가
     console.log("포스팅 저장 성공", tagData);
   }
 };

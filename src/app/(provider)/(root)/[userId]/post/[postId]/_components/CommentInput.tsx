@@ -49,7 +49,6 @@ function CommentInput({
     }
   }, [mutation.isPending]);
 
-  // TODO: 댓글도 낙관적 업데이트 적용해서 빠른 업데이트 되게 하기
   // 댓글 작성 완료 버튼
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,6 +62,7 @@ function CommentInput({
         images: null, //나중에 사진 넣을때 여기에
       };
       setComment("");
+      // 낙관적 업데이트
       mutation.mutate({ comment: newComment });
     }
   };
