@@ -22,7 +22,7 @@ function PostReactButton({
   const { setIsModalOpen, setModal } = usePostStore();
 
   const [reactionClick, setReactionClick] = useState<boolean>(false);
-
+  
   // repost, like 낙관적 업데이트
   const { mutate: repostMutate } = useRepostMutation();
   const { mutate: likeMutate } = useLikeMutation();
@@ -40,6 +40,7 @@ function PostReactButton({
     tag: string
   ) => {
     e.stopPropagation();
+
     // 마음 누를 시 로직
     if (tag === "like") {
       if (!reactionClick) {

@@ -9,6 +9,7 @@ import PostReactButton from "./PostReactButton";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useEffect } from "react";
 import { getNotification } from "@/apis/notification.api";
+import { useNotifications } from "@/hooks/useNotifiactions";
 
 type PostProps = {
   post: PostType;
@@ -60,16 +61,7 @@ function Post({ post }: PostProps) {
   // 멘션 누를 시
   const handleCommentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-  };
-
-  useEffect(() => {
-    if (post.user) {
-      const unsubscribe = getNotification(post.user.id);
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, [post.user]);
+  }; 
 
   if (!user) {
     router.push("/login");
