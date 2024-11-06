@@ -11,6 +11,7 @@ import { useState } from "react";
 import PostCommentModal from "./PostCommentModal";
 import RepostModal from "./RepostModal";
 import { usePostStore } from "@/stores/post.store";
+import ProfileBtn from "@/components/ProfileBtn";
 
 type PostProps = {
   post: PostType;
@@ -59,12 +60,6 @@ function Post({ post }: PostProps) {
     router.push(`/${post.user_id}/post/${post.id}`);
   };
 
-  // 프로필 클릭 시
-  const handleProfileClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    e.stopPropagation();
-    router.push(`/${post.user_id}`);
-  };
-
   // 멘션 누를 시
   const handleCommentClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -99,17 +94,10 @@ function Post({ post }: PostProps) {
           </p>
         )}
         <div className="flex">
-          <div className="relative w-[46px] h-[46px] aspect-square rounded-full">
-            <Image
-              fill
-              src={post.user.profile_url}
-              alt="profile"
-              objectFit="cover"
-              className="absolute rounded-full max-h-[46px]"
-              onClick={handleProfileClick}
-            />
-          </div>
-
+          <ProfileBtn
+            profileUrl={post.user.profile_url}
+            userId={post.user.id}
+          />
           <div className="ml-6 w-full">
             <div className="flex items-center">
               <p className="font-semibold">{post.user.nickname}</p>

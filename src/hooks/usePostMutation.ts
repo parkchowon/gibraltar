@@ -95,7 +95,7 @@ export const useCommentMutation = () => {
 
 // post 세부 페이지 timeline에서 불러오기
 export const usePostDetail = (postId: string) => {
-  return useQuery<PostType>({
+  return useQuery({
     queryKey: ["post", postId],
     queryFn: () => fetchPostDetail(postId),
   });

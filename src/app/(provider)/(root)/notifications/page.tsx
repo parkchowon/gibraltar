@@ -7,20 +7,26 @@ import { getNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
 import { NotiType } from "@/types/notification";
+import Post from "../home/_components/Post/Post";
 
 function NotificationPage() {
   const { user } = useAuth();
 
+  // TODO: infinityQuery로 무한스크롤링 로직으로 refactoring하기
   const { data, isPending, error } = useQuery({
-    queryKey: ["notificationList", user?.id],
-    queryFn: () => getNotification(user?.id),
-    initialData: [],
+    queryKey: ["notificationList"],
+    queryFn: () => {
+      if (user) {
+        return getNotification(user.id);
+      }
+    },
   });
 
   if (error) {
     console.log(error);
   }
 
+  // TODO: 같은 post에 여러명 겹치면 겹쳐지게 하는 로직 작성..
   const renderingNotificationItem = (noti: NotiType) => {
     switch (noti.type) {
       case "repost":
@@ -28,7 +34,9 @@ function NotificationPage() {
       case "like":
         return <RepostItem notification={noti} />;
       case "follow":
-        return <FollowItem />;
+        return <FollowItem notification={noti} />;
+      case "comment":
+        if (noti.comment) return <Post post={noti.comment} />;
       default:
         return <RepostItem notification={noti} />;
     }

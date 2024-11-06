@@ -1,6 +1,6 @@
 import { NotiType } from "@/types/notification";
-import Image from "next/image";
 import React from "react";
+import ProfileBtn from "@/components/ProfileBtn";
 
 function RepostItem({ notification }: { notification: NotiType }) {
   return (
@@ -8,14 +8,10 @@ function RepostItem({ notification }: { notification: NotiType }) {
       key={notification.id}
       className="flex w-full px-[25px] py-[15px] gap-6"
     >
-      <div className="relative w-[46px] h-[46px] rounded-full bg-gray-50 flex-shrink-0">
-        <Image
-          src={notification.reacted_user_profile_url}
-          alt="profile image"
-          fill
-          className="absolute object-cover rounded-full"
-        />
-      </div>
+      <ProfileBtn
+        userId={notification.reacted_user_id}
+        profileUrl={notification.reacted_user_profile_url}
+      />
       <div className="flex flex-col flex-grow gap-2.5">
         <p className="text-base">
           <span className="font-bold">

@@ -1,15 +1,27 @@
-import React from "react";
+import { checkFollow } from "@/apis/follow.api";
+import { NotiType } from "@/types/notification";
+import { useQuery } from "@tanstack/react-query";
+import ProfileBtn from "../../../../../components/ProfileBtn";
 
-function FollowItem() {
+function FollowItem({ notification }: { notification: NotiType }) {
+  const { data, isPending } = useQuery({
+    queryKey: ["followCheck"],
+    queryFn: () =>
+      checkFollow(notification.reacted_user_id, notification.user_id),
+  });
+
   return (
     <div className="flex items-center w-full px-[25px] py-[15px] gap-6">
-      <div className="w-[46px] h-[46px] rounded-full bg-gray-50 flex-shrink-0"></div>
+      <ProfileBtn
+        userId={notification.reacted_user_id}
+        profileUrl={notification.reacted_user_profile_url}
+      />
       <p>
-        <span className="font-bold">유저 1923</span> 님이 회원님을 팔로우하기
-        시작했습니다.
+        <span className="font-bold">{notification.reacted_user_nickname}</span>{" "}
+        님이 회원님을 팔로우하기 시작했습니다.
       </p>
       <button className="text-sm font-semibold px-9 py-2.5 ml-auto bg-gray-50 rounded-[10px]">
-        팔로우
+        {isPending ? "" : data ? "팔로잉" : "팔로우"}
       </button>
     </div>
   );

@@ -29,3 +29,15 @@ export const deleteFollow = async (userId: string, followingId: string) => {
     .eq("reacted_user_id", userId)
     .eq("user_id", followingId);
 };
+
+export const checkFollow = async (followerId: string, followingId: string) => {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("id")
+    .eq("follower_id", followerId)
+    .eq("following_id", followingId)
+    .single();
+  if (error) console.error(error.message);
+
+  return !!data;
+};

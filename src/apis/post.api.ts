@@ -1,6 +1,11 @@
 import supabase from "@/supabase/client";
 import { TagRow } from "@/types/database";
-import { CreatePostType, LikesFnType, RepostFnType } from "@/types/home.type";
+import {
+  CreatePostType,
+  LikesFnType,
+  PostType,
+  RepostFnType,
+} from "@/types/home.type";
 import { sortDataByTime } from "@/utils/sortDataByTime";
 
 /** post를 생성하기 */
@@ -218,7 +223,7 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
 
       return {
         ...post,
-        isReposted: repostedCheck?.isReposted,
+        isReposted: repostedCheck ? repostedCheck.isReposted : false,
         reposted_by: repostedUser,
         timeline_at: repostedTime,
         comments: postComments,
@@ -428,37 +433,39 @@ export const getUserBookmark = async (userId: string, page: number) => {
 };
 
 // 클릭한 post 정보 하나 불러오기
-export const fetchPostDetail = async (postId: string) => {
-  const [postResult, repostsResult, likesResult, commentsResult] =
-    await Promise.all([
-      supabase
-        .from("posts")
-        .select(
-          "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name))"
-        )
-        .eq("id", postId)
-        .single(),
-      supabase
-        .from("reposts")
-        .select("post_id, comment, reposted_by, reposted_at")
-        .eq("post_id", postId),
-      supabase.from("likes").select("post_id, user_id").eq("post_id", postId),
-      supabase.from("posts").select("*").eq("parent_post_id", postId),
-    ]);
+export const fetchPostDetail = async (
+  postId: string
+): Promise<PostType | undefined> => {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
+      )
+      .eq("id", postId)
+      .single();
 
-  const { data, error } = postResult;
-  const { data: reposts, error: reactsError } = repostsResult;
-  const { data: likes, error: likesError } = likesResult;
-  const { data: comments, error: commentError } = commentsResult;
+    if (error) throw new Error(error.message);
 
-  const post = Array.isArray(data) ? data[0] : data;
+    const { data: commentData, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .eq("parent_post_id", postId);
 
-  return {
-    ...post,
-    reposts: reposts || undefined,
-    likes: likes || undefined,
-    comments: comments || undefined,
-  };
+    if (commentError) throw new Error(commentError.message);
+
+    const result = {
+      ...data,
+      isReposted: false,
+      reposted_by: "",
+      timeline_at: data ? data.created_at : "",
+      comments: commentData || [],
+    };
+
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // tag 리스트 불러오기
