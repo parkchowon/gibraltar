@@ -1,17 +1,32 @@
+import { NotiType } from "@/types/notification";
+import Image from "next/image";
 import React from "react";
 
-function RepostItem() {
+function RepostItem({ notification }: { notification: NotiType }) {
   return (
-    <div className="flex w-full px-[25px] py-[15px] gap-6">
-      <div className="w-[46px] h-[46px] rounded-full bg-gray-50 flex-shrink-0"></div>
+    <div
+      key={notification.id}
+      className="flex w-full px-[25px] py-[15px] gap-6"
+    >
+      <div className="relative w-[46px] h-[46px] rounded-full bg-gray-50 flex-shrink-0">
+        <Image
+          src={notification.reacted_user_profile_url}
+          alt="profile image"
+          fill
+          className="absolute object-cover rounded-full"
+        />
+      </div>
       <div className="flex flex-col flex-grow gap-2.5">
         <p className="text-base">
-          <span className="font-bold">유저 1293</span> 님이 회원님의 포스트를
-          재게시했습니다.
+          <span className="font-bold">
+            {notification.reacted_user_nickname}
+          </span>{" "}
+          님이 회원님의 포스트를
+          {notification.type === "repost" ? " 재게시 했습" : " 마음에 들어 합"}
+          니다.
         </p>
         <p className=" line-clamp-2 text-gray-400">
-          트윗을 써보았어요 ㅋㅋ 아 근데 그건 진짜 개웃겼음 트윗을
-          써보았어요트윗을 써보았어요 ㅋㅋ 아 근데 그건 진짜 개웃겼음 트윗을아
+          {notification.related_post_content}
         </p>
       </div>
     </div>

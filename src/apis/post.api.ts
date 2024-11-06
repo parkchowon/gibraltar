@@ -7,9 +7,9 @@ import { sortDataByTime } from "@/utils/sortDataByTime";
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   let postMediaURLs = null;
 
-  // storage 저장 먼저
+  /** storage에 미디어 저장 */
   try {
-    // image가 있는 post일 시
+    // image가 있는 post일 시에만 storage에 저장
     if (post.images && post.images.length > 0) {
       const filePaths = post.images.map((image) => {
         const type = image.type.startsWith("video/") ? "video" : "image";
@@ -28,8 +28,9 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       const isSuccess = uploadResults.every(
         (result) => result && result.error === null
       );
+
       if (!isSuccess) {
-        console.error("업로드 중에 에러가 생김");
+        throw new Error("storage에 미디어 저장 중 오류");
       }
 
       postMediaURLs = filePaths.map((filePath) => {
@@ -38,44 +39,73 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       });
     }
   } catch (error) {
-    // 오류, 실패 시 catch해서 끝냄.
     console.error("post image 저장중 오류:", error);
-    throw error;
   }
 
-  const { data, error } = await supabase
-    .from("posts")
-    .insert({
-      content: post.content,
-      images: postMediaURLs || null,
-      user_id: post.user_id,
-      parent_post_id: post.parent_post_id,
-    })
-    .select()
-    .single();
+  /** supabase table에 저장하는 로직 */
+  try {
+    // posts 테이블에 post 저장
+    const { data, error } = await supabase
+      .from("posts")
+      .insert({
+        content: post.content,
+        images: postMediaURLs || null,
+        user_id: post.user_id,
+        parent_post_id: post.parent_post_id,
+      })
+      .select()
+      .single();
 
-  if (error) {
-    console.error("포스팅 저장 실패: ", error.message);
-  }
-
-  // tag가 있을 시,
-  if (tags && data) {
-    // post_tags에 들어갈 row
-    const postTagTableRow = tags.map((tag) => ({
-      post_id: data.id,
-      tag_id: tag.id,
-    }));
-
-    // post_tags에도 저장
-    const { data: tagData, error: tagError } = await supabase
-      .from("post_tags")
-      .insert(postTagTableRow);
-    if (tagError) {
-      console.error(tagError);
+    if (error) {
+      throw new Error(error.message);
     }
 
-    // TODO: comment일 시, notification에 insert 하는 로직 추가
-    console.log("포스팅 저장 성공", tagData);
+    // tag가 있을 시 post_tags 테이블에 tag들 저장
+    if (tags && data) {
+      const postTagTableRow = tags.map((tag) => ({
+        post_id: data.id,
+        tag_id: tag.id,
+      }));
+
+      const { data: tagData, error: tagError } = await supabase
+        .from("post_tags")
+        .insert(postTagTableRow);
+      if (tagError) {
+        throw new Error(tagError.message);
+      }
+    }
+
+    // comment일시 notifications 테이블에 저장
+    if (post.parent_post_id) {
+      // post의 user id를 받아옴
+      const { data: postUser, error: postUserError } = await supabase
+        .from("posts")
+        .select("users (id)")
+        .eq("id", post.parent_post_id)
+        .single();
+      if (postUserError) {
+        throw new Error(postUserError.message);
+      }
+
+      // post의 user id가 있을 시에 notifications에 저장
+      if (postUser && postUser.users) {
+        const { data: notiData, error: notiError } = await supabase
+          .from("notifications")
+          .insert({
+            reacted_user_id: post.user_id,
+            type: "comment",
+            user_id: postUser?.users?.id,
+            is_read: false,
+            mentioned_post_id: data.id,
+            related_post_id: post.parent_post_id,
+          });
+        if (notiError) {
+          throw new Error(notiError.message);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

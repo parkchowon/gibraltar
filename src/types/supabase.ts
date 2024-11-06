@@ -408,7 +408,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_notifications_with_details: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          reacted_user_id: string
+          related_post_id: string
+          created_at: string
+          mentioned_post_id: string
+          type: string
+          is_read: boolean
+          reacted_user_nickname: string
+          reacted_user_profile_url: string
+          related_post_content: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
