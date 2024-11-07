@@ -84,7 +84,7 @@ export type Database = {
       notifications: {
         Row: {
           created_at: string
-          id: number
+          id: string
           is_read: boolean
           mentioned_post_id: string | null
           reacted_user_id: string
@@ -94,7 +94,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           is_read?: boolean
           mentioned_post_id?: string | null
           reacted_user_id: string
@@ -104,7 +104,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           is_read?: boolean
           mentioned_post_id?: string | null
           reacted_user_id?: string
@@ -411,6 +411,8 @@ export type Database = {
       get_notifications_with_details: {
         Args: {
           p_user_id: string
+          p_notification_size?: number
+          p_cursor?: string
         }
         Returns: {
           id: string

@@ -2,7 +2,7 @@
 import MainLayout from "@/components/Layout/MainLayout";
 import RepostItem from "./_components/RepostItem";
 import FollowItem from "./_components/FollowItem";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
@@ -12,14 +12,20 @@ import Post from "../home/_components/Post/Post";
 function NotificationPage() {
   const { user } = useAuth();
 
-  // TODO: infinityQuery로 무한스크롤링 로직으로 refactoring하기
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error } = useInfiniteQuery({
     queryKey: ["notificationList"],
-    queryFn: () => {
+    queryFn: ({ pageParam }: { pageParam: string }) => {
       if (user) {
-        return getNotification(user.id);
+        return getNotification(user.id, pageParam);
       }
     },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || lastPage.length < 20) {
+        return undefined;
+      }
+      return lastPage[lastPage.length - 1].created_at;
+    },
+    initialPageParam: new Date().toISOString(),
   });
 
   if (error) {
@@ -54,9 +60,11 @@ function NotificationPage() {
       <div className="w-full h-[77px] bg-gray-300" />
       <div className="px-6 w-full divide-y-[1px] divide-gray-300">
         {data &&
-          data.map((item) => {
-            console.log(item);
-            return renderingNotificationItem(item);
+          data.pages &&
+          data.pages.map((page) => {
+            return page?.map((noti) => {
+              return renderingNotificationItem(noti);
+            });
           })}
       </div>
     </MainLayout>

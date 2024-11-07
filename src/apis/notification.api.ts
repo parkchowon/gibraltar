@@ -2,12 +2,16 @@ import supabase from "@/supabase/client";
 import { fetchPostDetail } from "./post.api";
 import { PostType } from "@/types/home.type";
 
-export const getNotification = async (userId: string) => {
+const NOTIFICATION_SIZE = 20;
+
+export const getNotification = async (userId: string, pageParam: string) => {
   try {
     const { data, error } = await supabase.rpc(
       "get_notifications_with_details",
       {
         p_user_id: userId,
+        p_notification_size: NOTIFICATION_SIZE,
+        p_cursor: pageParam,
       }
     );
 
