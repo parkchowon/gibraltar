@@ -36,7 +36,6 @@ export const getNotification = async (userId: string, pageParam: string) => {
       commentPosts.map((post) => [post?.id, post])
     );
 
-    console.log(commentPostsMap);
     const notiWithPost = data.map((noti) => {
       const comment =
         noti.type === "comment"

@@ -1,8 +1,12 @@
 import { NotiType } from "@/types/notification";
 import React from "react";
 import ProfileBtn from "@/components/ProfileBtn";
+type RepostItemProps = {
+  notification: NotiType;
+  nicknames?: (string | undefined)[];
+};
 
-function RepostItem({ notification }: { notification: NotiType }) {
+function RepostItem({ notification, nicknames }: RepostItemProps) {
   return (
     <div
       key={notification.id}
@@ -15,7 +19,9 @@ function RepostItem({ notification }: { notification: NotiType }) {
       <div className="flex flex-col flex-grow gap-2.5">
         <p className="text-base">
           <span className="font-bold">
-            {notification.reacted_user_nickname}
+            {nicknames
+              ? nicknames.map((nick) => nick)
+              : notification.reacted_user_nickname}
           </span>{" "}
           님이 회원님의 포스트를
           {notification.type === "repost" ? " 재게시 했습" : " 마음에 들어 합"}

@@ -9,6 +9,7 @@ import PostLoading from "@/components/Loading/PostLoading";
 import { NotiType } from "@/types/notification";
 import Post from "../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
+import { groupBy } from "lodash";
 
 function NotificationPage() {
   const { user } = useAuth();
@@ -41,6 +42,10 @@ function NotificationPage() {
     console.log(error);
   }
 
+  const allNoti = data?.pages.flat() || [];
+  const groupByType = groupBy(allNoti, "type");
+  const groupedLikes = groupBy(groupByType["like"], "related_post_id");
+
   // observer로 스크롤 감지
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -69,6 +74,19 @@ function NotificationPage() {
       case "repost":
         return <RepostItem notification={noti} />;
       case "like":
+        const postLikes = groupedLikes[noti.related_post_id];
+        if (postLikes.length > 1) {
+          if (
+            postLikes[0]?.reacted_user_nickname === noti.reacted_user_nickname
+          ) {
+            const nicknames = postLikes.map(
+              (like) => like?.reacted_user_nickname
+            );
+
+            return <RepostItem notification={noti} nicknames={nicknames} />;
+          }
+          return;
+        }
         return <RepostItem notification={noti} />;
       case "follow":
         return <FollowItem notification={noti} />;
