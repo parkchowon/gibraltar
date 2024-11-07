@@ -8,11 +8,20 @@ import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
 import { NotiType } from "@/types/notification";
 import Post from "../home/_components/Post/Post";
+import { useEffect, useRef } from "react";
 
 function NotificationPage() {
   const { user } = useAuth();
+  const loadMoreRef = useRef(null);
 
-  const { data, isPending, error } = useInfiniteQuery({
+  const {
+    data,
+    isPending,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
     queryKey: ["notificationList"],
     queryFn: ({ pageParam }: { pageParam: string }) => {
       if (user) {
@@ -31,6 +40,28 @@ function NotificationPage() {
   if (error) {
     console.log(error);
   }
+
+  // observer로 스크롤 감지
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // TODO: 같은 post에 여러명 겹치면 겹쳐지게 하는 로직 작성..
   const renderingNotificationItem = (noti: NotiType) => {
@@ -67,6 +98,8 @@ function NotificationPage() {
             });
           })}
       </div>
+      <div ref={loadMoreRef} className="h-5" />
+      {isFetchingNextPage && <PostLoading />}
     </MainLayout>
   );
 }
