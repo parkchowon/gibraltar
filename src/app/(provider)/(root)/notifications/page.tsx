@@ -42,9 +42,23 @@ function NotificationPage() {
     console.log(error);
   }
 
+  // 모든 알림 배열
   const allNoti = data?.pages.flat() || [];
-  const groupByType = groupBy(allNoti, "type");
-  const groupedLikes = groupBy(groupByType["like"], "related_post_id");
+
+  // 타입별로 나눈 배열
+  const groupByType = groupBy(allNoti, "type") as Record<string, NotiType[]>;
+
+  // repost 배열을 post 별로 나눔
+  const groupedReposts = groupBy(
+    groupByType["repost"],
+    "related_post_id"
+  ) as Record<string, NotiType[]>;
+
+  // like 배열을 post 별로 나눔
+  const groupedLikes = groupBy(
+    groupByType["like"],
+    "related_post_id"
+  ) as Record<string, NotiType[]>;
 
   // observer로 스크롤 감지
   useEffect(() => {
@@ -72,6 +86,18 @@ function NotificationPage() {
   const renderingNotificationItem = (noti: NotiType) => {
     switch (noti.type) {
       case "repost":
+        const postReposts = groupedReposts[noti.related_post_id];
+        if (postReposts.length > 1) {
+          if (
+            postReposts[0]?.reacted_user_nickname === noti.reacted_user_nickname
+          ) {
+            const nicknames = postReposts.map(
+              (repost) => repost.reacted_user_nickname
+            );
+            return <RepostItem notification={noti} nicknames={nicknames} />;
+          }
+          return;
+        }
         return <RepostItem notification={noti} />;
       case "like":
         const postLikes = groupedLikes[noti.related_post_id];
@@ -80,7 +106,7 @@ function NotificationPage() {
             postLikes[0]?.reacted_user_nickname === noti.reacted_user_nickname
           ) {
             const nicknames = postLikes.map(
-              (like) => like?.reacted_user_nickname
+              (like) => like.reacted_user_nickname
             );
 
             return <RepostItem notification={noti} nicknames={nicknames} />;
