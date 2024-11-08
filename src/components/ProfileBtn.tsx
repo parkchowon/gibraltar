@@ -1,14 +1,30 @@
+import { cva, VariantProps } from "class-variance-authority";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-function ProfileBtn({
-  userId,
-  profileUrl,
-}: {
+const profileVariants = cva("relative aspect-square flex-shrink-0", {
+  variants: {
+    intent: {
+      post: "w-[46px] h-[46px]",
+      two: "w-7 h-7",
+      three: "w-[23px] h-[23px]",
+    },
+  },
+  defaultVariants: {
+    intent: "post",
+  },
+});
+
+export type ProfileVariantsType = VariantProps<typeof profileVariants>;
+
+// 지금 컴포넌트 props type
+type ProfileBtnProps = {
   userId: string;
   profileUrl: string;
-}) {
+} & ProfileVariantsType;
+
+function ProfileBtn({ userId, profileUrl, intent }: ProfileBtnProps) {
   const router = useRouter();
 
   const handleProfileClick = (
@@ -20,13 +36,13 @@ function ProfileBtn({
   return (
     <button
       onClick={handleProfileClick}
-      className="relative w-[46px] h-[46px] rounded-full aspect-square bg-gray-50 flex-shrink-0"
+      className={profileVariants({ intent })}
     >
       <Image
         src={profileUrl}
         alt="profile image"
         fill
-        className="absolute object-cover max-h-[46px] rounded-full"
+        className="absolute object-cover rounded-full"
       />
     </button>
   );

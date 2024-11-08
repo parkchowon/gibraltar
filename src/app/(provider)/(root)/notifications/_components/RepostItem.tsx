@@ -1,27 +1,58 @@
 import { NotiType } from "@/types/notification";
 import React from "react";
 import ProfileBtn from "@/components/ProfileBtn";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/auth.context";
+import NotificationProfile from "./NotificationProfile";
 type RepostItemProps = {
   notification: NotiType;
-  nicknames?: (string | undefined)[];
+  reactedUser?: {
+    nicknames: string[];
+    profileUrls: string[];
+    userIds: string[];
+  };
 };
 
-function RepostItem({ notification, nicknames }: RepostItemProps) {
+function RepostItem({ notification, reactedUser }: RepostItemProps) {
+  const { user } = useAuth();
+  const router = useRouter();
+  const reactionCount = reactedUser?.nicknames.length;
+
+  const nicknames = reactedUser
+    ? reactedUser?.nicknames.length < 5
+      ? reactedUser?.nicknames.join(", ")
+      : `${reactedUser?.nicknames.slice(0, 4).join(", ")}님 외 ${
+          reactionCount ? reactionCount - 4 : 0
+        }명`
+    : false;
+
+  // 알람 클릭
+  const handleNotiClick = () => {
+    router.push(`/${user?.id}/post/${notification.related_post_id}`);
+  };
+
   return (
-    <div
+    <button
       key={notification.id}
-      className="flex w-full px-[25px] py-[15px] gap-6"
+      onClick={handleNotiClick}
+      className="flex w-full px-[25px] py-[15px] gap-6 text-left"
     >
-      <ProfileBtn
-        userId={notification.reacted_user_id}
-        profileUrl={notification.reacted_user_profile_url}
-      />
+      {reactionCount ? (
+        <NotificationProfile
+          reactionCount={reactionCount}
+          profileUrls={reactedUser.profileUrls}
+          userIds={reactedUser.userIds}
+        />
+      ) : (
+        <ProfileBtn
+          userId={notification.reacted_user_id}
+          profileUrl={notification.reacted_user_profile_url}
+        />
+      )}
       <div className="flex flex-col flex-grow gap-2.5">
         <p className="text-base">
           <span className="font-bold">
-            {nicknames
-              ? nicknames.map((nick) => nick)
-              : notification.reacted_user_nickname}
+            {nicknames ? nicknames : notification.reacted_user_nickname}
           </span>{" "}
           님이 회원님의 포스트를
           {notification.type === "repost" ? " 재게시 했습" : " 마음에 들어 합"}
@@ -31,7 +62,7 @@ function RepostItem({ notification, nicknames }: RepostItemProps) {
           {notification.related_post_content}
         </p>
       </div>
-    </div>
+    </button>
   );
 }
 

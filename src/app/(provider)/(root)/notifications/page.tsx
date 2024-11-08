@@ -91,10 +91,20 @@ function NotificationPage() {
           if (
             postReposts[0]?.reacted_user_nickname === noti.reacted_user_nickname
           ) {
-            const nicknames = postReposts.map(
-              (repost) => repost.reacted_user_nickname
+            const reactedUser = postReposts.reduce(
+              (acc, repost) => {
+                acc.nicknames.push(repost.reacted_user_nickname);
+                acc.profileUrls.push(repost.reacted_user_profile_url);
+                acc.userIds.push(repost.reacted_user_id);
+                return acc;
+              },
+              {
+                nicknames: [] as string[],
+                profileUrls: [] as string[],
+                userIds: [] as string[],
+              }
             );
-            return <RepostItem notification={noti} nicknames={nicknames} />;
+            return <RepostItem notification={noti} reactedUser={reactedUser} />;
           }
           return;
         }
@@ -105,11 +115,21 @@ function NotificationPage() {
           if (
             postLikes[0]?.reacted_user_nickname === noti.reacted_user_nickname
           ) {
-            const nicknames = postLikes.map(
-              (like) => like.reacted_user_nickname
-            );
+            const reactedUser = postLikes.reduce(
+              (acc, repost) => {
+                acc.nicknames.push(repost.reacted_user_nickname);
+                acc.profileUrls.push(repost.reacted_user_profile_url);
+                acc.userIds.push(repost.reacted_user_id);
 
-            return <RepostItem notification={noti} nicknames={nicknames} />;
+                return acc;
+              },
+              {
+                nicknames: [] as string[],
+                profileUrls: [] as string[],
+                userIds: [] as string[],
+              }
+            );
+            return <RepostItem notification={noti} reactedUser={reactedUser} />;
           }
           return;
         }
