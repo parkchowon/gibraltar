@@ -6,7 +6,7 @@ import ProfileDetail from "./_components/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
 import UserPost from "./_components/UserPost";
 import UserTab from "./_components/UserTab";
-import ArrowBtn from "@/assets/icons/arrow.svg";
+import BackArrowBtn from "@/components/BackArrowBtn";
 
 function ProfilePage() {
   const pathname = usePathname();
@@ -17,12 +17,7 @@ function ProfilePage() {
   return (
     <MainLayout>
       <div className="px-6 pt-[4%]">
-        <div className="flex gap-8 items-center">
-          <button>
-            <ArrowBtn width="15" height="13.7" />
-          </button>
-          <p className="font-semibold">홈으로</p>
-        </div>
+        <BackArrowBtn intent="profilePage" />
         {/* 프로필 부분 */}
         <ProfileBox userId={userId} />
         {/* 세부프로필 부분 */}

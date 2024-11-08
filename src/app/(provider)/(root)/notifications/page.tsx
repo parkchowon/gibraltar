@@ -12,21 +12,20 @@ import { useEffect, useRef } from "react";
 import { groupBy } from "lodash";
 
 function NotificationPage() {
-  const { user } = useAuth();
+  const { userData, isPending } = useAuth();
   const loadMoreRef = useRef(null);
 
   const {
     data,
-    isPending,
-    error,
+    isPending: isLoading,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
     queryKey: ["notificationList"],
     queryFn: ({ pageParam }: { pageParam: string }) => {
-      if (user) {
-        return getNotification(user.id, pageParam);
+      if (userData) {
+        return getNotification(userData.id, pageParam);
       }
     },
     getNextPageParam: (lastPage) => {
@@ -36,11 +35,8 @@ function NotificationPage() {
       return lastPage[lastPage.length - 1].created_at;
     },
     initialPageParam: new Date().toISOString(),
+    enabled: !!userData,
   });
-
-  if (error) {
-    console.log(error);
-  }
 
   // 모든 알림 배열
   const allNoti = data?.pages.flat() || [];
@@ -82,7 +78,6 @@ function NotificationPage() {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // TODO: 같은 post에 여러명 겹치면 겹쳐지게 하는 로직 작성..
   const renderingNotificationItem = (noti: NotiType) => {
     switch (noti.type) {
       case "repost":
@@ -143,7 +138,7 @@ function NotificationPage() {
     }
   };
 
-  if (isPending)
+  if (isPending || isLoading)
     return (
       <MainLayout>
         <PostLoading />
