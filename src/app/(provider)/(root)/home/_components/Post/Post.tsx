@@ -90,7 +90,7 @@ function Post({ post }: PostProps) {
           <p className="text-sm ml-16 text-gray-400">
             {post.reposted_by === "" || post.reposted_by === userData?.nickname
               ? "재게시했습니다"
-              : `${post.reposted_by} 님이 리트윗 함`}
+              : `${post.reposted_by} 님이 재게시 함`}
           </p>
         )}
         <div className="flex">

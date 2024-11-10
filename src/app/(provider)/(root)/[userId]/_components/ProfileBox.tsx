@@ -6,6 +6,7 @@ import { useFollow } from "@/hooks/useUserFollow";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import ProfileEditModal from "./ProfileEditModal";
 
 type followerType = {
   created_at: string;
@@ -19,6 +20,7 @@ function ProfileBox({ userId }: { userId: string }) {
   const [followers, setFollowers] = useState<followerType[]>([]);
   const [followings, setFollowings] = useState<number>(0);
   const [isFollowing, setIsFollowing] = useState<boolean>();
+  const [editClick, setEditClick] = useState<boolean>(false);
 
   // 지금 프로필 페이지가 내 페이지인지
   const isMyProfile = loginUser && loginUser.id === userId;
@@ -34,18 +36,38 @@ function ProfileBox({ userId }: { userId: string }) {
     },
   });
 
-  // 본인일 시 프로필 편집 로직
+  useEffect(() => {
+    if (data?.followerList) {
+      const followerList = data.followerList;
+      const follower = followerList.filter((follow) => {
+        return follow.follower_id === userId;
+      });
+
+      setFollowers(follower);
+      setFollowings(
+        follower ? followerList.length - follower.length : followerList.length
+      );
+      // 지금 프로필 페이지의 팔로워중에 본인이 있는지에 대해
+      const isFollowing = followerList.find(
+        (follower) => loginUser && follower.follower_id === loginUser.id
+      );
+      setIsFollowing(!!isFollowing);
+    }
+  }, [data, data?.followerList]);
+
+  // 본인일 시 프로필 편집 모달 오픈
   const handleEditClick = () => {
-    // TODO: 프로필 편집 (화면이 없음)
+    setEditClick(true);
   };
 
   // 팔로우, 언팔로우 업데이트를 위한 mutation
   const { followMutation, unFollowMutation } = useFollow();
 
+  if (!data || isPending) return <p>loading...</p>;
+
   // 팔로우 할 시
-  const followerList = data?.followerList;
-  const profileUser = data?.profileUser;
-  const postCount = data?.postCount || 0;
+  const profileUser = data.profileUser;
+  const postCount = data.postCount || 0;
 
   const status = {
     state: profileUser?.status || "상태 표시 안 함",
@@ -89,28 +111,14 @@ function ProfileBox({ userId }: { userId: string }) {
     }
   };
 
-  useEffect(() => {
-    if (followerList) {
-      const follower = followerList.filter((follow) => {
-        return follow.follower_id === userId;
-      });
-
-      setFollowers(follower);
-      setFollowings(
-        follower ? followerList.length - follower.length : followerList.length
-      );
-      // 지금 프로필 페이지의 팔로워중에 본인이 있는지에 대해
-      const isFollowing = followerList.find(
-        (follower) => loginUser && follower.follower_id === loginUser.id
-      );
-      setIsFollowing(!!isFollowing);
-    }
-  }, [data, followerList]);
-
-  if (isPending) return <p>loading...</p>;
-
   return (
     <div className="flex pt-[50px] pb-[5.5%] px-[95px]">
+      {editClick && profileUser && (
+        <ProfileEditModal
+          profileUser={profileUser}
+          setEditClick={setEditClick}
+        />
+      )}
       <div className="relative w-[21.1%] h-[21.1%] mr-[95px] aspect-square">
         <Image
           alt="profile"

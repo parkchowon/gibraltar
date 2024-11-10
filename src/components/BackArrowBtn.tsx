@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import ArrowBtn from "@/assets/icons/arrow.svg";
 import { useRouter } from "next/navigation";
 import { cva, VariantProps } from "class-variance-authority";
@@ -8,6 +8,8 @@ const arrowBtnVariants = cva("flex gap-8", {
     intent: {
       profilePage: "items-center",
       detailPostPage: "w-full py-6 px-[25px]",
+      commentModal: "w-full py-6 px-[25px]",
+      profileEditModal: "",
     },
   },
   defaultVariants: {
@@ -17,18 +19,29 @@ const arrowBtnVariants = cva("flex gap-8", {
 
 export type ArrowBtnVariantsType = VariantProps<typeof arrowBtnVariants>;
 
-type BackArrowBtnProp = ArrowBtnVariantsType;
+type BackArrowBtnProp = {
+  type?: "page" | "modal";
+  setModalClick?: Dispatch<SetStateAction<boolean>>;
+} & ArrowBtnVariantsType;
 
-function BackArrowBtn({ intent }: BackArrowBtnProp) {
+function BackArrowBtn({
+  type = "page",
+  setModalClick,
+  intent,
+}: BackArrowBtnProp) {
   const router = useRouter();
 
   const handleBackClick = () => {
     router.back();
   };
 
+  const handleCloseClick = () => {
+    if (setModalClick) setModalClick(false);
+  };
+
   return (
     <div className={arrowBtnVariants({ intent })}>
-      <button onClick={handleBackClick}>
+      <button onClick={type === "page" ? handleBackClick : handleCloseClick}>
         <ArrowBtn width="15" height="14" />
       </button>
       <p>홈으로</p>

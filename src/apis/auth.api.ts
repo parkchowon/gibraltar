@@ -1,13 +1,19 @@
 import supabase from "@/supabase/client";
 
 export const getUser = async (userId: string) => {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single();
 
-  return data;
+    if (error) throw new Error(error.message);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 export const getFollower = async (userId: string) => {
