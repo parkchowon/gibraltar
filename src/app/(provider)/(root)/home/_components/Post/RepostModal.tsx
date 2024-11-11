@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
 import ReactDOM from "react-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const REPOST_LIST = [
   {
@@ -40,22 +41,25 @@ function RepostModal() {
     },
   });
 
-  const handleRepostClick = async (
+  const handleRepostClick = (
     e: React.MouseEvent<HTMLButtonElement>,
     text: string
   ) => {
     e.stopPropagation();
     if (user) {
       if (text === "재게시") {
-        setIsModalOpen();
+        setIsModalOpen("closed");
         mutate();
+      }
+      if (text === "인용하기") {
+        setIsModalOpen("quote");
       }
     }
   };
 
   return ReactDOM.createPortal(
     <div
-      onClick={() => setIsModalOpen()}
+      onClick={() => setIsModalOpen("closed")}
       className={`fixed inset-0 w-screen h-full z-30`}
     >
       <div
@@ -65,7 +69,9 @@ function RepostModal() {
         {REPOST_LIST.map((repost) => {
           return (
             <button
-              className="px-1 py-2"
+              className={`px-1 py-2 hover:bg-gray-100 ${
+                repost.id === 1 ? "hover:rounded-t-xl" : "hover:rounded-b-xl"
+              }`}
               onClick={(e) => handleRepostClick(e, repost.name)}
               key={repost.id}
             >

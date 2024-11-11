@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import ArrowBtn from "@/assets/icons/arrow.svg";
 import { useRouter } from "next/navigation";
 import { cva, VariantProps } from "class-variance-authority";
+import { usePostStore } from "@/stores/post.store";
 
 const arrowBtnVariants = cva("flex gap-8", {
   variants: {
@@ -30,6 +31,7 @@ function BackArrowBtn({
   intent,
 }: BackArrowBtnProp) {
   const router = useRouter();
+  const { setIsModalOpen } = usePostStore();
 
   const handleBackClick = () => {
     router.back();
@@ -37,6 +39,7 @@ function BackArrowBtn({
 
   const handleCloseClick = () => {
     if (setModalClick) setModalClick(false);
+    else setIsModalOpen("closed");
   };
 
   return (

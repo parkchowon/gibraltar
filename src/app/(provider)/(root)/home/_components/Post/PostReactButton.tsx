@@ -57,7 +57,7 @@ function PostReactButton({
         return repostMutate({ postId, userId: userId, postUserId });
       }
       const currentBtn = e.currentTarget.getBoundingClientRect();
-      setIsModalOpen();
+      setIsModalOpen("repost");
       setModal({
         postId: postId,
         postUserId: postUserId,

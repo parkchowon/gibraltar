@@ -13,6 +13,7 @@ import RepostModal from "./RepostModal";
 import { usePostStore } from "@/stores/post.store";
 import ProfileBtn from "@/components/ProfileBtn";
 import { formatToPostDate } from "@/utils/dateFormatter";
+import PostQuoteModal from "./PostQuoteModal";
 
 type PostProps = {
   post: PostType;
@@ -66,6 +67,20 @@ function Post({ post }: PostProps) {
     setCommentClick(true);
   };
 
+  const modalRendering = () => {
+    if (userData)
+      switch (isModalOpen) {
+        case "repost":
+          return <RepostModal />;
+        case "quote":
+          return <PostQuoteModal userData={userData} post={post} />;
+        case "closed":
+          return;
+        default:
+          return;
+      }
+  };
+
   if (!user) {
     router.push("/login");
   }
@@ -76,7 +91,7 @@ function Post({ post }: PostProps) {
 
   return (
     <>
-      {isModalOpen && <RepostModal />}
+      {modalRendering()}
       {commentClick && (
         <PostCommentModal post={post} setCommentClick={setCommentClick} />
       )}

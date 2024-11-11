@@ -7,20 +7,19 @@ type ModalType = {
   left: number;
 };
 
+type modalType = "repost" | "quote" | "closed";
+
 type PostType = {
-  isModalOpen: boolean;
+  isModalOpen: modalType;
   modal: ModalType;
-  setIsModalOpen: () => void;
+  setIsModalOpen: (value: modalType) => void;
   setModal: (value: ModalType) => void;
 };
 
 export const usePostStore = create<PostType>((set) => ({
-  isModalOpen: false,
+  isModalOpen: "closed",
   modal: { postId: "", postUserId: "", top: 0, left: 0 },
-  setIsModalOpen: () =>
-    set((prev) => {
-      return { isModalOpen: !prev.isModalOpen };
-    }),
+  setIsModalOpen: (value) => set({ isModalOpen: value }),
   setModal: (position) =>
     set(() => {
       return { modal: position };
