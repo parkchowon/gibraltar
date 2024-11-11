@@ -12,6 +12,7 @@ import PostCommentModal from "./PostCommentModal";
 import RepostModal from "./RepostModal";
 import { usePostStore } from "@/stores/post.store";
 import ProfileBtn from "@/components/ProfileBtn";
+import { formatToPostDate } from "@/utils/dateFormatter";
 
 type PostProps = {
   post: PostType;
@@ -30,8 +31,7 @@ function Post({ post }: PostProps) {
   const tags = post.post_tags ? post.post_tags : [];
 
   // post 날짜
-  const postDate = post.created_at.split("T")[0];
-  const postTime = post.created_at.split("T")[1].slice(0, 8);
+  const postTime = formatToPostDate(post.created_at);
 
   // post media 배열
   const jsonString = JSON.stringify(post.images);
@@ -102,7 +102,7 @@ function Post({ post }: PostProps) {
             <div className="flex items-center">
               <p className="font-semibold">{post.user.nickname}</p>
               <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
-              {/* <p>{postDate.split("-").join("/")}</p> */}
+              <p className="text-sm text-gray-500 ml-1.5">{postTime}</p>
             </div>
             <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
             {/* 미디어 */}
