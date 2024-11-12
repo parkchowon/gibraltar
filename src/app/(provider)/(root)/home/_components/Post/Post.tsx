@@ -3,7 +3,7 @@ import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PostTag from "../Tag/PostTag";
-import PostImage from "./PostImage";
+import PostMedia from "./PostMedia";
 import PostVideo from "./PostVideo";
 import PostReactButton from "./PostReactButton";
 import PostLoading from "@/components/Loading/PostLoading";
@@ -103,7 +103,7 @@ function Post({ post }: PostProps) {
             {post.images && (
               // TODO: image (아직 화면이 없음)
               <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-                <PostImage jsons={post.images} />
+                <PostMedia jsons={post.images} />
               </div>
             )}
             {/* 태그 */}

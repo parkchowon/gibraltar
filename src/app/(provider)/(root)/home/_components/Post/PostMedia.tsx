@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import PostVideo from "./PostVideo";
 
-function PostImage({
+function PostMedia({
   jsons,
 }: {
   jsons:
@@ -20,6 +20,7 @@ function PostImage({
   const images = JSON.parse(jsonString) as string[];
   const isImageType = images && images[0].includes("image");
 
+  // image 배열일 시
   if (isImageType) {
     return images.map((image) => {
       return (
@@ -33,9 +34,10 @@ function PostImage({
         </div>
       );
     });
+    // 비디오 일시
   } else {
     return <PostVideo images={images} />;
   }
 }
 
-export default PostImage;
+export default PostMedia;

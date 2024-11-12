@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { usePostStore } from "@/stores/post.store";
 import BackArrowBtn from "@/components/BackArrowBtn";
 import ProfileBtn from "@/components/ProfileBtn";
-import PostImage from "./PostImage";
+import PostMedia from "./PostMedia";
 import { useAuth } from "@/contexts/auth.context";
 
 function PostQuoteModal() {
@@ -57,7 +57,7 @@ function PostQuoteModal() {
                   </p>
                   {quotedPost.images && (
                     <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-                      <PostImage jsons={quotedPost.images} />
+                      <PostMedia jsons={quotedPost.images} />
                     </div>
                   )}
                 </div>
