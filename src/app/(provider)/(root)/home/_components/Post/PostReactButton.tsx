@@ -19,6 +19,7 @@ function PostReactButton({ post, userId, reaction }: PostReactionProps) {
   const [reactionClick, setReactionClick] = useState<boolean>(false);
 
   // repost, like 낙관적 업데이트
+  // TODO: 인용포스트는 재게시를 누르면 재게시했습니다. 가 안뜸.. 뭐지?? (낙관적 업데이트를 다시 고쳐야될듯)
   const { mutate: repostMutate } = useRepostMutation();
   const { mutate: likeMutate } = useLikeMutation();
 
