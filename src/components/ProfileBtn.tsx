@@ -11,6 +11,7 @@ const profileVariants = cva("relative aspect-square flex-shrink-0", {
       three: "w-[23px] h-[23px]",
       edit: "absolute w-[166px] h-[166px] cursor-default",
       quote: "w-[46px] h-[46px] cursor-default",
+      miniQuote: "w-6 h-6 cursor-default",
     },
   },
   defaultVariants: {
@@ -22,18 +23,24 @@ export type ProfileVariantsType = VariantProps<typeof profileVariants>;
 
 // 지금 컴포넌트 props type
 type ProfileBtnProps = {
-  userId: string;
+  userId?: string;
   profileUrl: string;
+  type?: "non-click" | "click";
 } & ProfileVariantsType;
 
-function ProfileBtn({ userId, profileUrl, intent }: ProfileBtnProps) {
+function ProfileBtn({
+  userId,
+  profileUrl,
+  intent,
+  type = "click",
+}: ProfileBtnProps) {
   const router = useRouter();
 
   const handleProfileClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     // 편집때 쓰이는 프로필은 클릭하면 페이지 이동 없게
-    if (intent === "edit" || "quote") return;
+    if (type === "non-click") return;
     e.stopPropagation();
     router.push(`/${userId}`);
   };

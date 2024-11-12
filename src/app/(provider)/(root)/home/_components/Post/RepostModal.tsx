@@ -3,7 +3,8 @@ import { useAuth } from "@/contexts/auth.context";
 import { usePostStore } from "@/stores/post.store";
 import ReactDOM from "react-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { PostType } from "@/types/home.type";
 
 export const REPOST_LIST = [
   {
@@ -20,6 +21,7 @@ function RepostModal() {
   const { modal, setIsModalOpen } = usePostStore();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { mutate } = useMutation({
     mutationFn: () => insertRepost(modal.postId, user?.id, modal.postUserId),
@@ -52,6 +54,7 @@ function RepostModal() {
         mutate();
       }
       if (text === "인용하기") {
+        // router.push(`/home?quote`);
         setIsModalOpen("quote");
       }
     }

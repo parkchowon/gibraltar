@@ -23,7 +23,6 @@ type PostProps = {
 function Post({ post }: PostProps) {
   const router = useRouter();
   const { user, userData } = useAuth();
-  const { isModalOpen } = usePostStore();
 
   // comment modal 여닫기
   const [commentClick, setCommentClick] = useState<boolean>(false);
@@ -33,11 +32,6 @@ function Post({ post }: PostProps) {
 
   // post 날짜
   const postTime = formatToPostDate(post.created_at);
-
-  // post media 배열
-  const jsonString = JSON.stringify(post.images);
-  const images = JSON.parse(jsonString) as string[];
-  const isImageType = images && images[0].includes("image");
 
   // repost 클릭 data
   const repostReaction = {
@@ -67,20 +61,6 @@ function Post({ post }: PostProps) {
     setCommentClick(true);
   };
 
-  const modalRendering = () => {
-    if (userData)
-      switch (isModalOpen) {
-        case "repost":
-          return <RepostModal />;
-        case "quote":
-          return <PostQuoteModal userData={userData} post={post} />;
-        case "closed":
-          return;
-        default:
-          return;
-      }
-  };
-
   if (!user) {
     router.push("/login");
   }
@@ -91,7 +71,6 @@ function Post({ post }: PostProps) {
 
   return (
     <>
-      {modalRendering()}
       {commentClick && (
         <PostCommentModal post={post} setCommentClick={setCommentClick} />
       )}
@@ -121,14 +100,10 @@ function Post({ post }: PostProps) {
             </div>
             <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
             {/* 미디어 */}
-            {images && (
+            {post.images && (
               // TODO: image (아직 화면이 없음)
               <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-                {isImageType ? (
-                  <PostImage images={images} />
-                ) : (
-                  <PostVideo images={images} />
-                )}
+                <PostImage jsons={post.images} />
               </div>
             )}
             {/* 태그 */}
@@ -151,15 +126,13 @@ function Post({ post }: PostProps) {
               </div>
               {/* 재게시 */}
               <PostReactButton
-                postId={post.id}
-                postUserId={post.user.id}
+                post={post}
                 userId={user?.id}
                 reaction={repostReaction}
               />
               {/* 하트 */}
               <PostReactButton
-                postId={post.id}
-                postUserId={post.user.id}
+                post={post}
                 userId={user?.id}
                 reaction={likeReaction}
               />

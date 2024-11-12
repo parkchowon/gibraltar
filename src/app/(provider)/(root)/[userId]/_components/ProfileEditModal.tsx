@@ -51,6 +51,7 @@ function ProfileEditModal({
               profileUrl={profileUser.profile_url}
               userId={profileUser.id}
               intent={"edit"}
+              type="non-click"
             />
           </div>
           <div className="flex flex-col flex-grow gap-3">

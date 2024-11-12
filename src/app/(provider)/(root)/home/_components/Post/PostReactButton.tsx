@@ -1,25 +1,20 @@
 import { useLikeMutation, useRepostMutation } from "@/hooks/usePostMutation";
 import { usePostStore } from "@/stores/post.store";
+import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 type PostReactionProps = {
-  postId: string;
+  post: PostType;
   userId: string | undefined;
-  postUserId: string;
   reaction: {
     number: number;
     type: string;
     byMe: boolean;
   };
 };
-function PostReactButton({
-  postId,
-  userId,
-  postUserId,
-  reaction,
-}: PostReactionProps) {
-  const { setIsModalOpen, setModal } = usePostStore();
+function PostReactButton({ post, userId, reaction }: PostReactionProps) {
+  const { setIsModalOpen, setModal, setQuotedPost } = usePostStore();
 
   const [reactionClick, setReactionClick] = useState<boolean>(false);
 
@@ -45,22 +40,32 @@ function PostReactButton({
     if (tag === "like") {
       if (!reactionClick) {
         setReactionClick(true);
-        return likeMutate({ postId, userId: userId, postUserId });
+        return likeMutate({ postId, userId: userId, postUserId: post.user_id });
       } else {
         setReactionClick(false);
-        return likeMutate({ postId, userId: userId, state: false, postUserId });
+        return likeMutate({
+          postId,
+          userId: userId,
+          state: false,
+          postUserId: post.user_id,
+        });
       }
     } else {
       // 재게시버튼 누를 시
       if (reactionClick) {
         setReactionClick(false);
-        return repostMutate({ postId, userId: userId, postUserId });
+        return repostMutate({
+          postId,
+          userId: userId,
+          postUserId: post.user_id,
+        });
       }
       const currentBtn = e.currentTarget.getBoundingClientRect();
       setIsModalOpen("repost");
+      setQuotedPost(post);
       setModal({
         postId: postId,
-        postUserId: postUserId,
+        postUserId: post.user_id,
         top: currentBtn.top,
         left: currentBtn.left,
       });
@@ -70,7 +75,7 @@ function PostReactButton({
   return (
     <div className="relative flex">
       <button
-        onClick={(e) => handleReactClick(e, postId, reaction.type)}
+        onClick={(e) => handleReactClick(e, post.id, reaction.type)}
         className="flex rounded-full p-1 hover:bg-gray-300"
       >
         <Image
