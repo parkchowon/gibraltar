@@ -1,3 +1,4 @@
+import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import { useAuth } from "@/contexts/auth.context";
 import { useCommentMutation } from "@/hooks/usePostMutation";
 import Image from "next/image";
@@ -59,7 +60,7 @@ function CommentInput({
         content: comment,
         parent_post_id: postId,
         user_id: userData.id,
-        images: null, //나중에 사진 넣을때 여기에
+        images: null, // TODO: 나중에 사진 넣을때 여기에
       };
       setComment("");
       // 낙관적 업데이트
@@ -87,6 +88,7 @@ function CommentInput({
           <textarea
             ref={textRef}
             value={comment}
+            maxLength={MAX_POST_TEXT_LENGTH}
             className="w-full h-auto overflow-hidden resize-none bg-transparent outline-none"
             placeholder="댓글을 입력해주세요."
             onInput={handleInputChange}

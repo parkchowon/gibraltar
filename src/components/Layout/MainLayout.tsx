@@ -5,7 +5,7 @@ import SearchBar from "@/app/(provider)/(root)/home/_components/SearchBar";
 import { PropsWithChildren } from "react";
 import SideBar from "../SideBar";
 import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
-import PostQuoteModal from "@/app/(provider)/(root)/home/_components/Post/PostQuoteModal";
+import QuoteModal from "@/app/(provider)/(root)/home/_components/Post/QuoteModal";
 import { usePostStore } from "@/stores/post.store";
 
 function MainLayout({ children }: PropsWithChildren) {
@@ -16,7 +16,7 @@ function MainLayout({ children }: PropsWithChildren) {
       case "repost":
         return <RepostModal />;
       case "quote":
-        return <PostQuoteModal />;
+        return <QuoteModal />;
       case "closed":
         return;
       default:

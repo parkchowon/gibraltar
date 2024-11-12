@@ -57,6 +57,7 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
         images: postMediaURLs || null,
         user_id: post.user_id,
         parent_post_id: post.parent_post_id,
+        quoted_post_id: post.quoted_post_id,
       })
       .select()
       .single();
@@ -606,4 +607,17 @@ export const fetchCommentInPost = async (postId: string) => {
   });
 
   return enrichedComments || [];
+};
+
+/** 인용알티 한 post 불러오는 함수 */
+export const fetchQuotePost = async (postId: string) => {
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      "user: users (id, nickname, handle, profile_url), content, images, created_at"
+    )
+    .eq("id", postId)
+    .single();
+  if (error) return null;
+  return data;
 };

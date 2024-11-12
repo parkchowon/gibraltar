@@ -11,6 +11,7 @@ import Cancel from "@/assets/icons/cancel_x.svg";
 import TagBox from "./TagBox";
 import SelectTag from "./SelectTag";
 import PostBoxLoading from "@/components/Loading/PostBoxLoading";
+import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -176,6 +177,7 @@ function PostBox() {
           className="h-[134px] bg-transparent focus:outline-none resize-none"
           placeholder="여기에 오버워치 얘기를 적어보세요"
           onChange={handleTextChange}
+          maxLength={MAX_POST_TEXT_LENGTH}
           value={text}
         />
         <div className="flex w-full py-2 overflow-x-hidden gap-x-3">

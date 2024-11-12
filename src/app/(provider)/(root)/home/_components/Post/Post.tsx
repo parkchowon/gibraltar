@@ -4,16 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PostTag from "../Tag/PostTag";
 import PostMedia from "./PostMedia";
-import PostVideo from "./PostVideo";
 import PostReactButton from "./PostReactButton";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useState } from "react";
 import PostCommentModal from "./PostCommentModal";
-import RepostModal from "./RepostModal";
-import { usePostStore } from "@/stores/post.store";
 import ProfileBtn from "@/components/ProfileBtn";
 import { formatToPostDate } from "@/utils/dateFormatter";
-import PostQuoteModal from "./PostQuoteModal";
+import PostQuote from "./PostQuote";
 
 type PostProps = {
   post: PostType;
@@ -106,6 +103,8 @@ function Post({ post }: PostProps) {
                 <PostMedia jsons={post.images} />
               </div>
             )}
+            {/* 인용한 트윗 */}
+            {post.quoted_post_id && <PostQuote postId={post.quoted_post_id} />}
             {/* 태그 */}
             {tags.length !== 0 && <PostTag tagList={tags} />}
             <div className="flex gap-6 mt-[7px] items-center">
