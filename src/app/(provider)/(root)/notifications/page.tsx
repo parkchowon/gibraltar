@@ -133,6 +133,8 @@ function NotificationPage() {
         return <FollowItem notification={noti} />;
       case "comment":
         if (noti.comment) return <Post post={noti.comment} />;
+      case "quote":
+        if (noti.quote) return <Post post={noti.quote} />;
       default:
         return <RepostItem notification={noti} />;
     }

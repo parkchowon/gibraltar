@@ -493,8 +493,9 @@ export const insertRepost = async (
       .from("notifications")
       .insert({
         reacted_user_id: userId,
-        type: "repost",
+        type: is_quoted ? "quote" : "repost",
         related_post_id: postId,
+        mentioned_post_id: postId,
         user_id: postUserId,
         is_read: false,
       });

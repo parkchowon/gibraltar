@@ -17,12 +17,22 @@ export const getNotification = async (userId: string, pageParam: string) => {
 
     if (error) throw new Error(error.message);
 
-    const typeCommentId = data
+    // 댓글 post id 배열
+    const typeCommentIds = data
       .filter((data) => data.type === "comment")
       .map((comment) => comment.mentioned_post_id);
 
+    // 인용 포스트의 id 배열
+    const typeQuoteIds = data
+      .filter((data) => (data.type = "quote"))
+      .map((quote) => quote.mentioned_post_id);
+
     const commentPostsResults = await Promise.allSettled(
-      typeCommentId.map(fetchPostDetail)
+      typeCommentIds.map(fetchPostDetail)
+    );
+
+    const quotePostsResults = await Promise.all(
+      typeQuoteIds.map(fetchPostDetail)
     );
 
     const commentPosts = commentPostsResults
@@ -41,10 +51,18 @@ export const getNotification = async (userId: string, pageParam: string) => {
         noti.type === "comment"
           ? commentPostsMap.get(noti.mentioned_post_id) || null
           : null;
+      // TODO: 로직에 오류있음!
+      const quote =
+        noti.type === "quote"
+          ? quotePostsResults.find(
+              (quote) => quote?.id === noti.mentioned_post_id
+            )
+          : null;
+
       return {
         ...noti,
-        isComment: noti.type === "comment",
         comment: comment,
+        quote: quote,
       };
     });
     return notiWithPost;
