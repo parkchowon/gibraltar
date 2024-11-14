@@ -2,6 +2,7 @@ type Repost = {
   post_id: string;
   reposted_at: string;
   reposted_by: string;
+  is_quoted: boolean;
 };
 
 type Post = {

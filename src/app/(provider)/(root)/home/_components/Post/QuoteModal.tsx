@@ -52,12 +52,13 @@ function QuoteModal() {
 
   const handleQuoteSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (userData) {
+    if (userData && quotedPost) {
       const newPost = {
         content: quoteText,
         images: null, // TODO: 이미지 나중에 넣을 때
         parent_post_id: null,
-        quoted_post_id: quotedPost?.id,
+        quoted_post_id: quotedPost.id,
+        post_user_id: quotedPost.user?.id || "",
         user_id: userData.id,
       };
       setQuoteText("");

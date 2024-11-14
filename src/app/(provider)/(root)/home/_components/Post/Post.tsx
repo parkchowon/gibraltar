@@ -30,13 +30,18 @@ function Post({ post }: PostProps) {
   // post 날짜
   const postTime = formatToPostDate(post.created_at);
 
+  const repostedByMe = post.reposts.find(
+    (post) => post.reposted_by === user?.id
+  );
+  const isQuotedByMe = repostedByMe?.is_quoted;
+
   // repost 클릭 data
   const repostReaction = {
     number: post.reposts.length,
     type: "repost",
     byMe:
       (post.isReposted && post.reposted_by === "") ||
-      !!post.reposts.find((post) => post.reposted_by === user?.id) ||
+      (!!repostedByMe && !isQuotedByMe) ||
       false,
   };
 

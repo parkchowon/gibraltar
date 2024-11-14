@@ -23,6 +23,15 @@ export type CreatePostType = {
   user_id: string;
 };
 
+export type CreateQuoteType = {
+  content: string;
+  images: File[] | null;
+  parent_post_id: string | null;
+  quoted_post_id: string;
+  post_user_id: string;
+  user_id: string;
+};
+
 type Tag = {
   tag_name: string;
 };

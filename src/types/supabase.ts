@@ -284,22 +284,22 @@ export type Database = {
       };
       reposts: {
         Row: {
-          comment: string | null;
           id: number;
+          is_quoted: boolean;
           post_id: string;
           reposted_at: string;
           reposted_by: string;
         };
         Insert: {
-          comment?: string | null;
           id?: number;
+          is_quoted?: boolean;
           post_id: string;
           reposted_at?: string;
           reposted_by: string;
         };
         Update: {
-          comment?: string | null;
           id?: number;
+          is_quoted?: boolean;
           post_id?: string;
           reposted_at?: string;
           reposted_by?: string;

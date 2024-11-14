@@ -145,8 +145,9 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
     // 팔로하고 있는 사람들(본인 포함)이 rt한 postId 목록
     let repostsQuery = supabase
       .from("reposts")
-      .select("post_id, reposted_at, reposted_by")
+      .select("post_id, reposted_at, reposted_by, is_quoted")
       .in("reposted_by", followerList)
+      .eq("is_quoted", false)
       .order("reposted_at", { ascending: false })
       .limit(POST_SIZE);
 
@@ -188,7 +189,7 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
     const { data: posts, error: postError } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
       )
       .in("id", orderedPostId)
       .is("parent_post_id", null)
@@ -247,8 +248,9 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
   try {
     let repostsQuery = supabase
       .from("reposts")
-      .select("post_id, reposted_at, reposted_by")
+      .select("post_id, reposted_at, reposted_by, is_quoted")
       .eq("reposted_by", userId)
+      .eq("is_quoted", false)
       .order("reposted_at", { ascending: false })
       .limit(POST_SIZE);
 
@@ -441,7 +443,7 @@ export const fetchPostDetail = async (
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by), likes (user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
       )
       .eq("id", postId)
       .single();
@@ -480,12 +482,12 @@ export const insertRepost = async (
   postId: string,
   userId: string | undefined,
   postUserId: string,
-  comment?: string
+  is_quoted?: boolean
 ) => {
   if (userId) {
     const { data, error } = await supabase
       .from("reposts")
-      .insert({ post_id: postId, reposted_by: userId, comment: comment });
+      .insert({ post_id: postId, reposted_by: userId, is_quoted: is_quoted });
 
     const { data: notiData, error: notiError } = await supabase
       .from("notifications")
