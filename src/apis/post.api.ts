@@ -313,7 +313,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
       .in("id", orderedPostId);
 
@@ -368,7 +368,7 @@ export const getUserMedia = async (userId: string, page: number) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
       .eq("user_id", userId)
       .not("images", "is", null)
@@ -425,7 +425,7 @@ export const getUserBookmark = async (userId: string, page: number) => {
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
       .in("id", likedPostsId)
       .is("parent_post_id", null)
@@ -611,7 +611,7 @@ export const fetchCommentInPost = async (postId: string) => {
   const { data: comments, error } = await supabase
     .from("posts")
     .select(
-      "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, reposted_at), likes (post_id, user_id)"
+      "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
     )
     .eq("parent_post_id", postId);
 
