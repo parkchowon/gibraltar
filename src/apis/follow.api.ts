@@ -5,6 +5,11 @@ export const addFollow = async (userId: string, followingId: string) => {
     .from("followers")
     .insert({ follower_id: userId, following_id: followingId });
 
+  if (data) {
+    console.log("follow 성공");
+  }
+  if (error) return console.error(error.message);
+
   const { data: notiData, error: notiError } = await supabase
     .from("notifications")
     .insert({

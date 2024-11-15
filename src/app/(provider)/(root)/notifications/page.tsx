@@ -22,7 +22,7 @@ function NotificationPage() {
     isFetchingNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
-    queryKey: ["notificationList"],
+    queryKey: ["notificationList", userData?.id],
     queryFn: ({ pageParam }: { pageParam: string }) => {
       if (userData) {
         return getNotification(userData.id, pageParam);
@@ -37,7 +37,6 @@ function NotificationPage() {
     initialPageParam: new Date().toISOString(),
     enabled: !!userData,
   });
-
   // 모든 알림 배열
   const allNoti = data?.pages.flat() || [];
 
@@ -81,16 +80,20 @@ function NotificationPage() {
   const renderingNotificationItem = (noti: NotiType) => {
     switch (noti.type) {
       case "repost":
+        if (!noti.related_post_id) return;
         const postReposts = groupedReposts[noti.related_post_id];
         if (postReposts.length > 1) {
           if (
-            postReposts[0]?.reacted_user_nickname === noti.reacted_user_nickname
+            postReposts[0].reacted_user?.nickname ===
+            noti.reacted_user?.nickname
           ) {
             const reactedUser = postReposts.reduce(
               (acc, repost) => {
-                acc.nicknames.push(repost.reacted_user_nickname);
-                acc.profileUrls.push(repost.reacted_user_profile_url);
-                acc.userIds.push(repost.reacted_user_id);
+                if (repost.reacted_user) {
+                  acc.nicknames.push(repost.reacted_user.nickname);
+                  acc.profileUrls.push(repost.reacted_user.profile_url);
+                  acc.userIds.push(repost.reacted_user_id);
+                }
                 return acc;
               },
               {
@@ -105,17 +108,18 @@ function NotificationPage() {
         }
         return <RepostItem notification={noti} />;
       case "like":
-        const postLikes = groupedLikes[noti.related_post_id];
+        const postLikes = groupedLikes[noti.related_post_id || ""];
         if (postLikes.length > 1) {
           if (
-            postLikes[0]?.reacted_user_nickname === noti.reacted_user_nickname
+            postLikes[0]?.reacted_user?.nickname === noti.reacted_user?.nickname
           ) {
             const reactedUser = postLikes.reduce(
-              (acc, repost) => {
-                acc.nicknames.push(repost.reacted_user_nickname);
-                acc.profileUrls.push(repost.reacted_user_profile_url);
-                acc.userIds.push(repost.reacted_user_id);
-
+              (acc, like) => {
+                if (like.reacted_user) {
+                  acc.nicknames.push(like.reacted_user?.nickname);
+                  acc.profileUrls.push(like.reacted_user.profile_url);
+                  acc.userIds.push(like.reacted_user_id);
+                }
                 return acc;
               },
               {

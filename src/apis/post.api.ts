@@ -81,6 +81,33 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       }
     }
 
+    // quote 일시
+    if (post.quoted_post_id) {
+      // post의 user id를 받아옴
+      const { data: postUser, error: postUserError } = await supabase
+        .from("posts")
+        .select("users (id)")
+        .eq("id", post.quoted_post_id)
+        .single();
+      if (postUserError) {
+        throw new Error(postUserError.message);
+      }
+
+      if (postUser && postUser.users) {
+        const { data: notiData, error: notiError } = await supabase
+          .from("notifications")
+          .insert({
+            reacted_user_id: post.user_id,
+            type: "quote",
+            user_id: postUser.users?.id,
+            is_read: false,
+            mentioned_post_id: data.id,
+            related_post_id: post.parent_post_id,
+          });
+        if (notiError) throw new Error(notiError.message);
+      }
+    }
+
     // comment일시 notifications 테이블에 저장
     if (post.parent_post_id) {
       // post의 user id를 받아옴
@@ -479,23 +506,23 @@ export const getTagList = async () => {
 
 /** repost 관련 실행, 취소 */
 export const insertRepost = async (
-  postId: string,
+  postId: string | null,
   userId: string | undefined,
   postUserId: string,
   is_quoted?: boolean
 ) => {
-  if (userId) {
+  if (userId && postId) {
     const { data, error } = await supabase
       .from("reposts")
       .insert({ post_id: postId, reposted_by: userId, is_quoted: is_quoted });
 
+    if (is_quoted) return;
     const { data: notiData, error: notiError } = await supabase
       .from("notifications")
       .insert({
         reacted_user_id: userId,
-        type: is_quoted ? "quote" : "repost",
+        type: "repost",
         related_post_id: postId,
-        mentioned_post_id: postId,
         user_id: postUserId,
         is_read: false,
       });

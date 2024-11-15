@@ -50,13 +50,13 @@ function FollowUser() {
     if (FollowingList && userData && FollowingList[idx].user) {
       if (FollowingList[idx].isFollowing) {
         return unFollowMutation.mutate({
-          followingId: userData.id,
-          userId: FollowingList[idx].user.id,
+          userId: userData.id,
+          followingId: FollowingList[idx].user.id,
         });
       } else {
         return followMutation.mutate({
-          followingId: userData.id,
-          userId: FollowingList[idx].user.id,
+          userId: userData.id,
+          followingId: FollowingList[idx].user.id,
         });
       }
     }
@@ -98,7 +98,7 @@ function FollowUser() {
               const followTimes = follow.user?.profile[0].play_time as string[];
               return (
                 <div
-                  key={idx}
+                  key={`${follow.user?.id}${follow.score}`}
                   className={`absolute flex-col w-[404px] h-[463px] items-center bg-white top-0 left-0 pt-[35px] px-6 pb-[22px] border border-black rounded-2xl ${
                     idx === cardIndex ? "flex" : "hidden"
                   }`}
@@ -163,7 +163,7 @@ function FollowUser() {
                   <div className="absolute bottom-[22px] flex gap-[8px]">
                     {FollowingList.map((card, index) => (
                       <div
-                        key={idx}
+                        key={card.user?.id}
                         className={`w-1.5 h-1.5 ${
                           cardIndex === index ? "bg-mint" : "bg-gray-400"
                         } rounded-full`}

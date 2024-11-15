@@ -14,10 +14,12 @@ function FollowItem({ notification }: { notification: NotiType }) {
     <div className="flex items-center w-full px-[25px] py-[15px] gap-6">
       <ProfileBtn
         userId={notification.reacted_user_id}
-        profileUrl={notification.reacted_user_profile_url}
+        profileUrl={notification.reacted_user?.profile_url || ""}
       />
       <p>
-        <span className="font-bold">{notification.reacted_user_nickname}</span>{" "}
+        <span className="font-bold">
+          {notification.reacted_user?.nickname || "undefined"}
+        </span>{" "}
         님이 회원님을 팔로우하기 시작했습니다.
       </p>
       {/* TODO: 팔로우 hook 가지고 와서 버튼 누르면 팔로우랑 언팔로우 되게 */}

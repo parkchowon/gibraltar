@@ -89,8 +89,7 @@ export const getRecommendedUsers = async (
       .from("followers")
       .select("*")
       .in("following_id", sameModePlayer)
-      .eq("follower_id", profile.userId)
-      .limit(1),
+      .eq("follower_id", profile.userId),
   ]);
 
   const { data: userResult, error: userError } = user;
@@ -98,6 +97,7 @@ export const getRecommendedUsers = async (
   const { data: styleResult, error: styleError } = style;
   const { data: timeResult, error: timeError } = time;
   const { data: followResult, error: followError } = follow;
+  console.log(followResult);
 
   // 추천 유저 알고리즘
   const calculateScore = (userId: string) => {
@@ -131,7 +131,12 @@ export const getRecommendedUsers = async (
 
   const scoredUsers = sameModePlayer.map((userId) => ({
     user: userResult ? userResult.find((user) => user.id === userId) : null,
-    isFollowing: !!followResult,
+    isFollowing:
+      followResult?.length !== 0
+        ? !!followResult?.map((follow) => {
+            if (follow.follower_id === userId) return follow.id;
+          })
+        : false,
     score: calculateScore(userId),
   }));
 

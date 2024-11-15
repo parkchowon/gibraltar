@@ -46,20 +46,22 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
       ) : (
         <ProfileBtn
           userId={notification.reacted_user_id}
-          profileUrl={notification.reacted_user_profile_url}
+          profileUrl={
+            notification.reacted_user?.profile_url || "/home_line.svg"
+          }
         />
       )}
       <div className="flex flex-col flex-grow gap-2.5">
         <p className="text-base">
           <span className="font-bold">
-            {nicknames ? nicknames : notification.reacted_user_nickname}
+            {nicknames ? nicknames : notification.reacted_user?.nickname}
           </span>{" "}
           님이 회원님의 포스트를
           {notification.type === "repost" ? " 재게시 했습" : " 마음에 들어 합"}
           니다.
         </p>
         <p className=" line-clamp-2 text-gray-400">
-          {notification.related_post_content}
+          {notification.related_post?.content}
         </p>
       </div>
     </button>
