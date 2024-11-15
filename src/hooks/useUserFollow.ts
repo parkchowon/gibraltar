@@ -21,6 +21,7 @@ export const useFollow = () => {
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
 
       // 미리 UI 적용
+      // TODO: 팔로우하면 낙관적 업데이트 되게 "" 이부분 수정하기
       queryClient.setQueryData(["profileData"], "");
       queryClient.setQueryData(["timelineData"], "");
       // 에러나면 이전 것을..
