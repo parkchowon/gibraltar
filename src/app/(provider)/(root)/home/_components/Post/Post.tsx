@@ -11,6 +11,8 @@ import PostCommentModal from "./PostCommentModal";
 import ProfileBtn from "@/components/ProfileBtn";
 import { formatToPostDate } from "@/utils/dateFormatter";
 import PostQuote from "./PostQuote";
+import OptionDot from "@/assets/icons/more_option_dot.svg";
+import OptionModal from "../../../../../../components/OptionModal/OptionModal";
 
 type PostProps = {
   post: PostType;
@@ -23,6 +25,8 @@ function Post({ post }: PostProps) {
 
   // comment modal 여닫기
   const [commentClick, setCommentClick] = useState<boolean>(false);
+  const [optionClick, setOptionClick] = useState<boolean>(false);
+  const [optionPos, setOptionPos] = useState<number[]>([]);
 
   // tag 배열
   const tags = post.post_tags ? post.post_tags : [];
@@ -55,6 +59,15 @@ function Post({ post }: PostProps) {
   // 포스트 클릭 시
   const handlePostClick = () => {
     router.push(`/${post.user_id}/post/${post.id}`);
+  };
+
+  // 더보기 버튼 클릭 시
+  const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    const currentBtn = e.currentTarget.getBoundingClientRect();
+
+    setOptionPos([currentBtn.top, currentBtn.left]);
+    setOptionClick(!optionClick);
   };
 
   // 멘션 누를 시
@@ -99,6 +112,20 @@ function Post({ post }: PostProps) {
               <p className="font-semibold">{post.user.nickname}</p>
               <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
               <p className="text-sm text-gray-500 ml-1.5">{postTime}</p>
+              {optionClick && (
+                <OptionModal
+                  post={{ postId: post.id, userId: post.user.id }}
+                  pos={optionPos}
+                  setOptionClick={setOptionClick}
+                />
+              )}
+              {/* 트윗 더보기 ... 버튼 */}
+              <button
+                onClick={handleOptionClick}
+                className="grid place-items-center w-6 h-6 ml-auto rotate-90 rounded-full hover:bg-gray-300"
+              >
+                <OptionDot width="7" height="12" />
+              </button>
             </div>
             <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
             {/* 미디어 */}
