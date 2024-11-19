@@ -4,14 +4,15 @@ import { useAuth } from "@/contexts/auth.context";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-function SearchBar() {
+function SearchBar({ searchValue }: { searchValue?: string }) {
   const { isPending } = useAuth();
   const router = useRouter();
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>(
+    searchValue ? searchValue : ""
+  );
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(searchText);
     router.push(`/search?word=${searchText}&tab=popular`);
   };
 
@@ -26,8 +27,9 @@ function SearchBar() {
       className="flex w-full h-[58px] px-8 py-[15px] gap-3 rounded-full bg-gray-300"
     >
       <input
+        value={searchText}
         onChange={handleInputChange}
-        className="flex-grow bg-inherit outline-none"
+        className="flex-grow min-w-0 bg-inherit outline-none"
         placeholder="검색어를 입력하세요"
       />
       <button>
