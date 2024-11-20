@@ -79,7 +79,9 @@ function SearchTab() {
           );
         })}
       </div>
-      <div className="flex flex-col h-fit px-6 divide-y-2 divide-gray-300 bg-gray-200">
+      <div
+        className={`flex flex-col h-fit divide-y-2 divide-gray-300 bg-gray-200`}
+      >
         {data &&
           (tabName === "user"
             ? (data as SearchUserType).map((user) => {
