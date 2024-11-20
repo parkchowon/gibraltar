@@ -1,5 +1,5 @@
 import { checkFollow } from "@/apis/follow.api";
-import { NotiType } from "@/types/notification";
+import { NotiType } from "@/types/notification.type";
 import { useQuery } from "@tanstack/react-query";
 import ProfileBtn from "../../../../../components/ProfileBtn";
 

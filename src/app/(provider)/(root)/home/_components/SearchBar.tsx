@@ -4,7 +4,13 @@ import { useAuth } from "@/contexts/auth.context";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-function SearchBar({ searchValue }: { searchValue?: string }) {
+function SearchBar({
+  searchValue,
+  tab,
+}: {
+  searchValue?: string;
+  tab?: string;
+}) {
   const { isPending } = useAuth();
   const router = useRouter();
   const [searchText, setSearchText] = useState<string>(
@@ -13,6 +19,9 @@ function SearchBar({ searchValue }: { searchValue?: string }) {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (tab) {
+      return router.push(`/search?word=${searchText}&tab=${tab}`);
+    }
     router.push(`/search?word=${searchText}&tab=popular`);
   };
 

@@ -6,7 +6,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
-import { NotiType } from "@/types/notification";
+import { NotiType } from "@/types/notification.type";
 import Post from "../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
 import { groupBy } from "lodash";

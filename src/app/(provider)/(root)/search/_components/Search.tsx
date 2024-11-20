@@ -7,11 +7,12 @@ import SearchTab from "./SearchTab";
 function Search() {
   const params = useSearchParams();
   const searchText = params.get("word") ?? "";
+  const tab = params.get("tab") ?? "";
 
   return (
     <MainLayout>
       <div className="w-full px-12 py-8">
-        <SearchBar searchValue={searchText} />
+        <SearchBar searchValue={searchText} tab={tab} />
       </div>
       <SearchTab />
     </MainLayout>

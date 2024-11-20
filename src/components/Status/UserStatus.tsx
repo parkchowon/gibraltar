@@ -1,4 +1,4 @@
-import { StatusTypeProps } from "@/types/status";
+import { StatusTypeProps } from "@/types/status.type";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 

@@ -10,6 +10,7 @@ import React from "react";
 import Post from "../../home/_components/Post/Post";
 import { useAuth } from "@/contexts/auth.context";
 import UserItem from "@/components/UserItem";
+import { SearchPostType, SearchUserType } from "@/types/search.type";
 
 const TAB = [
   { name: "인기순", path: "popular" },
@@ -28,18 +29,23 @@ function SearchTab() {
 
   const { data, isPending } = useQuery({
     queryKey: ["searchPost", `${tabName}${searchText}`],
-    queryFn: () => {
-      switch (tabName) {
-        case "popular":
-          return fetchPopularSearch(searchText, user?.id);
-        case "recent":
-          return fetchRecentSearch(searchText, user?.id);
-        case "user":
-          return fetchUserSearch(searchText, user?.id);
-        default:
-          fetchPopularSearch(searchText, user?.id);
+    queryFn: (): Promise<SearchPostType | SearchUserType> => {
+      if (user) {
+        switch (tabName) {
+          case "popular":
+            return fetchPopularSearch(searchText, user.id);
+          case "recent":
+            return fetchRecentSearch(searchText, user.id);
+          case "user":
+            return fetchUserSearch(searchText, user.id);
+          default:
+            throw new Error(`Invalid tab name: ${tabName}`);
+        }
+      } else {
+        throw new Error("there is no user return to home");
       }
     },
+    enabled: !!user?.id,
   });
 
   const handleClickTab = (tab: string) => {
@@ -74,12 +80,14 @@ function SearchTab() {
         })}
       </div>
       <div className="flex flex-col h-fit px-6 divide-y-2 divide-gray-300 bg-gray-200">
-        {data?.map((post) => {
-          if (tabName !== "user") {
-            return <Post key={post.id} post={post} />;
-          }
-          return <UserItem key={post.id} />;
-        })}
+        {data &&
+          (tabName === "user"
+            ? (data as SearchUserType).map((user) => {
+                return <UserItem key={user.id} user={user} />;
+              })
+            : (data as SearchPostType).map((post) => {
+                return <Post key={post.id} post={post} />;
+              }))}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { NotiType } from "@/types/notification";
+import { NotiType } from "@/types/notification.type";
 import React from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import { useRouter } from "next/navigation";
