@@ -7,9 +7,11 @@ import SideBar from "../SideBar";
 import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
 import QuoteModal from "@/app/(provider)/(root)/home/_components/Post/QuoteModal";
 import { usePostStore } from "@/stores/post.store";
+import { usePathname } from "next/navigation";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
+  const path = usePathname();
 
   const modalRendering = () => {
     switch (isModalOpen) {
@@ -24,6 +26,7 @@ function MainLayout({ children }: PropsWithChildren) {
     }
   };
 
+  console.log(path);
   return (
     <>
       {modalRendering()}
@@ -38,7 +41,7 @@ function MainLayout({ children }: PropsWithChildren) {
         </section>
         {/* 오른쪽 프로필 */}
         <section className="fixed w-[18.3%] left-[75.1%] top-[7.12%]">
-          <SearchBar />
+          {path !== "/search" ? <SearchBar /> : null}
           <SideProfile />
           <PostBox />
         </section>

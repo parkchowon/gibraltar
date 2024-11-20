@@ -29,6 +29,8 @@ function SearchBar({
     setSearchText(e.currentTarget.value);
   };
 
+  console.log(tab);
+
   if (isPending) return <SearchBarLoading />;
   return (
     <form

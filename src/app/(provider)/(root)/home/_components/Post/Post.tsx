@@ -92,12 +92,13 @@ function Post({ post }: PostProps) {
       <div
         onClick={handlePostClick}
         className={`flex flex-col w-full px-6 ${
-          post.isReposted ? "pt-1 pb-4" : "py-4"
+          post.isReposted && post.reposted_by ? "pt-1 pb-4" : "py-4"
         }  cursor-pointer bg-gray-200 hover:bg-gray-100`}
       >
-        {post.isReposted && (
+        {post.isReposted && post.reposted_by && (
           <p className="text-sm ml-16 text-gray-400">
-            {post.reposted_by === "" || post.reposted_by === userData?.nickname
+            {post.reposted_by === userData?.nickname ||
+            post.reposted_by === user?.id
               ? "재게시했습니다"
               : `${post.reposted_by} 님이 재게시 함`}
           </p>

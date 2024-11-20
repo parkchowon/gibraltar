@@ -242,7 +242,7 @@ export const getPost = async (userId: string | null, cursor: string | null) => {
       if (repostedCheck?.isReposted) {
         repostedUser =
           nicknames.find((nick) => nick.id === repostedCheck.reposted_by)
-            ?.nickname || "";
+            ?.nickname || userId;
         repostedTime = repostedCheck.created_at;
       }
 
@@ -344,7 +344,7 @@ export const getUserPost = async (userId: string, cursor: string | null) => {
       return {
         ...post,
         isReposted: postCreatedAt?.isReposted || false,
-        reposted_by: userName.nickname || "",
+        reposted_by: userName.nickname,
         timeline_at: post.created_at,
         comments: postComments,
       };
