@@ -4,7 +4,7 @@ import ProfileSetting from "./_components/ProfileSetting";
 
 function ProfileSettingPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<p>loading...</p>}>
       <ProfileSetting />
     </Suspense>
   );
