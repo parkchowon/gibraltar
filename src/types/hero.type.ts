@@ -1,3 +1,4 @@
+import { getRecommendedUsers } from "@/apis/profile.api";
 import { Json } from "./supabase";
 
 export type HeroType = {
@@ -5,7 +6,7 @@ export type HeroType = {
   name: string;
   portrait: string;
   role: "tank" | "damage" | "support";
-}
+};
 
 export type playStyleType = {
   mode: string[];
@@ -16,7 +17,7 @@ export type playStyleType = {
 export type playChampsType = {
   MainChamps: HeroType[];
   selectedChamps: HeroType[];
-}
+};
 
 export type profileType = {
   userId: string;
@@ -24,34 +25,18 @@ export type profileType = {
   playStyle: playStyleType;
   mainChamps?: HeroType[];
   playChamps?: HeroType[];
-  favoriteTeam: string;  
-}
+  favoriteTeam: string;
+};
 
 export type ProfileSettingProps = {
   playStyle: playStyleType;
   putPlayStyle: (value: playStyleType) => void;
-  playChamps:playChampsType;
-  putPlayChamps: (value: playChampsType)=> void;
+  playChamps: playChampsType;
+  putPlayChamps: (value: playChampsType) => void;
   favoriteTeam: string;
   putFavoriteTeam: (value: string) => void;
   bio: string;
-  putBio: (value: string)=>void;
-}
+  putBio: (value: string) => void;
+};
 
-export type RankedUsersType = {
-  user: {
-    id: string;
-    nickname: string;
-    profile_url: string;
-    handle: string;
-    profile: {
-            bio: string;
-            play_style: string;
-            play_mode: Json;
-            play_time: Json;
-            favorite_team: string;
-        }[];
-} | null | undefined;
-isFollowing: boolean;
-  score: number;
-}
+export type RankedUsersType = Awaited<ReturnType<typeof getRecommendedUsers>>;

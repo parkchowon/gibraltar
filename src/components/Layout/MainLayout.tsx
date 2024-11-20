@@ -26,7 +26,6 @@ function MainLayout({ children }: PropsWithChildren) {
     }
   };
 
-  console.log(path);
   return (
     <>
       {modalRendering()}

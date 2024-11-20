@@ -32,7 +32,6 @@ export const getNotification = async (userId: string, cursor: string) => {
       const matchType = typeData?.find((type) => type.id === noti.id)?.type;
       return { ...noti, type: matchType };
     });
-    console.log(typeData);
 
     const typeCommentIds = noti
       .filter((data) => data.type === "comment")
@@ -47,8 +46,6 @@ export const getNotification = async (userId: string, cursor: string) => {
       .filter((data) => data.type === "quote")
       .map((quote) => quote.mentioned_post_id)
       .filter((item) => item !== null);
-
-    console.log(typeQuoteIds);
 
     const quoteResult = await Promise.all(typeQuoteIds.map(fetchPostDetail));
 

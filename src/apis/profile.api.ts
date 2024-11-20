@@ -43,9 +43,7 @@ export const insertProfileSetting = async (profile: profileType) => {
 };
 
 // 첫 프로필 세팅 후 추천 유저 불러오기
-export const getRecommendedUsers = async (
-  profile: profileType
-): Promise<RankedUsersType[] | null> => {
+export const getRecommendedUsers = async (profile: profileType) => {
   const { data: modeResult, error: modeError } = await supabase
     .from("play_modes")
     .select("user_id")
@@ -97,7 +95,6 @@ export const getRecommendedUsers = async (
   const { data: styleResult, error: styleError } = style;
   const { data: timeResult, error: timeError } = time;
   const { data: followResult, error: followError } = follow;
-  console.log(followResult);
 
   // 추천 유저 알고리즘
   const calculateScore = (userId: string) => {
@@ -130,7 +127,7 @@ export const getRecommendedUsers = async (
   };
 
   const scoredUsers = sameModePlayer.map((userId) => ({
-    user: userResult ? userResult.find((user) => user.id === userId) : null,
+    user: userResult?.find((user) => user.id === userId) ?? null,
     isFollowing:
       followResult?.length !== 0
         ? !!followResult?.map((follow) => {
@@ -143,5 +140,6 @@ export const getRecommendedUsers = async (
   const rankedUsers = scoredUsers
     ? scoredUsers.sort((a, b) => b.score - a.score)
     : null;
+
   return rankedUsers;
 };

@@ -94,8 +94,8 @@ function FollowUser() {
         <div className="relative w-[404px] h-[463px]">
           {FollowingList &&
             FollowingList.map((follow, idx) => {
-              const followModes = follow.user?.profile[0].play_mode as string[];
-              const followTimes = follow.user?.profile[0].play_time as string[];
+              const followModes = follow.user?.profile?.play_mode as string[];
+              const followTimes = follow.user?.profile?.play_time as string[];
               return (
                 <div
                   key={`${follow.user?.id}${follow.score}`}
@@ -117,7 +117,7 @@ function FollowUser() {
                     {follow.user?.handle}
                   </p>
                   <p className=" w-full h-12 mb-1.5 text-center">
-                    {follow.user?.profile[0].bio}
+                    {follow.user?.profile?.bio}
                   </p>
 
                   {/* 같은 게임 모드 */}
@@ -144,7 +144,7 @@ function FollowUser() {
                   )}
                   {/* 같은 팀 */}
                   {favoriteTeam !== "없음" &&
-                  favoriteTeam === follow.user?.profile[0].favorite_team ? (
+                  favoriteTeam === follow.user?.profile?.favorite_team ? (
                     <p className="text-gray-500">
                       같은 팀{" "}
                       <span className="font-bold text-black">
