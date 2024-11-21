@@ -35,7 +35,8 @@ function MainLayout({ children }: PropsWithChildren) {
           <SideBar />
         </section>
         {/* 가운데 */}
-        <section className="absolute left-1/2 transform -translate-x-1/2 w-[40.8%] min-h-screen h-auto overflow-auto bg-gray-200">
+        <section className="absolute left-1/2 transform -translate-x-1/2 w-[40.8%] min-h-screen h-auto bg-gray-200">
+          {/* TODO: 여기에 BackBtn fixed로 붙여야될듯 */}
           {children}
         </section>
         {/* 오른쪽 프로필 */}

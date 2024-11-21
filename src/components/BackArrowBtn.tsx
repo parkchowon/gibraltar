@@ -8,7 +8,7 @@ const arrowBtnVariants = cva("flex gap-8", {
   variants: {
     intent: {
       profilePage: "items-center",
-      detailPostPage: "w-full py-6 px-[25px]",
+      detailPostPage: "fixed z-20 bg-inherit w-full py-6 px-[25px]",
       commentModal: "w-full py-6 px-[25px]",
       profileEditModal: "",
     },

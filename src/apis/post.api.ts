@@ -639,6 +639,40 @@ export const fetchCommentInPost = async (postId: string) => {
   return enrichedComments || [];
 };
 
+export const fetchParentsPost = async (postId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
+      )
+      .eq("id", postId)
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    const { data: commentData, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .eq("parent_post_id", postId);
+
+    if (commentError) throw new Error(commentError.message);
+
+    const result = {
+      ...data,
+      isReposted: false,
+      reposted_by: "",
+      timeline_at: data ? data.created_at : "",
+      comments: commentData || [],
+    };
+
+    return result;
+  } catch (e) {
+    console.error(e);
+    return;
+  }
+};
+
 /** 인용알티 한 post 불러오는 함수 */
 export const fetchQuotePost = async (postId: string) => {
   const { data, error } = await supabase
