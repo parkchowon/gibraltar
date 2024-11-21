@@ -58,8 +58,6 @@ function SearchTab() {
     router.push(`${path}${query}`);
   };
 
-  if (isPending) return <PostLoading />;
-
   return (
     <>
       <div className="flex justify-evenly border-y-[1px] border-gray-400">
@@ -82,6 +80,10 @@ function SearchTab() {
       <div
         className={`flex flex-col h-fit divide-y-2 divide-gray-300 bg-gray-200`}
       >
+        {isPending && <PostLoading />}
+        {data?.length === 0 && (
+          <p className="w-full py-20 text-center">검색 결과가 없습니다.</p>
+        )}
         {data &&
           (tabName === "user"
             ? (data as SearchUserType).map((user) => {

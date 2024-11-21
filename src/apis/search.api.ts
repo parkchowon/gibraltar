@@ -1,4 +1,5 @@
 import supabase from "@/supabase/client";
+import { orderedPopular } from "@/utils/orderedPopular";
 
 export const fetchPopularSearch = async (
   searchText: string,
@@ -36,7 +37,10 @@ export const fetchPopularSearch = async (
         comments: postComments,
       };
     });
-    return post;
+
+    // 인기순으로 정렬하는 함수
+    const orderedPost = orderedPopular(post);
+    return orderedPost;
   } catch (error) {
     console.error(error);
     return [];
@@ -88,11 +92,10 @@ export const fetchRecentSearch = async (searchText: string, userId: string) => {
 
 export const fetchUserSearch = async (searchText: string, userId: string) => {
   try {
-    //  userId, profileUrl, nickname, handle, content, follow여부
     const { data, error } = await supabase
       .from("users")
       .select("id, profile_url, nickname, handle, user_profiles(bio)")
-      .ilike("nickname", `%${searchText}%`);
+      .or(`nickname.ilike.%${searchText}%, handle.ilike.%${searchText}%`);
 
     if (error) throw new Error(error.message);
 
