@@ -6,7 +6,7 @@ import {
   PostType,
   RepostFnType,
 } from "@/types/home.type";
-import { sortDataByTime } from "@/utils/sortDataByTime";
+import { sortDataByTime } from "@/utils/sortData";
 
 /** post를 생성하기 */
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {

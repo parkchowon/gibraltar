@@ -1,9 +1,13 @@
 import supabase from "@/supabase/client";
-import { orderedPopular } from "@/utils/orderedPopular";
+import { orderedPopular } from "@/utils/sortData";
 
+const POST_SIZE = 10;
+
+// TODO: 어떻게 타협할건지..
 export const fetchPopularSearch = async (
   searchText: string,
-  userId: string
+  userId: string,
+  pageParams: string | number
 ) => {
   try {
     const { data, error } = await supabase
@@ -47,15 +51,24 @@ export const fetchPopularSearch = async (
   }
 };
 
-export const fetchRecentSearch = async (searchText: string, userId: string) => {
+export const fetchRecentSearch = async (
+  searchText: string,
+  userId: string,
+  pageParams: number
+) => {
   try {
+    const start = (pageParams - 1) * POST_SIZE;
+    const end = pageParams * POST_SIZE - 1;
+
     const { data, error } = await supabase
       .from("posts")
       .select(
         "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
       )
       .ilike("content", `%${searchText}%`)
+      .range(start, end)
       .order("created_at", { ascending: false });
+
     if (error) {
       throw new Error(error.message);
     }
@@ -90,11 +103,18 @@ export const fetchRecentSearch = async (searchText: string, userId: string) => {
   }
 };
 
-export const fetchUserSearch = async (searchText: string, userId: string) => {
+export const fetchUserSearch = async (
+  searchText: string,
+  pageParams: number
+) => {
   try {
+    const start = (pageParams - 1) * POST_SIZE;
+    const end = pageParams * POST_SIZE - 1;
+
     const { data, error } = await supabase
       .from("users")
       .select("id, profile_url, nickname, handle, user_profiles(bio)")
+      .range(start, end)
       .or(`nickname.ilike.%${searchText}%, handle.ilike.%${searchText}%`);
 
     if (error) throw new Error(error.message);

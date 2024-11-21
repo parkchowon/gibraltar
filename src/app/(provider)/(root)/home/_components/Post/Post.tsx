@@ -9,7 +9,7 @@ import PostLoading from "@/components/Loading/PostLoading";
 import { useState } from "react";
 import PostCommentModal from "./PostCommentModal";
 import ProfileBtn from "@/components/ProfileBtn";
-import { formatToPostDate } from "@/utils/dateFormatter";
+import { formatToPostDate } from "@/utils/formatChange";
 import PostQuote from "./PostQuote";
 import OptionDot from "@/assets/icons/more_option_dot.svg";
 import OptionModal from "../../../../../../components/OptionModal/OptionModal";

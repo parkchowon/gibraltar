@@ -1,3 +1,7 @@
+import { NotiType } from "@/types/notification.type";
+import { groupBy } from "lodash";
+
+// post 날짜 표시 함수
 export const formatToPostDate = (postTimeStamp: string) => {
   // 한국 현재 시간
   const now = new Date();
@@ -37,4 +41,24 @@ export const formatToPostDate = (postTimeStamp: string) => {
 
   // 현재 년도가 아닌 post의 time
   return `${postYear}년 ${postYear}월 ${postDay}일`;
+};
+
+// 알림 페이지 reactedUser 데이터 배열 재구성 함수
+export const userDataReducer = (post: NotiType[]) => {
+  const result = post.reduce(
+    (acc, repost) => {
+      if (repost.reacted_user) {
+        acc.nicknames.push(repost.reacted_user.nickname);
+        acc.profileUrls.push(repost.reacted_user.profile_url);
+        acc.userIds.push(repost.reacted_user_id);
+      }
+      return acc;
+    },
+    {
+      nicknames: [] as string[],
+      profileUrls: [] as string[],
+      userIds: [] as string[],
+    }
+  );
+  return result;
 };

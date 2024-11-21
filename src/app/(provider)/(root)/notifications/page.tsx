@@ -10,6 +10,7 @@ import { NotiType } from "@/types/notification.type";
 import Post from "../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
 import { groupBy } from "lodash";
+import { userDataReducer } from "@/utils/formatChange";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
@@ -87,21 +88,7 @@ function NotificationPage() {
             postReposts[0].reacted_user?.nickname ===
             noti.reacted_user?.nickname
           ) {
-            const reactedUser = postReposts.reduce(
-              (acc, repost) => {
-                if (repost.reacted_user) {
-                  acc.nicknames.push(repost.reacted_user.nickname);
-                  acc.profileUrls.push(repost.reacted_user.profile_url);
-                  acc.userIds.push(repost.reacted_user_id);
-                }
-                return acc;
-              },
-              {
-                nicknames: [] as string[],
-                profileUrls: [] as string[],
-                userIds: [] as string[],
-              }
-            );
+            const reactedUser = userDataReducer(postReposts);
             return <RepostItem notification={noti} reactedUser={reactedUser} />;
           }
           return;
@@ -113,21 +100,7 @@ function NotificationPage() {
           if (
             postLikes[0]?.reacted_user?.nickname === noti.reacted_user?.nickname
           ) {
-            const reactedUser = postLikes.reduce(
-              (acc, like) => {
-                if (like.reacted_user) {
-                  acc.nicknames.push(like.reacted_user?.nickname);
-                  acc.profileUrls.push(like.reacted_user.profile_url);
-                  acc.userIds.push(like.reacted_user_id);
-                }
-                return acc;
-              },
-              {
-                nicknames: [] as string[],
-                profileUrls: [] as string[],
-                userIds: [] as string[],
-              }
-            );
+            const reactedUser = userDataReducer(postLikes);
             return <RepostItem notification={noti} reactedUser={reactedUser} />;
           }
           return;

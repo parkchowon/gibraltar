@@ -4,9 +4,9 @@ import {
   fetchUserSearch,
 } from "@/apis/search.api";
 import PostLoading from "@/components/Loading/PostLoading";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Post from "../../home/_components/Post/Post";
 import { useAuth } from "@/contexts/auth.context";
 import UserItem from "@/components/UserItem";
@@ -27,26 +27,64 @@ function SearchTab() {
   const tabName = params.get("tab") ?? "";
   const searchText = params.get("word") ?? "";
 
-  const { data, isPending } = useQuery({
-    queryKey: ["searchPost", `${tabName}${searchText}`],
-    queryFn: (): Promise<SearchPostType | SearchUserType> => {
-      if (user) {
-        switch (tabName) {
-          case "popular":
-            return fetchPopularSearch(searchText, user.id);
-          case "recent":
-            return fetchRecentSearch(searchText, user.id);
-          case "user":
-            return fetchUserSearch(searchText, user.id);
-          default:
-            throw new Error(`Invalid tab name: ${tabName}`);
+  const loadMoreRef = useRef(null);
+
+  // TODO: pageParam에 .. 뭘 넘겨줄건지
+  const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["searchPost", `${tabName}${searchText}`],
+      queryFn: ({ pageParam }): Promise<SearchPostType | SearchUserType> => {
+        if (user) {
+          switch (tabName) {
+            case "popular":
+              return fetchPopularSearch(searchText, user.id, pageParam);
+            case "recent":
+              return fetchRecentSearch(
+                searchText,
+                user.id,
+                pageParam as number
+              );
+            case "user":
+              return fetchUserSearch(searchText, pageParam as number);
+            default:
+              throw new Error(`Invalid tab name: ${tabName}`);
+          }
+        } else {
+          throw new Error("there is no user return to home");
         }
-      } else {
-        throw new Error("there is no user return to home");
+      },
+      getNextPageParam: (lastPage, allPages) => {
+        if (!lastPage || lastPage.length === 0) return undefined;
+        if (tabName === "popular") {
+          return lastPage[lastPage.length - 1].id;
+        }
+        return allPages.length + 1;
+      },
+      initialPageParam: tabName === "popular" ? "" : 1,
+      enabled: !!user?.id,
+    });
+
+  // observer로 스크롤 감지
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
       }
-    },
-    enabled: !!user?.id,
-  });
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleClickTab = (tab: string) => {
     const current = new URLSearchParams(Array.from(params.entries()));
@@ -81,17 +119,23 @@ function SearchTab() {
         className={`flex flex-col h-fit divide-y-2 divide-gray-300 bg-gray-200`}
       >
         {isPending && <PostLoading />}
-        {data?.length === 0 && (
+        {data && data.pages.length === 0 && (
           <p className="w-full py-20 text-center">검색 결과가 없습니다.</p>
         )}
         {data &&
           (tabName === "user"
-            ? (data as SearchUserType).map((user) => {
-                return <UserItem key={user.id} user={user} />;
+            ? data.pages.map((page) => {
+                return (page as SearchUserType).map((user) => {
+                  return <UserItem key={user.id} user={user} />;
+                });
               })
-            : (data as SearchPostType).map((post) => {
-                return <Post key={post.id} post={post} />;
+            : data.pages.map((page) => {
+                return (page as SearchPostType).map((post) => {
+                  return <Post key={post.id} post={post} />;
+                });
               }))}
+        <div ref={loadMoreRef} style={{ height: "20px" }} />
+        {isFetchingNextPage && <PostLoading />}
       </div>
     </>
   );
