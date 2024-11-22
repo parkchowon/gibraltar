@@ -29,7 +29,7 @@ function PostMedia({
             src={image}
             alt="image"
             fill
-            className="absolute object-contain inset-0"
+            className="absolute object-cover inset-0"
           />
         </div>
       );

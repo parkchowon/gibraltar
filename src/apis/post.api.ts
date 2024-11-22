@@ -7,139 +7,80 @@ import {
   RepostFnType,
 } from "@/types/home.type";
 import { sortDataByTime } from "@/utils/sortData";
+import axios from "axios";
 
-/** post를 생성하기 */
 export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   let postMediaURLs = null;
 
-  /** storage에 미디어 저장 */
   try {
-    // image가 있는 post일 시에만 storage에 저장
+    /** storage에 미디어 저장 */
     if (post.images && post.images.length > 0) {
-      const filePaths = post.images.map((image) => {
-        const type = image.type.startsWith("video/") ? "video" : "image";
-        return `${post.user_id}/${type}/${Date.now()}_${image.name}`;
+      const formData = new FormData();
+      post.images.forEach((image) => {
+        formData.append("images", image);
+      });
+      formData.append("user_id", post.user_id);
+
+      // 이미지 업로드 요청
+      const uploadResponse = await axios.post("/api/storage/post", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const uploadPromises = filePaths.map((filePath, idx) => {
-        if (post.images)
-          return supabase.storage
-            .from("posts")
-            .upload(filePath, post.images[idx]);
-      });
+      postMediaURLs = uploadResponse.data.urls; // 서버에서 반환된 URL 배열
 
-      const uploadResults = await Promise.all(uploadPromises);
-
-      const isSuccess = uploadResults.every(
-        (result) => result && result.error === null
-      );
-
-      if (!isSuccess) {
-        throw new Error("storage에 미디어 저장 중 오류");
-      }
-
-      postMediaURLs = filePaths.map((filePath) => {
-        const { data } = supabase.storage.from("posts").getPublicUrl(filePath);
-        return data.publicUrl;
-      });
-    }
-  } catch (error) {
-    console.error("post image 저장중 오류:", error);
-  }
-
-  /** supabase table에 저장하는 로직 */
-  try {
-    // posts 테이블에 post 저장
-    const { data, error } = await supabase
-      .from("posts")
-      .insert({
+      /** posts 테이블에 post 저장 */
+      const { data } = await axios.post("/api/post", {
         content: post.content,
         images: postMediaURLs || null,
         user_id: post.user_id,
         parent_post_id: post.parent_post_id,
         quoted_post_id: post.quoted_post_id,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    // tag가 있을 시 post_tags 테이블에 tag들 저장
-    if (tags && data) {
-      const postTagTableRow = tags.map((tag) => ({
-        post_id: data.id,
-        tag_id: tag.id,
-      }));
-
-      const { data: tagData, error: tagError } = await supabase
-        .from("post_tags")
-        .insert(postTagTableRow);
-      if (tagError) {
-        throw new Error(tagError.message);
-      }
-    }
-
-    // quote 일시
-    if (post.quoted_post_id) {
-      // post의 user id를 받아옴
-      const { data: postUser, error: postUserError } = await supabase
-        .from("posts")
-        .select("users (id)")
-        .eq("id", post.quoted_post_id)
-        .single();
-      if (postUserError) {
-        throw new Error(postUserError.message);
-      }
-
-      if (postUser && postUser.users) {
-        const { data: notiData, error: notiError } = await supabase
-          .from("notifications")
-          .insert({
-            reacted_user_id: post.user_id,
-            type: "quote",
-            user_id: postUser.users?.id,
-            is_read: false,
-            mentioned_post_id: data.id,
-            related_post_id: post.parent_post_id,
-          });
-        if (notiError) throw new Error(notiError.message);
-      }
-    }
-
-    // comment일시 notifications 테이블에 저장
-    if (post.parent_post_id) {
-      // post의 user id를 받아옴
-      const { data: postUser, error: postUserError } = await supabase
-        .from("posts")
-        .select("users (id)")
-        .eq("id", post.parent_post_id)
-        .single();
-      if (postUserError) {
-        throw new Error(postUserError.message);
-      }
-
-      // post의 user id가 있을 시에 notifications에 저장
-      if (postUser && postUser.users) {
-        const { data: notiData, error: notiError } = await supabase
-          .from("notifications")
-          .insert({
-            reacted_user_id: post.user_id,
-            type: "comment",
-            user_id: postUser?.users?.id,
-            is_read: false,
-            mentioned_post_id: data.id,
-            related_post_id: post.parent_post_id,
-          });
-        if (notiError) {
-          throw new Error(notiError.message);
-        }
-      }
+        tags: tags || [],
+      });
     }
   } catch (error) {
     console.error(error);
   }
+
+  // TODO: 알림 생성 route.ts
+
+  // // quote일 시 알림 생성
+  // if (post.quoted_post_id) {
+  //   const { data: postUser } = await axios.get(
+  //     `/api/posts/${post.quoted_post_id}/user`
+  //   );
+
+  //   if (postUser) {
+  //     await axios.post("/api/notifications", {
+  //       reacted_user_id: post.user_id,
+  //       type: "quote",
+  //       user_id: postUser.id,
+  //       is_read: false,
+  //       mentioned_post_id: data.id,
+  //       related_post_id: post.parent_post_id,
+  //     });
+  //   }
+  // }
+
+  // // comment일 시 알림 생성
+  // if (post.parent_post_id) {
+  //   const { data: postUser } = await axios.get(
+  //     `/api/posts/${post.parent_post_id}/user`
+  //   );
+
+  //   if (postUser) {
+  //     await axios.post("/api/notifications", {
+  //       reacted_user_id: post.user_id,
+  //       type: "comment",
+  //       user_id: postUser.id,
+  //       is_read: false,
+  //       mentioned_post_id: data.id,
+  //       related_post_id: post.parent_post_id,
+  //     });
+  //   }
+  // }
 };
 
 /**  user가 팔로하고 있는 모든 유저의 게시글 불러오기 */
