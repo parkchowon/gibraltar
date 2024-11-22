@@ -685,3 +685,16 @@ export const fetchQuotePost = async (postId: string) => {
   if (error) return null;
   return data;
 };
+
+export const deletedPost = async (postId: string, userId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .delete()
+      .eq("id", postId)
+      .eq("user_id", userId);
+    if (error) throw new Error(error.message);
+  } catch (e) {
+    console.error(e);
+  }
+};

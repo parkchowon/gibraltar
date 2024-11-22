@@ -34,11 +34,15 @@ function OptionModal({ post, pos, setOptionClick }: OptionModalProps) {
     <div className="fixed inset-0 z-50 flex justify-center">
       <div onClick={handleBackGroundClick} className={`absolute inset-0`}>
         <div
-          className="absolute w-60 h-fit rounded-2xl bg-white"
+          className="absolute w-60 h-fit rounded-2xl bg-white shadow-md"
           style={{ top: `${pos[0]}px`, left: `${pos[1]}px` }}
         >
           {post.userId === user?.id ? (
-            <OptionItem text="삭제하기" />
+            <OptionItem
+              text="삭제하기"
+              postId={post.postId}
+              userId={post.userId}
+            />
           ) : (
             <OptionItem text={data ? "언팔로우하기" : "팔로우하기"} />
           )}
