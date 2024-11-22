@@ -71,8 +71,7 @@ function TimeLine() {
 
   return (
     <>
-      <div className="w-full h-[77px] bg-gray-300" />
-      <div className="flex flex-col h-fit px-6 divide-y-2 divide-gray-300 bg-gray-200">
+      <div className="flex flex-col h-fit px-6 divide-y-[1px] divide-gray-300 bg-gray-200">
         {isLoading ? (
           <TimeLineLoading />
         ) : data && data.pages.length === 0 ? (

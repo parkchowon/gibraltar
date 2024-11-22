@@ -126,7 +126,6 @@ function NotificationPage() {
 
   return (
     <MainLayout>
-      <div className="w-full h-[77px] bg-gray-300" />
       <div className="px-6 w-full divide-y-[1px] divide-gray-300">
         {data &&
           data.pages &&

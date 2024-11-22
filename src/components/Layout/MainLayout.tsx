@@ -8,6 +8,7 @@ import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostMod
 import QuoteModal from "@/app/(provider)/(root)/home/_components/Post/QuoteModal";
 import { usePostStore } from "@/stores/post.store";
 import { usePathname } from "next/navigation";
+import BackArrowBtn from "../BackArrowBtn";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
@@ -36,7 +37,7 @@ function MainLayout({ children }: PropsWithChildren) {
         </section>
         {/* 가운데 */}
         <section className="absolute left-1/2 transform -translate-x-1/2 w-[40.8%] min-h-screen h-auto bg-gray-200">
-          {/* TODO: 여기에 BackBtn fixed로 붙여야될듯 */}
+          {path != "/search" && <BackArrowBtn type="page" />}
           {children}
         </section>
         {/* 오른쪽 프로필 */}

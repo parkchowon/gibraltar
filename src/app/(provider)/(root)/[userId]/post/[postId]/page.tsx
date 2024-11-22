@@ -6,7 +6,6 @@ import Post from "../../../home/_components/Post/Post";
 import CommentInput from "./_components/CommentInput";
 import PostComments from "./_components/PostComments";
 import PostLoading from "@/components/Loading/PostLoading";
-import BackArrowBtn from "@/components/BackArrowBtn";
 import PostParents from "./_components/PostParents";
 import { useEffect, useRef } from "react";
 
@@ -19,6 +18,7 @@ function DetailPostPage() {
 
   useEffect(() => {
     if (scrollRef.current) {
+      scrollRef.current.style.scrollMargin = "73px";
       scrollRef.current.scrollIntoView({ behavior: "auto" });
     }
   }, [post, scrollRef.current]);
@@ -26,7 +26,6 @@ function DetailPostPage() {
   if (isPending || !post) {
     return (
       <MainLayout>
-        <BackArrowBtn />
         <PostLoading />
       </MainLayout>
     );
@@ -34,9 +33,7 @@ function DetailPostPage() {
 
   return (
     <MainLayout>
-      {/* 헤더 */}
-      <BackArrowBtn />
-      <div className="h-screen pt-[72px]">
+      <div className="h-screen">
         {post.parent_post_id && (
           <div className="px-6">
             <PostParents postId={post.parent_post_id} />

@@ -11,10 +11,16 @@ function Search() {
 
   return (
     <MainLayout>
-      <div className="w-full px-12 py-8">
+      <div className="w-full px-12 py-8 border-gray-300 border-b-[1px]">
         <SearchBar searchValue={searchText} tab={tab} />
       </div>
-      <SearchTab />
+      {searchText ? (
+        <SearchTab />
+      ) : (
+        <p className="w-full py-40 text-center">
+          원하는 정보나 유저를 찾아보세요!
+        </p>
+      )}
     </MainLayout>
   );
 }

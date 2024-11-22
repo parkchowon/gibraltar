@@ -116,7 +116,7 @@ function SearchTab() {
         })}
       </div>
       <div
-        className={`flex flex-col h-fit divide-y-2 divide-gray-300 bg-gray-200`}
+        className={`flex flex-col h-fit divide-y-[1px] divide-gray-300 bg-gray-200`}
       >
         {isPending && <PostLoading />}
         {data && data.pages.length === 0 && (

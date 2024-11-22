@@ -6,7 +6,6 @@ import ProfileDetail from "./_components/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
 import UserPost from "./_components/UserPost";
 import UserTab from "./_components/UserTab";
-import BackArrowBtn from "@/components/BackArrowBtn";
 
 function ProfilePage() {
   const pathname = usePathname();
@@ -16,8 +15,7 @@ function ProfilePage() {
 
   return (
     <MainLayout>
-      <div className="px-6 pt-[4%]">
-        <BackArrowBtn intent="profilePage" />
+      <div className="px-6">
         {/* 프로필 부분 */}
         <ProfileBox userId={userId} />
         {/* 세부프로필 부분 */}

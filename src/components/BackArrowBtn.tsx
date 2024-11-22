@@ -1,20 +1,19 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ArrowBtn from "@/assets/icons/arrow.svg";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cva, VariantProps } from "class-variance-authority";
 import { usePostStore } from "@/stores/post.store";
 
 const arrowBtnVariants = cva("flex gap-8", {
   variants: {
     intent: {
-      profilePage: "items-center",
-      detailPostPage: "fixed z-20 bg-inherit w-full py-6 px-[25px]",
+      page: "sticky top-0 z-20 w-full py-6 px-[25px] border-gray-300 border-b-[1px] bg-gray-200 bg-opacity-60 backdrop-blur-md",
       commentModal: "w-full py-6 px-[25px]",
       profileEditModal: "",
     },
   },
   defaultVariants: {
-    intent: "detailPostPage",
+    intent: "page",
   },
 });
 
@@ -31,6 +30,24 @@ function BackArrowBtn({
   intent,
 }: BackArrowBtnProp) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [title, setTitle] = useState<string>("뒤로가기");
+
+  useEffect(() => {
+    switch (pathname) {
+      case "/home":
+        return setTitle("홈");
+      case "/notifications":
+        return setTitle("알림");
+      case "/info":
+        return setTitle("오버워치 정보");
+      case "/group":
+        return setTitle("그룹찾기");
+      default:
+        return setTitle("뒤로가기");
+    }
+  }, [pathname]);
+
   const { setIsModalOpen } = usePostStore();
 
   const handleBackClick = () => {
@@ -43,11 +60,15 @@ function BackArrowBtn({
   };
 
   return (
-    <div className={arrowBtnVariants({ intent })}>
-      <button onClick={type === "page" ? handleBackClick : handleCloseClick}>
-        <ArrowBtn width="15" height="14" />
-      </button>
-      <p>홈으로</p>
+    <div className={`${arrowBtnVariants({ intent })}`}>
+      {title === "뒤로가기" ? (
+        <button onClick={type === "page" ? handleBackClick : handleCloseClick}>
+          <ArrowBtn width="15" height="14" />
+        </button>
+      ) : null}
+      <p className={`${title !== "뒤로가기" && "font-semibold px-5"}`}>
+        {title}
+      </p>
     </div>
   );
 }

@@ -11,7 +11,7 @@ function SideBar() {
 
   const handleClick = (path: string) => {
     if (path === "/mypage") {
-      return router.replace(`/${user?.id}`);
+      return router.push(`/${user?.id}`);
     }
     router.push(path);
   };
