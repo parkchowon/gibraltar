@@ -55,44 +55,6 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
   } catch (error) {
     console.error(error);
   }
-
-  // TODO: 알림 생성 route.ts
-
-  // // quote일 시 알림 생성
-  // if (post.quoted_post_id) {
-  //   const { data: postUser } = await axios.get(
-  //     `/api/posts/${post.quoted_post_id}/user`
-  //   );
-
-  //   if (postUser) {
-  //     await axios.post("/api/notifications", {
-  //       reacted_user_id: post.user_id,
-  //       type: "quote",
-  //       user_id: postUser.id,
-  //       is_read: false,
-  //       mentioned_post_id: data.id,
-  //       related_post_id: post.parent_post_id,
-  //     });
-  //   }
-  // }
-
-  // // comment일 시 알림 생성
-  // if (post.parent_post_id) {
-  //   const { data: postUser } = await axios.get(
-  //     `/api/posts/${post.parent_post_id}/user`
-  //   );
-
-  //   if (postUser) {
-  //     await axios.post("/api/notifications", {
-  //       reacted_user_id: post.user_id,
-  //       type: "comment",
-  //       user_id: postUser.id,
-  //       is_read: false,
-  //       mentioned_post_id: data.id,
-  //       related_post_id: post.parent_post_id,
-  //     });
-  //   }
-  // }
 };
 
 /**  user가 팔로하고 있는 모든 유저의 게시글 불러오기 */
