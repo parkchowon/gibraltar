@@ -33,10 +33,12 @@ function QuoteModal() {
     }
   }, []);
 
-  // 모달이 열려있고 mutation이 성공적으로 끝날경우 모달 닫힘
-  if (isModalOpen === "quote" && mutation.isSuccess) {
-    setIsModalOpen("closed");
-  }
+  useEffect(() => {
+    // 모달이 열려있고 mutation이 성공적으로 끝날경우 모달 닫힘
+    if (isModalOpen === "quote" && mutation.isSuccess) {
+      setIsModalOpen("closed");
+    }
+  }, [mutation.isSuccess]);
 
   // post 올라가는 중 loading
   useEffect(() => {

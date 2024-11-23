@@ -29,15 +29,26 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       });
 
       postMediaURLs = uploadResponse.data.urls; // 서버에서 반환된 URL 배열
+    }
+    /** posts 테이블에 post 저장 */
+    const data = await axios.post("/api/post", {
+      content: post.content,
+      images: postMediaURLs || null,
+      user_id: post.user_id,
+      parent_post_id: post.parent_post_id,
+      quoted_post_id: post.quoted_post_id,
+      tags: tags || [],
+    });
 
-      /** posts 테이블에 post 저장 */
-      const { data } = await axios.post("/api/post", {
-        content: post.content,
-        images: postMediaURLs || null,
-        user_id: post.user_id,
-        parent_post_id: post.parent_post_id,
-        quoted_post_id: post.quoted_post_id,
-        tags: tags || [],
+    if (!!post.parent_user_id && post.user_id !== post.parent_user_id) {
+      const type = post.quoted_post_id ? "quote" : "comment";
+
+      const { data: notiData } = await axios.post("/api/notification", {
+        reacted_user_id: post.user_id,
+        type: type,
+        user_id: post.parent_user_id,
+        mentioned_post_id: data.data.postId,
+        related_post_id: post.parent_post_id,
       });
     }
   } catch (error) {

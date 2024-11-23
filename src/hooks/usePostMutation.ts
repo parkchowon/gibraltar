@@ -108,6 +108,7 @@ export const useQuoteMutation = () => {
         content: quote.content,
         images: quote.images,
         parent_post_id: quote.parent_post_id,
+        parent_user_id: quote.post_user_id,
         user_id: quote.user_id,
         quoted_post_id: quote.quoted_post_id,
       });

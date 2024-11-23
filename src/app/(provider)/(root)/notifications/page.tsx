@@ -131,7 +131,7 @@ function NotificationPage() {
           data.pages &&
           data.pages.map((page) => {
             return page?.map((noti) => {
-              return renderingNotificationItem(noti);
+              return <div key={noti.id}>{renderingNotificationItem(noti)}</div>;
             });
           })}
       </div>

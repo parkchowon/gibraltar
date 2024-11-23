@@ -34,7 +34,7 @@ export const POST = async (request: NextRequest) => {
       if (tagError) throw new Error("tag 저장 중 오류 : " + tagError.message);
     }
 
-    return NextResponse.json({ message: "post 저장 성공" });
+    return NextResponse.json({ message: "post 저장 성공", postId: data.id });
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }

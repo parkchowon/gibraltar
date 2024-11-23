@@ -11,7 +11,10 @@ function FollowItem({ notification }: { notification: NotiType }) {
   });
 
   return (
-    <div className="flex items-center w-full px-[25px] py-[15px] gap-6">
+    <div
+      key={notification.id}
+      className="flex items-center w-full px-[25px] py-[15px] gap-6"
+    >
       <ProfileBtn
         userId={notification.reacted_user_id}
         profileUrl={notification.reacted_user?.profile_url || ""}

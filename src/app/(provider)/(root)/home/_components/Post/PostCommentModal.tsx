@@ -25,7 +25,11 @@ function PostCommentModal({
           type="modal"
         />
         <Post post={post} />
-        <CommentInput postId={post.id} setCommentClick={setCommentClick} />
+        <CommentInput
+          postId={post.id}
+          postUserId={post.user?.id}
+          setCommentClick={setCommentClick}
+        />
       </div>
     </div>,
     document.body

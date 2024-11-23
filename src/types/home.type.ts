@@ -19,6 +19,7 @@ export type CreatePostType = {
   content: string;
   images: File[] | null;
   parent_post_id: string | null;
+  parent_user_id?: string;
   quoted_post_id?: string | null;
   user_id: string;
 };

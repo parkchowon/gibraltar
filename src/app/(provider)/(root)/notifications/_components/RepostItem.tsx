@@ -32,10 +32,10 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
   };
 
   return (
-    <button
+    <div
       key={notification.id}
       onClick={handleNotiClick}
-      className="flex w-full px-[25px] py-[15px] gap-6 text-left"
+      className="flex w-full px-[25px] py-[15px] gap-6 text-left cursor-pointer"
     >
       {reactionCount ? (
         <NotificationProfile
@@ -64,7 +64,7 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
           {notification.related_post?.content}
         </p>
       </div>
-    </button>
+    </div>
   );
 }
 

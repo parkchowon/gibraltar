@@ -43,7 +43,7 @@ function DetailPostPage() {
           {/* 포스트 내용 */}
           <Post post={post} />
           {/* 댓글 작성 창 */}
-          <CommentInput postId={postId} />
+          <CommentInput postId={postId} postUserId={post.user?.id} />
           {/* 댓글 */}
           <PostComments postId={postId} />
         </div>

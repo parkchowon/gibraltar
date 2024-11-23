@@ -6,9 +6,11 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 function CommentInput({
   postId,
+  postUserId,
   setCommentClick,
 }: {
   postId: string;
+  postUserId?: string;
   setCommentClick?: Dispatch<SetStateAction<boolean>>;
 }) {
   const { userData } = useAuth();
@@ -34,10 +36,12 @@ function CommentInput({
     }
   }, []);
 
-  // 모달이고 mutation이 성공적으로 끝날 시에 모달 닫힘
-  if (setCommentClick && mutation.isSuccess) {
-    setCommentClick(false);
-  }
+  useEffect(() => {
+    // 모달이고 mutation이 성공적으로 끝날 시에 모달 닫힘
+    if (setCommentClick && mutation.isSuccess) {
+      setCommentClick(false);
+    }
+  }, [mutation.isSuccess]);
 
   useEffect(() => {
     if (mutation.isPending) {
@@ -59,6 +63,7 @@ function CommentInput({
       const newComment = {
         content: comment,
         parent_post_id: postId,
+        parent_user_id: postUserId,
         user_id: userData.id,
         images: null, // TODO: 나중에 사진 넣을때 여기에
       };
