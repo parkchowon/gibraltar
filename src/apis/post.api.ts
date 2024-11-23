@@ -40,6 +40,7 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
       tags: tags || [],
     });
 
+    /** 다른 사람의 게시물에 인용, 멘션을 달았을 경우 알림 저장 */
     if (!!post.parent_user_id && post.user_id !== post.parent_user_id) {
       const type = post.quoted_post_id ? "quote" : "comment";
 
