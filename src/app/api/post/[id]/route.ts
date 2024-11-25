@@ -6,8 +6,8 @@ export const GET = async (
   reqeust: NextRequest,
   { params }: { params: { id: string } }
 ) => {
-  const postId = params.id;
   const supabase = createClient();
+  const postId = params.id;
   try {
     const { data, error } = await supabase
       .from("posts")
@@ -48,4 +48,35 @@ export const GET = async (
       { status: 500 }
     );
   }
+};
+
+// [id]의 post 삭제
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const supabase = createClient();
+  const postId = params.id;
+  const userId = request.nextUrl.searchParams.get("userId");
+
+  if (!postId || !userId) {
+    return NextResponse.json(
+      { message: "post id나 user id가 존재하지 않음" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", postId)
+    .eq("user_id", userId);
+  if (error) {
+    return NextResponse.json(
+      { message: "삭제하는 도중 서버 오류" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ message: "post 삭제 성공" }, { status: 200 });
 };
