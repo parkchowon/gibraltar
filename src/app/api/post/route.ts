@@ -2,6 +2,9 @@ import { createClient } from "@/supabase/server";
 import { TagRow } from "@/types/database";
 import { NextRequest, NextResponse } from "next/server";
 
+/** post 하나 */
+
+// 생성
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
   const { content, images, user_id, parent_post_id, quoted_post_id, tags } =
