@@ -7,14 +7,18 @@ import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
+import { useProfileStore } from "@/stores/profile.store";
 
 function SettingProfile() {
   const { userData, isPending } = useAuth();
+  const { putNickname } = useProfileStore();
+
   const [isInvalid, setIsInvalid] = useState<string>("");
   const [isNickOK, setIsNickOK] = useState<boolean>(true);
   const [profileImg, setProfileImg] = useState<string>("");
   const [file, setFile] = useState<File>();
   const [id, setID] = useState<string>(generateRandomHandle());
+
   const idRef = useRef<HTMLInputElement>(null);
   const nickRef = useRef<HTMLInputElement | null>(null);
 
@@ -85,6 +89,7 @@ function SettingProfile() {
         file: file,
         userId: userData.id,
       };
+      putNickname(nickRef.current?.value ?? "");
       profileUpdate(updateData);
     }
   };

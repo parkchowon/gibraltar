@@ -9,13 +9,15 @@ import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import SearchingPage from "../SearchingPage";
 import { useFollow } from "@/hooks/useUserFollow";
+import ProfileBtn from "@/components/ProfileBtn";
 
 function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
   const handleSubmit = () => {};
 
   const { userData } = useAuth();
-  const { bio, favoriteTeam, playChamps, playStyle } = useProfileStore();
+  const { bio, favoriteTeam, playChamps, playStyle, nickname } =
+    useProfileStore();
 
   const { followMutation, unFollowMutation } = useFollow();
 
@@ -103,12 +105,10 @@ function FollowUser() {
                     idx === cardIndex ? "flex" : "hidden"
                   }`}
                 >
-                  <Image
-                    alt="profile"
-                    src={follow.user?.profile_url || ""}
-                    width={106}
-                    height={106}
-                    className="rounded-full"
+                  <ProfileBtn
+                    profileUrl={follow.user?.profile_url || ""}
+                    intent={"card"}
+                    type="non-click"
                   />
                   <p className="text-lg font-medium mt-3.5">
                     {follow.user?.nickname}
@@ -122,7 +122,7 @@ function FollowUser() {
 
                   {/* 같은 게임 모드 */}
                   <p className="text-gray-500">
-                    {userData?.nickname}님처럼{" "}
+                    {nickname !== "" ? nickname : userData?.nickname}님처럼{" "}
                     <span className="font-bold text-black">
                       {followModes
                         .filter((mode) => playStyle.mode.includes(mode))

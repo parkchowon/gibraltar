@@ -130,9 +130,9 @@ export const getRecommendedUsers = async (profile: profileType) => {
     user: userResult?.find((user) => user.id === userId) ?? null,
     isFollowing:
       followResult?.length !== 0
-        ? !!followResult?.map((follow) => {
-            if (follow.follower_id === userId) return follow.id;
-          })
+        ? !!followResult?.find((follow) => {
+            follow.follower_id === userId;
+          })?.id
         : false,
     score: calculateScore(userId),
   }));

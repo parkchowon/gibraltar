@@ -29,6 +29,8 @@ export type profileType = {
 };
 
 export type ProfileSettingProps = {
+  nickname: string;
+  putNickname: (value: string) => void;
   playStyle: playStyleType;
   putPlayStyle: (value: playStyleType) => void;
   playChamps: playChampsType;

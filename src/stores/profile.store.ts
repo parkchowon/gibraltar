@@ -4,25 +4,27 @@ import { persist } from "zustand/middleware";
 
 export const useProfileStore = create(
   persist<ProfileSettingProps>(
-    (set)=>({
+    (set) => ({
+      nickname: "",
       playStyle: {
         mode: [],
         style: "",
-        time: []
+        time: [],
       },
       playChamps: {
         MainChamps: [],
-        selectedChamps: []
+        selectedChamps: [],
       },
-      favoriteTeam: '',
-      bio: '',
-      putPlayStyle: (value) => set({playStyle: value}),
-      putPlayChamps: (value)=> set({playChamps: value}),
-      putFavoriteTeam: (value) => set({favoriteTeam: value}),
-      putBio: (value)=>set({bio: value})
+      favoriteTeam: "",
+      bio: "",
+      putNickname: (value) => set({ nickname: value }),
+      putPlayStyle: (value) => set({ playStyle: value }),
+      putPlayChamps: (value) => set({ playChamps: value }),
+      putFavoriteTeam: (value) => set({ favoriteTeam: value }),
+      putBio: (value) => set({ bio: value }),
     }),
     {
-      name: 'profile-step',
+      name: "profile-step",
     }
-)
-)
+  )
+);
