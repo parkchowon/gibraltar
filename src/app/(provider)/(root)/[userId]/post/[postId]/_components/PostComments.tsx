@@ -28,7 +28,6 @@ function PostComments({ postId }: { postId: string }) {
             return (
               <div key={comment.id} className="relative">
                 <Post post={comment} />
-                {/* TODO: 이 부분 디자인 삑남 */}
                 <div className="absolute left-[6.5%] top-20 h-10 w-[1px] bg-gray-400" />
                 <PostComments postId={comment.id} />
               </div>
