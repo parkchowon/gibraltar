@@ -5,21 +5,31 @@ const LOGIN_KEY = "sb-zdumabzfaygdbxnucjib-auth-token";
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
-  const {pathname} = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
   if (pathname === "/") {
-    if (!request.cookies.get(`${LOGIN_KEY}.1`) && !request.cookies.get(`${LOGIN_KEY}.0`)) {
+    if (
+      !request.cookies.get(`${LOGIN_KEY}.1`) &&
+      !request.cookies.get(`${LOGIN_KEY}.0`)
+    ) {
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
     url.pathname = "/home";
     return NextResponse.redirect(url);
   }
-  
+
+  if (
+    pathname === "/home" &&
+    !request.cookies.get(`${LOGIN_KEY}.1`) &&
+    !request.cookies.get(`${LOGIN_KEY}.0`)
+  ) {
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
   return await updateSession(request);
-
 }
-
 
 export const config = {
   matcher: [
