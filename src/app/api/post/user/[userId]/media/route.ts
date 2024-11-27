@@ -15,23 +15,13 @@ export const GET = async (
   try {
     const start = (page - 1) * POST_SIZE;
     const end = page * POST_SIZE - 1;
-
-    const { data: likedPostsData, error: likedPostsError } = await supabase
-      .from("likes")
-      .select("post_id")
-      .eq("user_id", userId);
-    if (likedPostsError) throw new Error(likedPostsError.message);
-
-    const likedPostsId = likedPostsData
-      ? likedPostsData.map((post) => post.post_id)
-      : [];
-
     const { data, error } = await supabase
       .from("posts")
       .select(
         "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
-      .in("id", likedPostsId)
+      .eq("user_id", userId)
+      .not("images", "is", null)
       .is("parent_post_id", null)
       .range(start, end)
       .order("created_at", { ascending: false });

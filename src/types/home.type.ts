@@ -13,7 +13,45 @@ export type UserDataProps = {
 export type PostsType = PostType[] | null;
 
 // post 컴포넌트에서 사용되는 type
-export type PostType = Awaited<ReturnType<typeof getPost>>[number];
+export type PostType = {
+  isReposted: boolean | undefined;
+  reposted_by: string | null;
+  timeline_at: string;
+  comments: {
+    content: string;
+    created_at: string;
+    id: string;
+    images: Json | null;
+    parent_post_id: string | null;
+    quoted_post_id: string | null;
+    user_id: string;
+  }[];
+  content: string;
+  created_at: string;
+  id: string;
+  images: Json | null;
+  parent_post_id: string | null;
+  quoted_post_id: string | null;
+  user_id: string;
+  user: {
+    id: string;
+    nickname: string;
+    profile_url: string;
+    handle: string;
+  } | null;
+  post_tags: {
+    tag: {
+      tag_name: string;
+    };
+  }[];
+  reposts: {
+    reposted_by: string;
+    is_quoted: boolean;
+  }[];
+  likes: {
+    user_id: string;
+  }[];
+};
 
 export type CreatePostType = {
   content: string;
