@@ -42,7 +42,7 @@ export type PostType = {
   post_tags: {
     tag: {
       tag_name: string;
-    };
+    } | null;
   }[];
   reposts: {
     reposted_by: string;
