@@ -8,6 +8,14 @@ export const GET = async (
 ) => {
   const supabase = createClient();
   const postId = params.id;
+
+  if (!postId) {
+    return NextResponse.json(
+      { message: "post id가 존재하지 않음" },
+      { status: 400 }
+    );
+  }
+
   try {
     const { data, error } = await supabase
       .from("posts")

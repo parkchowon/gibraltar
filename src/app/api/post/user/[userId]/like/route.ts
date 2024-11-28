@@ -12,6 +12,13 @@ export const GET = async (
   const page = Number(searchParams.get("page"));
   const userId = params.userId;
 
+  if (!userId) {
+    return NextResponse.json(
+      { message: "user id가 존재하지 않음" },
+      { status: 400 }
+    );
+  }
+
   try {
     const start = (page - 1) * POST_SIZE;
     const end = page * POST_SIZE - 1;

@@ -205,42 +205,33 @@ export const clickLike = async ({
   state,
   postUserId,
 }: LikesFnType) => {
-  if (!!userId == false) return;
-
-  if (userId && state) {
-    const { data, error } = await supabase
-      .from("likes")
-      .insert({ post_id: postId, user_id: userId });
-
-    const { data: notiData, error: notiError } = await supabase
-      .from("notifications")
-      .insert({
+  if (state) {
+    //like 반응
+    const response = await axios.post(
+      `api/post/${postId}/like?user_id=${userId}`
+    );
+    if (response.status === 200) {
+      await axios.post("api/notification", {
         reacted_user_id: userId,
         type: "like",
-        related_post_id: postId,
         user_id: postUserId,
-        is_read: false,
+        mentioned_post_id: null,
+        related_post_id: postId,
       });
-
-    if (error || notiError) {
-      throw new Error(error?.message || notiError?.message);
     }
-  } else if (userId && state == false) {
-    const { data, error } = await supabase
-      .from("likes")
-      .delete()
-      .eq("post_id", postId);
-
-    const { data: notiData, error: notiError } = await supabase
-      .from("notifications")
-      .delete()
-      .eq("related_post_id", postId)
-      .eq("reacted_user_id", userId)
-      .eq("user_id", postUserId)
-      .eq("type", "like");
-
-    if (error || notiError) {
-      throw new Error(error?.message || notiError?.message);
+  } else {
+    // like 취소
+    const response = await axios.delete(
+      `api/post/${postId}/like?user_id=${userId}`
+    );
+    if (response.status === 200) {
+      await axios.post("api/notification", {
+        reacted_user_id: userId,
+        type: "like",
+        user_id: postUserId,
+        mentioned_post_id: null,
+        related_post_id: postId,
+      });
     }
   }
 };
