@@ -4,12 +4,10 @@ import OptionItem from "./OptionItem";
 import { useAuth } from "@/contexts/auth.context";
 import { useQuery } from "@tanstack/react-query";
 import { checkFollow } from "@/apis/follow.api";
+import { deletePostType } from "@/types/home.type";
 
 type OptionModalProps = {
-  post: {
-    postId: string;
-    userId: string; //post의 userId
-  };
+  post: deletePostType;
   pos: number[];
   setOptionClick: Dispatch<SetStateAction<boolean>>;
 };
@@ -38,13 +36,12 @@ function OptionModal({ post, pos, setOptionClick }: OptionModalProps) {
           style={{ top: `${pos[0]}px`, left: `${pos[1]}px` }}
         >
           {post.userId === user?.id ? (
-            <OptionItem
-              text="삭제하기"
-              postId={post.postId}
-              userId={post.userId}
-            />
+            <OptionItem text="삭제하기" post={post} />
           ) : (
-            <OptionItem text={data ? "언팔로우하기" : "팔로우하기"} />
+            <OptionItem
+              text={data ? "언팔로우하기" : "팔로우하기"}
+              post={post}
+            />
           )}
         </div>
       </div>

@@ -26,3 +26,50 @@ export const POST = async (request: NextRequest) => {
     );
   }
 };
+
+export const DELETE = async (request: NextRequest) => {
+  const supabase = createClient();
+  const searchParams = request.nextUrl.searchParams;
+
+  const relatedPostId = searchParams.get("related_post_id") as string;
+  const mentionedPostId = searchParams.get("mentioned_post_id") as string;
+  const reactedUserId = searchParams.get("reacted_user_id") as string;
+  const userId = searchParams.get("user_id") as string;
+  const type = searchParams.get("type") as string;
+
+  let query = supabase
+    .from("notifications")
+    .delete()
+    .eq("reacted_user_id", reactedUserId)
+    .eq("type", type);
+
+  if (relatedPostId) {
+    query = query.eq("related_post_id", relatedPostId);
+  }
+
+  if (userId) {
+    query = query.eq("user_id", userId);
+  }
+
+  if (mentionedPostId) {
+    query = query.eq("mentioned_post_id", mentionedPostId);
+  }
+
+  try {
+    const { data, error } = await query;
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return NextResponse.json(
+      { message: "notification 테이블 저장 성공" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "notification 테이블 삭제 중 서버 오류", error },
+      { status: 500 }
+    );
+  }
+};

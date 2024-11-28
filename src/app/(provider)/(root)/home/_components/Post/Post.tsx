@@ -34,9 +34,18 @@ function Post({ post }: PostProps) {
   // post 날짜
   const postTime = formatToPostDate(post.created_at);
 
+  // post의 type
+  const postType = post.parent_post_id
+    ? "comment"
+    : post.quoted_post_id
+    ? "quote"
+    : "post";
+
+  // 내가 repost 했는지
   const repostedByMe = post.reposts.find(
     (post) => post.reposted_by === user?.id
   );
+  // 내가 인용 했는지
   const isQuotedByMe = repostedByMe?.is_quoted;
 
   // repost 클릭 data
@@ -115,7 +124,11 @@ function Post({ post }: PostProps) {
               <p className="text-sm text-gray-500 ml-1.5">{postTime}</p>
               {optionClick && (
                 <OptionModal
-                  post={{ postId: post.id, userId: post.user.id }}
+                  post={{
+                    postId: post.id,
+                    userId: post.user.id,
+                    type: postType,
+                  }}
                   pos={optionPos}
                   setOptionClick={setOptionClick}
                 />

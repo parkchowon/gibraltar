@@ -65,8 +65,8 @@ function PostBox() {
         parent_post_id: null, // post 생성시에는 null
       };
       resetTag();
+      // TODO: 이거 useMutation으로 작업하기
       await createPost(post, selectedTag);
-      // TODO: post 올라가는 시간동안 loading 화면 넣기(아직 화면이없음)
     }
     setText("");
     setPostVideo(null);

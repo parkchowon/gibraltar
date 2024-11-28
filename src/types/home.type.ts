@@ -71,6 +71,11 @@ export type CreateQuoteType = {
   user_id: string;
 };
 
+export type deletePostType = {
+  postId: string;
+  userId: string; //post의 userId
+};
+
 type Tag = {
   tag_name: string;
 };

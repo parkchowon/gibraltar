@@ -151,25 +151,23 @@ export const insertRepost = async (
   postUserId: string,
   is_quoted?: boolean
 ) => {
-  if (userId && postId) {
-    const { data, error } = await supabase
-      .from("reposts")
-      .insert({ post_id: postId, reposted_by: userId, is_quoted: is_quoted });
+  try {
+    const response = await axios.post(
+      `api/post/${postId}/repost?user_id=${userId}&is_quoted=${is_quoted}`
+    );
 
-    if (is_quoted) return;
-    const { data: notiData, error: notiError } = await supabase
-      .from("notifications")
-      .insert({
+    if (response.status === 200 && !is_quoted) {
+      // 인용은 post 생성 로직에서 알림 처리해서 인용이 아닌 repost만
+      await axios.post("api/notification", {
         reacted_user_id: userId,
         type: "repost",
-        related_post_id: postId,
         user_id: postUserId,
-        is_read: false,
+        mentioned_post_id: null,
+        related_post_id: postId,
       });
-
-    if (error || notiError) {
-      throw new Error(error?.message || notiError?.message);
     }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -178,23 +176,18 @@ export const deleteRepost = async ({
   userId,
   postUserId,
 }: RepostFnType) => {
-  if (userId) {
-    const { data, error } = await supabase
-      .from("reposts")
-      .delete()
-      .eq("post_id", postId);
+  try {
+    const response = await axios.delete(
+      `api/post/${postId}/repost?user_id=${userId}`
+    );
 
-    const { data: notiData, error: notiError } = await supabase
-      .from("notifications")
-      .delete()
-      .eq("related_post_id", postId)
-      .eq("reacted_user_id", userId)
-      .eq("user_id", postUserId)
-      .eq("type", "repost");
-
-    if (error) {
-      throw new Error(error.message);
+    if (response.status === 200) {
+      await axios.delete(
+        `api/notification?related_post_id=${postId}&reacted_user_id=${userId}&user_id=${postUserId}&type=repost`
+      );
     }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -205,34 +198,34 @@ export const clickLike = async ({
   state,
   postUserId,
 }: LikesFnType) => {
-  if (state) {
-    //like 반응
-    const response = await axios.post(
-      `api/post/${postId}/like?user_id=${userId}`
-    );
-    if (response.status === 200) {
-      await axios.post("api/notification", {
-        reacted_user_id: userId,
-        type: "like",
-        user_id: postUserId,
-        mentioned_post_id: null,
-        related_post_id: postId,
-      });
+  try {
+    if (state) {
+      //like 반응
+      const response = await axios.post(
+        `api/post/${postId}/like?user_id=${userId}`
+      );
+      if (response.status === 200) {
+        await axios.post("api/notification", {
+          reacted_user_id: userId,
+          type: "like",
+          user_id: postUserId,
+          mentioned_post_id: null,
+          related_post_id: postId,
+        });
+      }
+    } else {
+      // like 취소
+      const response = await axios.delete(
+        `api/post/${postId}/like?user_id=${userId}`
+      );
+      if (response.status === 200) {
+        await axios.delete(
+          `api/notification?related_post_id=${postId}&reacted_user_id=${userId}&user_id=${postUserId}&type=like`
+        );
+      }
     }
-  } else {
-    // like 취소
-    const response = await axios.delete(
-      `api/post/${postId}/like?user_id=${userId}`
-    );
-    if (response.status === 200) {
-      await axios.post("api/notification", {
-        reacted_user_id: userId,
-        type: "like",
-        user_id: postUserId,
-        mentioned_post_id: null,
-        related_post_id: postId,
-      });
-    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

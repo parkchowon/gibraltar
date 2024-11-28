@@ -42,7 +42,8 @@ export const checkFollow = async (followerId: string, followingId: string) => {
     .eq("follower_id", followerId)
     .eq("following_id", followingId)
     .single();
-  if (error) console.error(error.message);
+
+  if (error && error.code !== "PGRST116") console.error(error.message);
 
   return !!data;
 };

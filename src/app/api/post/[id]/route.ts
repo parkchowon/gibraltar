@@ -74,6 +74,12 @@ export const DELETE = async (
     );
   }
 
+  // TODO: 외부키로 참조되고 있는 post id의 오류를 어떻게 해결할 것인가
+  const { data, error: parentsError } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("parent_post_id", postId);
+
   const { error } = await supabase
     .from("posts")
     .delete()

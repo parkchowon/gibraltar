@@ -1,6 +1,7 @@
 import {
   clickLike,
   createPost,
+  deletePost,
   deleteRepost,
   fetchPostDetail,
   insertRepost,
@@ -8,6 +9,7 @@ import {
 import {
   CreatePostType,
   CreateQuoteType,
+  deletePostType,
   LikesFnType,
   RepostFnType,
 } from "@/types/home.type";
@@ -120,6 +122,30 @@ export const useQuoteMutation = () => {
         queryClient.setQueryData(["timelineData"], {
           ...prevTimeline,
           newState,
+        });
+      }
+      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["timelineData"],
+      });
+    },
+  });
+};
+
+export const usePostDeleteMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ postId, userId }: deletePostType) =>
+      deletePost(postId, userId),
+    onMutate: async (newState) => {
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+      if (prevTimeline) {
+        queryClient.setQueryData(["timelineData"], {
+          ...prevTimeline,
+          ...[newState],
         });
       }
       return () => queryClient.setQueryData(["timelineData"], prevTimeline);
