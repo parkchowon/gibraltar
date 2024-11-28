@@ -34,13 +34,6 @@ function Post({ post }: PostProps) {
   // post 날짜
   const postTime = formatToPostDate(post.created_at);
 
-  // post의 type
-  const postType = post.parent_post_id
-    ? "comment"
-    : post.quoted_post_id
-    ? "quote"
-    : "post";
-
   // 내가 repost 했는지
   const repostedByMe = post.reposts.find(
     (post) => post.reposted_by === user?.id
@@ -127,7 +120,6 @@ function Post({ post }: PostProps) {
                   post={{
                     postId: post.id,
                     userId: post.user.id,
-                    type: postType,
                   }}
                   pos={optionPos}
                   setOptionClick={setOptionClick}
