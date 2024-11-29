@@ -30,6 +30,7 @@ export const GET = async (
       .eq("user_id", userId)
       .not("images", "is", null)
       .is("parent_post_id", null)
+      .is("is_deleted", false)
       .range(start, end)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);

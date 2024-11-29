@@ -87,6 +87,7 @@ export const GET = async (request: NextRequest) => {
       )
       .in("id", orderedPostId)
       .is("parent_post_id", null)
+      .is("is_deleted", false)
       .order("created_at", { ascending: false });
 
     if (postError)

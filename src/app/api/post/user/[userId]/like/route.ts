@@ -40,6 +40,7 @@ export const GET = async (
       )
       .in("id", likedPostsId)
       .is("parent_post_id", null)
+      .is("is_deleted", false)
       .range(start, end)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);

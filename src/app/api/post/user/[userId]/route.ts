@@ -64,6 +64,7 @@ export const GET = async (
       .select(
         "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
+      .is("is_deleted", false)
       .in("id", orderedPostId);
 
     if (error) throw new Error(error.message);

@@ -82,6 +82,14 @@ function Post({ post }: PostProps) {
     router.push("/login");
   }
 
+  if (post.is_deleted) {
+    return (
+      <div className="w-full my-3 py-6 border-[1px] border-gray-300 rounded-xl">
+        <p className="w-full text-center">이 포스트는 삭제되었습니다</p>
+      </div>
+    );
+  }
+
   if (!post.user) {
     return <PostLoading />;
   }

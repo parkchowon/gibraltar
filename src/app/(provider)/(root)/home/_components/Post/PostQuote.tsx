@@ -27,7 +27,7 @@ function PostQuote({ postId }: { postId?: string }) {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    if (data && data.user) {
+    if (data && data.user && !quote?.is_deleted) {
       router.push(`/${data?.user.id}/post/${postId}`);
     }
   };
@@ -41,23 +41,29 @@ function PostQuote({ postId }: { postId?: string }) {
         data && "cursor-pointer"
       }`}
     >
-      <div className="flex w-full gap-1.5 items-center">
-        <ProfileBtn
-          profileUrl={quote.user ? quote.user?.profile_url : ""}
-          type="non-click"
-          intent="miniQuote"
-        />
-        <p className="font-semibold ml-2">{quote.user?.nickname}</p>
-        <p className="text-sm text-gray-500">{quote.user?.handle}</p>
-      </div>
-      <div>
-        <p className="mt-[7px] mb-[6px] leading-snug">{quote.content}</p>
-        {quote.images && (
-          <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-            <PostMedia jsons={quote.images} />
+      {quote.is_deleted ? (
+        <p>이 포스트는 삭제되었습니다.</p>
+      ) : (
+        <>
+          <div className="flex w-full gap-1.5 items-center">
+            <ProfileBtn
+              profileUrl={quote.user ? quote.user?.profile_url : ""}
+              type="non-click"
+              intent="miniQuote"
+            />
+            <p className="font-semibold ml-2">{quote.user?.nickname}</p>
+            <p className="text-sm text-gray-500">{quote.user?.handle}</p>
           </div>
-        )}
-      </div>
+          <div>
+            <p className="mt-[7px] mb-[6px] leading-snug">{quote.content}</p>
+            {quote.images && (
+              <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
+                <PostMedia jsons={quote.images} />
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

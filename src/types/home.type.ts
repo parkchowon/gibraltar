@@ -33,6 +33,7 @@ export type PostType = {
   parent_post_id: string | null;
   quoted_post_id: string | null;
   user_id: string;
+  is_deleted: boolean;
   user: {
     id: string;
     nickname: string;

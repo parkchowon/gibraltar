@@ -308,7 +308,7 @@ export const fetchQuotePost = async (postId: string) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "user: users (id, nickname, handle, profile_url), content, images, created_at"
+      "user: users (id, nickname, handle, profile_url), content, images, created_at, is_deleted"
     )
     .eq("id", postId)
     .single();
