@@ -74,20 +74,42 @@ export const DELETE = async (
     );
   }
 
-  // TODO: 외부키로 참조되고 있는 post id의 오류를 어떻게 해결할 것인가
-  const { data, error: parentsError } = await supabase
-    .from("posts")
-    .select("*")
-    .eq("parent_post_id", postId);
+  // // TODO: 외부키로 참조되고 있는 post id의 오류를 어떻게 해결할 것인가
+  // const { data, error: parentsError } = await supabase
+  //   .from("posts")
+  //   .select("*")
+  //   .eq("parent_post_id", postId);
 
   const { error } = await supabase
     .from("posts")
     .delete()
     .eq("id", postId)
     .eq("user_id", userId);
-  if (error) {
+
+  if (error?.code === "23503") {
+    console.log(postId, "인 포스터를 소프트 삭제");
+    const { data, error: updateError } = await supabase
+      .from("posts")
+      .update({ is_deleted: true })
+      .eq("id", postId);
+
+    if (updateError) {
+      return NextResponse.json(
+        { message: "삭제 업데이트 중 서버 오류", updateError },
+        { status: 500 }
+      );
+    }
+
+    console.log(data);
     return NextResponse.json(
-      { message: "삭제하는 도중 서버 오류" },
+      { message: "삭제 업데이트 성공", data },
+      { status: 200 }
+    );
+  }
+
+  if (error && error.code !== "23503") {
+    return NextResponse.json(
+      { message: "삭제하는 도중 서버 오류", error },
       { status: 500 }
     );
   }

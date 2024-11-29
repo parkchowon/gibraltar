@@ -128,9 +128,11 @@ export const fetchPostDetail = async (
 // 하나의 post 삭제하기
 export const deletePost = async (postId: string, userId: string) => {
   try {
-    await apiClient.delete(`/api/post/${postId}`, {
+    const response = await apiClient.delete(`/api/post/${postId}`, {
       params: { userId: userId },
     });
+
+    console.log(response.data);
   } catch (error) {
     console.error(error);
     return alert("포스트 삭제중 오류 발생");
