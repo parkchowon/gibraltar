@@ -5,7 +5,7 @@ export const getUser = async (userId: string) => {
     const { data, error } = await supabase
       .from("users")
       .select("*")
-      .eq("id", userId)
+      .eq("id", userId) // 이부분 handle로
       .single();
 
     if (error) throw new Error(error.message);

@@ -1,7 +1,6 @@
 "use client";
 import MainLayout from "@/components/Layout/MainLayout";
 import { usePostDetail } from "@/hooks/usePostMutation";
-import { usePathname } from "next/navigation";
 import Post from "../../../home/_components/Post/Post";
 import CommentInput from "./_components/CommentInput";
 import PostComments from "./_components/PostComments";
@@ -9,9 +8,8 @@ import PostLoading from "@/components/Loading/PostLoading";
 import PostParents from "./_components/PostParents";
 import { useEffect, useRef } from "react";
 
-function DetailPostPage() {
-  const pathname = usePathname();
-  const postId = pathname.split("/")[3];
+function DetailPostPage({ params }: { params: { postId: string } }) {
+  const postId = params.postId;
   const scrollRef = useRef<HTMLDivElement>(null);
   // useQuery 접근
   const { data: post, isPending } = usePostDetail(postId);
