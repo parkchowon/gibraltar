@@ -28,7 +28,7 @@ function SideProfile() {
   };
 
   const handleProfileClick = () => {
-    router.push(`/${userData?.id}`);
+    router.push(`/${userData?.handle}`);
   };
 
   const handleStatusClick = () => {

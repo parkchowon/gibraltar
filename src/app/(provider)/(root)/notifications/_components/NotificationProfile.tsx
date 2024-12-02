@@ -3,11 +3,11 @@ import React from "react";
 
 function NotificationProfile({
   reactionCount,
-  userIds,
+  handles,
   profileUrls,
 }: {
   reactionCount: number;
-  userIds: string[];
+  handles: string[];
   profileUrls: string[];
 }) {
   if (reactionCount === 2) {
@@ -16,14 +16,14 @@ function NotificationProfile({
         <div className="absolute h-7 w-7 rounded-full">
           <ProfileBtn
             profileUrl={profileUrls[0]}
-            userId={userIds[0]}
+            handle={handles[0]}
             intent="two"
           />
         </div>
         <div className="absolute w-7 h-7 right-0 bottom-0 rounded-full">
           <ProfileBtn
             profileUrl={profileUrls[1]}
-            userId={userIds[1]}
+            handle={handles[1]}
             intent="two"
           />
         </div>
@@ -39,7 +39,7 @@ function NotificationProfile({
               <ProfileBtn
                 key={idx}
                 profileUrl={profile}
-                userId={userIds[idx]}
+                handle={handles[idx]}
                 intent="three"
               />
             );

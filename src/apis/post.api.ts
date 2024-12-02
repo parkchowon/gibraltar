@@ -237,94 +237,29 @@ export const clickLike = async ({
 
 /** comments 관련 함수 */
 export const fetchCommentInPost = async (postId: string) => {
-  //가장 상단에 있는 post에 대한 comment 리스트들
-  const { data: comments, error } = await supabase
-    .from("posts")
-    .select(
-      "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
-    )
-    .eq("parent_post_id", postId);
-
-  const commentsId = comments ? comments.map((item) => item.id) : [];
-
-  const { data: childComments, error: childCommentsError } = await supabase
-    .from("posts")
-    .select("*")
-    .in("parent_post_id", commentsId);
-
-  const enrichedComments = comments?.map((comment) => {
-    const commentchildComments = childComments?.filter(
-      (childComment) => childComment.parent_post_id === comment.id
-    );
-
-    return {
-      ...comment,
-      isReposted: false,
-      reposted_by: null,
-      timeline_at: comment.created_at,
-      comments: commentchildComments || [],
-    };
-  });
-
-  return enrichedComments || [];
+  try {
+    const response = await apiClient.get(`api/post/${postId}/comment/child`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const fetchParentsPost = async (postId: string) => {
   try {
-    const { data, error } = await supabase
-      .from("posts")
-      .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
-      )
-      .eq("id", postId)
-      .single();
-
-    if (error) throw new Error(error.message);
-
-    const { data: commentData, error: commentError } = await supabase
-      .from("posts")
-      .select("*")
-      .eq("parent_post_id", postId);
-
-    if (commentError) throw new Error(commentError.message);
-
-    const result = {
-      ...data,
-      isReposted: false,
-      reposted_by: "",
-      timeline_at: data ? data.created_at : "",
-      comments: commentData || [],
-    };
-
-    return result;
+    const response = await apiClient.get(`api/post/${postId}/comment/parents`);
+    return response.data;
   } catch (e) {
     console.error(e);
-    return;
   }
 };
 
 /** 인용알티 한 post 불러오는 함수 */
 export const fetchQuotePost = async (postId: string) => {
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      "user: users (id, nickname, handle, profile_url), content, images, created_at, is_deleted"
-    )
-    .eq("id", postId)
-    .single();
-  if (error) return null;
-  return data;
-};
-
-export const deletedPost = async (postId: string, userId: string) => {
   try {
-    const { data, error } = await supabase
-      .from("posts")
-      .delete()
-      .eq("id", postId)
-      .eq("user_id", userId);
-    if (error) throw new Error(error.message);
-  } catch (e) {
-    console.error(e);
+    const response = await apiClient.get(`api/post/${postId}/quote`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
 };

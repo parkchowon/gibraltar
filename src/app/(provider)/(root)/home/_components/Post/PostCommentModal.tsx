@@ -2,7 +2,7 @@ import { PostType } from "@/types/home.type";
 import React, { Dispatch, SetStateAction } from "react";
 import ReactDOM from "react-dom";
 import Post from "./Post";
-import CommentInput from "../../../[userId]/post/[postId]/_components/CommentInput";
+import CommentInput from "../../../[handle]/post/[postId]/_components/CommentInput";
 import BackArrowBtn from "@/components/BackArrowBtn";
 
 function PostCommentModal({

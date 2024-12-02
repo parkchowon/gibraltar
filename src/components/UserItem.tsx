@@ -19,7 +19,7 @@ function UserItem({ user }: { user: SearchUserType[number] }) {
         profileUrl={user.profile_url}
         intent={"post"}
         type="click"
-        userId={user.id}
+        handle={user.handle}
       />
       <div className="flex-grow ml-6 mr-8">
         <div className="flex items-center gap-1.5">

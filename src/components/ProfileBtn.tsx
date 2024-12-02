@@ -24,13 +24,13 @@ export type ProfileVariantsType = VariantProps<typeof profileVariants>;
 
 // 지금 컴포넌트 props type
 type ProfileBtnProps = {
-  userId?: string;
+  handle?: string;
   profileUrl: string;
   type?: "non-click" | "click";
 } & ProfileVariantsType;
 
 function ProfileBtn({
-  userId,
+  handle,
   profileUrl,
   intent,
   type = "click",
@@ -43,7 +43,7 @@ function ProfileBtn({
     // 편집때 쓰이는 프로필은 클릭하면 페이지 이동 없게
     if (type === "non-click") return;
     e.stopPropagation();
-    router.push(`/${userId}`);
+    router.push(`/${handle}`);
   };
 
   return (

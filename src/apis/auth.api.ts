@@ -1,18 +1,22 @@
 import supabase from "@/supabase/client";
+import apiClient from "./apiClient.api";
 
 export const getUser = async (userId: string) => {
   try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", userId) // 이부분 handle로
-      .single();
-
-    if (error) throw new Error(error.message);
-    return data;
+    const response = await apiClient.get(`api/auth/user?user_id=${userId}`);
+    return response.data;
   } catch (error) {
     console.error(error);
     return null;
+  }
+};
+
+export const getUserId = async (handle: string) => {
+  try {
+    const response = await apiClient.get(`api/auth/userId?handle=${handle}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
 };
 

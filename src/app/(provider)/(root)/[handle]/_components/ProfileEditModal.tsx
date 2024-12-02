@@ -55,7 +55,7 @@ function ProfileEditModal({
               </button>
               <ProfileBtn
                 profileUrl={profileUser.profile_url}
-                userId={profileUser.id}
+                handle={profileUser.handle}
                 intent={"edit"}
                 type="non-click"
               />

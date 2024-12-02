@@ -9,13 +9,13 @@ type RepostItemProps = {
   reactedUser?: {
     nicknames: string[];
     profileUrls: string[];
-    userIds: string[];
+    handles: string[];
   };
 };
 
 function RepostItem({ notification, reactedUser }: RepostItemProps) {
-  const { user } = useAuth();
   const router = useRouter();
+  const { userData } = useAuth();
   const reactionCount = reactedUser?.nicknames.length;
 
   const nicknames = reactedUser
@@ -28,7 +28,7 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
 
   // 알람 클릭
   const handleNotiClick = () => {
-    router.push(`/${user?.id}/post/${notification.related_post_id}`);
+    router.push(`/${userData?.handle}/post/${notification.related_post_id}`);
   };
 
   return (
@@ -41,11 +41,11 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
         <NotificationProfile
           reactionCount={reactionCount}
           profileUrls={reactedUser.profileUrls}
-          userIds={reactedUser.userIds}
+          handles={reactedUser.handles}
         />
       ) : (
         <ProfileBtn
-          userId={notification.reacted_user_id}
+          handle={notification.reacted_user?.handle}
           profileUrl={
             notification.reacted_user?.profile_url || "/home_line.svg"
           }

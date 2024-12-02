@@ -50,14 +50,14 @@ export const userDataReducer = (post: NotiType[]) => {
       if (repost.reacted_user) {
         acc.nicknames.push(repost.reacted_user.nickname);
         acc.profileUrls.push(repost.reacted_user.profile_url);
-        acc.userIds.push(repost.reacted_user_id);
+        acc.handles.push(repost.reacted_user.handle);
       }
       return acc;
     },
     {
       nicknames: [] as string[],
       profileUrls: [] as string[],
-      userIds: [] as string[],
+      handles: [] as string[],
     }
   );
   return result;

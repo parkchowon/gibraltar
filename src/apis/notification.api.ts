@@ -8,7 +8,7 @@ export const getNotification = async (userId: string, cursor: string) => {
     let notificationQuery = supabase
       .from("notifications")
       .select(
-        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url), related_post:posts!notifications_related_post_id_fkey(content)"
+        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle), related_post:posts!notifications_related_post_id_fkey(content)"
       )
       .eq("user_id", userId)
       .order("created_at", { ascending: false })

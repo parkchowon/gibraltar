@@ -54,6 +54,19 @@ export type PostType = {
   }[];
 };
 
+export type QuoteType = {
+  user: {
+    id: string;
+    nickname: string;
+    handle: string;
+    profile_url: string;
+  } | null;
+  content: string;
+  images: Json;
+  created_at: string;
+  is_deleted: boolean;
+} | null;
+
 export type CreatePostType = {
   content: string;
   images: File[] | null;

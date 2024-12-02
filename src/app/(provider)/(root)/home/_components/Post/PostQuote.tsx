@@ -6,12 +6,13 @@ import PostLoading from "@/components/Loading/PostLoading";
 import { useQuery } from "@tanstack/react-query";
 import { fetchQuotePost } from "@/apis/post.api";
 import { useRouter } from "next/navigation";
+import { QuoteType } from "@/types/home.type";
 
 function PostQuote({ postId }: { postId?: string }) {
   const { quotedPost } = usePostStore();
   const router = useRouter();
 
-  const { data, isPending } = useQuery({
+  const { data, isPending } = useQuery<QuoteType>({
     queryKey: ["quotePost", postId],
     queryFn: () => {
       if (postId) {
@@ -28,7 +29,7 @@ function PostQuote({ postId }: { postId?: string }) {
   ) => {
     e.stopPropagation();
     if (data && data.user && !quote?.is_deleted) {
-      router.push(`/${data?.user.id}/post/${postId}`);
+      router.push(`/${data.user.handle}/post/${postId}`);
     }
   };
 

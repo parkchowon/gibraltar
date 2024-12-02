@@ -60,7 +60,7 @@ function Post({ post }: PostProps) {
 
   // 포스트 클릭 시
   const handlePostClick = () => {
-    router.push(`/${post.user_id}/post/${post.id}`);
+    router.push(`/${post.user?.handle}/post/${post.id}`);
   };
 
   // 더보기 버튼 클릭 시
@@ -116,7 +116,7 @@ function Post({ post }: PostProps) {
         <div className="flex">
           <ProfileBtn
             profileUrl={post.user.profile_url}
-            userId={post.user.id}
+            handle={post.user.handle}
           />
           <div className="ml-6 w-full">
             <div className="flex items-center">
