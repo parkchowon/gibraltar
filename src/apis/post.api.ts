@@ -236,12 +236,15 @@ export const clickLike = async ({
 };
 
 /** comments 관련 함수 */
-export const fetchCommentInPost = async (postId: string) => {
+export const fetchCommentInPost = async (
+  postId: string
+): Promise<PostsType> => {
   try {
     const response = await apiClient.get(`api/post/${postId}/comment/child`);
     return response.data;
   } catch (error) {
     console.error(error);
+    return null;
   }
 };
 

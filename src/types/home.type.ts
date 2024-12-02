@@ -1,4 +1,3 @@
-import { getPost } from "@/apis/post.api";
 import { UserRow } from "./database";
 import { Json } from "./supabase";
 
