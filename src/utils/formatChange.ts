@@ -1,5 +1,4 @@
-import { NotiType } from "@/types/notification.type";
-import { groupBy } from "lodash";
+import { NotificationType } from "@/types/notification.type";
 
 // post 날짜 표시 함수
 export const formatToPostDate = (postTimeStamp: string) => {
@@ -44,7 +43,7 @@ export const formatToPostDate = (postTimeStamp: string) => {
 };
 
 // 알림 페이지 reactedUser 데이터 배열 재구성 함수
-export const userDataReducer = (post: NotiType[]) => {
+export const userDataReducer = (post: NotificationType[]) => {
   const result = post.reduce(
     (acc, repost) => {
       if (repost.reacted_user) {

@@ -1,9 +1,9 @@
 import { checkFollow } from "@/apis/follow.api";
-import { NotiType } from "@/types/notification.type";
 import { useQuery } from "@tanstack/react-query";
 import ProfileBtn from "../../../../../components/ProfileBtn";
+import { NotificationType } from "@/types/notification.type";
 
-function FollowItem({ notification }: { notification: NotiType }) {
+function FollowItem({ notification }: { notification: NotificationType }) {
   const { data, isPending } = useQuery({
     queryKey: ["followCheck"],
     queryFn: () =>

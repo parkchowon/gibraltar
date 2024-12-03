@@ -1,11 +1,11 @@
-import { NotiType } from "@/types/notification.type";
+import { NotificationType } from "@/types/notification.type";
 import React from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth.context";
 import NotificationProfile from "./NotificationProfile";
 type RepostItemProps = {
-  notification: NotiType;
+  notification: NotificationType;
   reactedUser?: {
     nicknames: string[];
     profileUrls: string[];
