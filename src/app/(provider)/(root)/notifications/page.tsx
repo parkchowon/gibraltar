@@ -6,11 +6,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
-import { NotiType } from "@/types/notification.type";
+import { NotificationType } from "@/types/notification.type";
 import Post from "../home/_components/Post/Post";
 import { useEffect, useRef } from "react";
 import { groupBy } from "lodash";
 import { userDataReducer } from "@/utils/formatChange";
+import { NOTIFICATION_SIZE } from "@/constants/post";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
@@ -24,13 +25,10 @@ function NotificationPage() {
     fetchNextPage,
   } = useInfiniteQuery({
     queryKey: ["notificationList", userData?.id],
-    queryFn: ({ pageParam }: { pageParam: string }) => {
-      if (userData) {
-        return getNotification(userData.id, pageParam);
-      }
-    },
+    queryFn: ({ pageParam }: { pageParam: string }) =>
+      getNotification(userData?.id, pageParam),
     getNextPageParam: (lastPage) => {
-      if (!lastPage || lastPage.length < 20) {
+      if (!lastPage || lastPage.length < NOTIFICATION_SIZE) {
         return undefined;
       }
       return lastPage[lastPage.length - 1].created_at;
@@ -42,19 +40,22 @@ function NotificationPage() {
   const allNoti = data?.pages.flat() || [];
 
   // 타입별로 나눈 배열
-  const groupByType = groupBy(allNoti, "type") as Record<string, NotiType[]>;
+  const groupByType = groupBy(allNoti, "type") as Record<
+    string,
+    NotificationType[]
+  >;
 
   // repost 배열을 post 별로 나눔
   const groupedReposts = groupBy(
     groupByType["repost"],
     "related_post_id"
-  ) as Record<string, NotiType[]>;
+  ) as Record<string, NotificationType[]>;
 
   // like 배열을 post 별로 나눔
   const groupedLikes = groupBy(
     groupByType["like"],
     "related_post_id"
-  ) as Record<string, NotiType[]>;
+  ) as Record<string, NotificationType[]>;
 
   // observer로 스크롤 감지
   useEffect(() => {
@@ -78,7 +79,7 @@ function NotificationPage() {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const renderingNotificationItem = (noti: NotiType) => {
+  const renderingNotificationItem = (noti: NotificationType) => {
     switch (noti.type) {
       case "repost":
         if (!noti.related_post_id) return;
@@ -109,9 +110,14 @@ function NotificationPage() {
       case "follow":
         return <FollowItem notification={noti} />;
       case "comment":
-        if (noti.comment) return <Post post={noti.comment} />;
+        if (noti.comment && !noti.comment.is_deleted)
+          return <Post post={noti.comment} />;
+        else return;
       case "quote":
-        if (noti.quote) return <Post post={noti.quote} />;
+        if (noti.quote && !noti.quote.is_deleted)
+          return <Post post={noti.quote} />;
+        else return;
+
       default:
         return <RepostItem notification={noti} />;
     }

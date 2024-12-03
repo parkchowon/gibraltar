@@ -6,6 +6,8 @@ export const GET = async (reqeust: NextRequest) => {
   const searchParams = reqeust.nextUrl.searchParams;
   const userId = searchParams.get("user_id") as string;
 
+  if (!userId)
+    return NextResponse.json({ message: "userId가 없음" }, { status: 400 });
   try {
     const { data, error } = await supabase
       .from("users")

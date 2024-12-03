@@ -18,6 +18,7 @@ function SideProfile() {
   const { data: user } = useQuery({
     queryKey: ["sideProfileData", userData?.id],
     queryFn: () => getUser(userData?.id || ""),
+    enabled: !!userData,
   });
 
   const status = {
