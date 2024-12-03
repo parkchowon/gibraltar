@@ -1,5 +1,5 @@
 "use client";
-import { findDuplicateHandle, profileUpdate } from "@/apis/auth.api";
+import { findDuplicateHandle } from "@/apis/auth.api";
 import { useAuth } from "@/contexts/auth.context";
 import { invalidCheckId } from "@/utils/invalidCheck";
 import { generateRandomHandle } from "@/utils/randomId";
@@ -8,6 +8,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import { useProfileStore } from "@/stores/profile.store";
+import { profileUpdate } from "@/apis/profile.api";
 
 function SettingProfile() {
   const { userData, isPending } = useAuth();

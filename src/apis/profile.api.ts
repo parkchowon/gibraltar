@@ -1,44 +1,74 @@
 import supabase from "@/supabase/client";
 import { profileType, RankedUsersType } from "@/types/hero.type";
+import apiClient from "./apiClient.api";
 
 // 회원가입 후 프로필 세팅
 export const insertProfileSetting = async (profile: profileType) => {
   try {
-    const { mode, style, time } = profile.playStyle;
-    const playModes = profile.playStyle.mode.map((mode) => {
-      return { user_id: profile.userId, play_mode: mode };
-    });
-    const playTime = profile.playStyle.time.map((time) => {
-      return { user_id: profile.userId, play_time: time };
-    });
-    const [profileResult, modeResult, timeResult] = await Promise.all([
-      supabase.from("user_profiles").insert({
-        user_id: profile.userId,
-        bio: profile.bio,
-        favorite_team: profile.favoriteTeam,
-        play_mode: mode,
-        play_style: style,
-        play_time: time,
-        main_champs: profile.mainChamps,
-        play_champs: profile.playChamps,
-      }),
-      supabase.from("play_modes").insert(playModes),
-      supabase.from("play_times").insert(playTime),
-    ]);
-    const { data, error } = profileResult;
-    if (error) {
-      throw new Error(error.message);
-    }
-    const { data: timeData, error: timeError } = modeResult;
-    if (timeError) {
-      throw new Error(timeError.message);
-    }
-    const { data: modeData, error: modeError } = timeResult;
-    if (modeError) {
-      throw new Error(modeError.message);
-    }
+    const response = await apiClient.post(
+      `api/auth/user/${profile.userId}/profile`
+    );
+    console.log(response.data);
   } catch (error) {
     console.error(error);
+  }
+};
+
+type profileProps = {
+  nickname?: string;
+  handle: string;
+  file?: File;
+  userId: string;
+};
+
+export const profileUpdate = async ({
+  nickname,
+  handle,
+  file,
+  userId,
+}: profileProps) => {
+  let profileUrl = null;
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("profile_url")
+    .eq("id", userId)
+    .single();
+  if (data) {
+    const isExist = data.profile_url.includes(
+      process.env.NEXT_PUBLIC_SUPABASE_URL as string
+    );
+    if (isExist) {
+      const oldProfile = data.profile_url.split("/").pop();
+      await supabase.storage
+        .from("profile-images")
+        .remove([`${userId}/${oldProfile}`]);
+    }
+  }
+
+  if (file) {
+    const filePath = `${userId}/${Date.now()}_${file.name}`;
+    const { data: saveStorageData, error: saveStorageError } =
+      await supabase.storage.from("profile-images").upload(filePath, file);
+    if (saveStorageError) {
+      console.error(saveStorageError);
+      return;
+    }
+    profileUrl = supabase.storage.from("profile-images").getPublicUrl(filePath)
+      .data.publicUrl;
+  }
+
+  const { data: updateData, error: updateError } = await supabase
+    .from("users")
+    .update({
+      profile_url: profileUrl || undefined,
+      nickname: nickname || undefined,
+      handle: handle,
+    })
+    .eq("id", userId);
+
+  if (updateError) {
+    console.error(updateError);
   }
 };
 

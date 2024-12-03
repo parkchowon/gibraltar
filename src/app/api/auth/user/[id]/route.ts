@@ -1,10 +1,12 @@
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (reqeust: NextRequest) => {
+export const GET = async (
+  reqeust: NextRequest,
+  { params }: { params: { id: string } }
+) => {
   const supabase = createClient();
-  const searchParams = reqeust.nextUrl.searchParams;
-  const userId = searchParams.get("user_id") as string;
+  const userId = params.id;
 
   if (!userId)
     return NextResponse.json({ message: "userId가 없음" }, { status: 400 });

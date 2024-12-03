@@ -1,11 +1,12 @@
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (
+  request: NextRequest,
+  { params }: { params: { handle: string } }
+) => {
   const supabase = createClient();
-  const searchParams = request.nextUrl.searchParams;
-  const handle = searchParams.get("handle") as string;
-
+  const handle = params.handle;
   try {
     const { data, error } = await supabase
       .from("users")
