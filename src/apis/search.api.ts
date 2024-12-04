@@ -10,12 +10,43 @@ export const fetchPopularSearch = async (
   pageParams: string | number
 ) => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("posts")
       .select(
         "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
-      )
-      .ilike("content", `%${searchText}%`);
+      );
+
+    // tag 검색 서치
+    const { data: tagId, error: tagError } = await supabase
+      .from("tags")
+      .select("id")
+      .eq("tag_name", searchText)
+      .single();
+    if (tagError) {
+      throw new Error(tagError.message);
+    }
+
+    console.log(tagId.id);
+
+    if (tagId) {
+      const { data: postTagData, error: postTagError } = await supabase
+        .from("post_tags")
+        .select("post_id")
+        .eq("tag_id", tagId.id);
+      if (postTagError) {
+        throw new Error(postTagError.message);
+      }
+
+      if (postTagData) {
+        const postId = postTagData.map((post) => post.post_id);
+        query.or(`content.ilike.%${searchText}%,id.in.(${postId.join(",")})`);
+      }
+    } else {
+      query.ilike("content", `%${searchText}%`);
+    }
+
+    // post 내용 검색 서치
+    const { data, error } = await query;
     if (error) throw new Error(error.message);
 
     const postIds = data ? data.map((post) => post.id) : [];
@@ -60,12 +91,41 @@ export const fetchRecentSearch = async (
     const start = (pageParams - 1) * POST_SIZE;
     const end = pageParams * POST_SIZE - 1;
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("posts")
       .select(
         "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
-      )
-      .ilike("content", `%${searchText}%`)
+      );
+
+    // tag 검색 서치
+    const { data: tagId, error: tagError } = await supabase
+      .from("tags")
+      .select("id")
+      .eq("tag_name", searchText)
+      .single();
+    if (tagError) {
+      throw new Error(tagError.message);
+    }
+
+    if (tagId) {
+      const { data: postTagData, error: postTagError } = await supabase
+        .from("post_tags")
+        .select("post_id")
+        .eq("tag_id", tagId.id);
+      if (postTagError) {
+        throw new Error(postTagError.message);
+      }
+
+      if (postTagData) {
+        const postId = postTagData.map((post) => post.post_id);
+        console.log(postId);
+        query.or(`content.ilike.%${searchText}%,id.in.(${postId.join(",")})`);
+      }
+    } else {
+      query.ilike("content", `%${searchText}%`);
+    }
+
+    const { data, error } = await query
       .range(start, end)
       .order("created_at", { ascending: false });
 

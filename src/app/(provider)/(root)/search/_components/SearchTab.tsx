@@ -4,7 +4,7 @@ import {
   fetchUserSearch,
 } from "@/apis/search.api";
 import PostLoading from "@/components/Loading/PostLoading";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 import Post from "../../home/_components/Post/Post";

@@ -1,6 +1,8 @@
 import { useTagStore } from "@/stores/tag.store";
 import { cva, VariantProps } from "class-variance-authority";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { MouseEvent } from "react";
 
 const chipVariants = cva("flex", {
   variants: {
@@ -23,13 +25,27 @@ type ChipProps = {
 
 function Chips({ text, intent }: ChipProps) {
   const { deleteSelectedTag } = useTagStore();
+  const router = useRouter();
 
   const handleXClick = (tag: string) => {
     deleteSelectedTag(tag);
   };
 
+  const handleClickTag = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    if (intent !== "removable") {
+      e.stopPropagation();
+      console.log("tag 클릭");
+      router.push(`/search?word=${text}`);
+    }
+  };
+
   return (
-    <div className={chipVariants({ intent })}>
+    <div
+      onClick={(e) => handleClickTag(e)}
+      className={chipVariants({ intent })}
+    >
       {text}
       <button
         onClick={() => handleXClick(text)}

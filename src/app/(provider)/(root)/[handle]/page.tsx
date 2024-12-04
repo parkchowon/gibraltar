@@ -19,8 +19,6 @@ function ProfilePage({ params }: { params: { handle: string } }) {
     queryKey: ["userId", handle],
     queryFn: () => getUserId(handle),
   });
-  // TODO: userId url 없애고 handle로 바꾼다음 handle로 userId 받아오는 로직으로 userId 넘겨주기
-  // TODO: 기존의 userId로 router.push했던 곳들 다 handle로 바꾸기
 
   if (isPending)
     return (
