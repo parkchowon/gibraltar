@@ -82,7 +82,7 @@ function SettingProfile() {
   };
 
   /** 버튼 누를 때 함수 */
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isPending && userData && idRef.current) {
       const updateData = {
         nickname: nickRef.current?.value,
@@ -91,7 +91,8 @@ function SettingProfile() {
         userId: userData.id,
       };
       putNickname(nickRef.current?.value ?? "");
-      profileUpdate(updateData);
+      const isFailed = await profileUpdate(updateData);
+      return isFailed;
     }
   };
 

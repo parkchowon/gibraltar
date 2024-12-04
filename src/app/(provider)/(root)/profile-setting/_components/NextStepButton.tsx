@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 type ButtonProps = {
   text?: string;
   isClickable?: boolean;
-  onClick: () => void;
+  onClick: () => Promise<void | boolean>;
 };
 function NextStepButton({
   text = "다음단계로",
@@ -15,8 +15,12 @@ function NextStepButton({
   const params = useSearchParams();
   const step = params.get("step");
 
-  const handleClickNext = () => {
-    onClick();
+  const handleClickNext = async () => {
+    const result = await onClick();
+    if (result === true) {
+      return confirm("프로필 업데이트 중 오류");
+    }
+
     if (Number(step) < 6) {
       router.push(`/profile-setting?step=${Number(step) + 1}`);
     } else {
@@ -32,7 +36,7 @@ function NextStepButton({
         isClickable ? "bg-mint" : "bg-gray-300 cursor-not-allowed"
       } rounded-full py-[19px] font-medium text-xl text-[#6A6A6A]`}
     >
-      {text}
+      {step === "6" ? "지브롤터 시작하기" : "다음으로"}
     </button>
   );
 }

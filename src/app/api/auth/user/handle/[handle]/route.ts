@@ -13,10 +13,10 @@ export const GET = async (
       .select("id")
       .eq("handle", handle)
       .single();
-    if (error) {
+    if (error && error.code !== "PGRST116") {
       throw new Error(error.message);
     }
-    return NextResponse.json(data.id);
+    return NextResponse.json(data?.id);
   } catch (error) {
     return NextResponse.json(
       { message: "서버로 인한 오류", error },

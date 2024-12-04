@@ -39,7 +39,7 @@ function SettingPlaying() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     putPlayStyle({
       mode: modeClick,
       style: styleClick,

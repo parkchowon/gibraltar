@@ -22,7 +22,7 @@ function SettingText() {
         playChamps: playChamps.selectedChamps,
         favoriteTeam: favoriteTeam,
       };
-      insertProfileSetting(profile);
+      await insertProfileSetting(profile);
     }
   };
 

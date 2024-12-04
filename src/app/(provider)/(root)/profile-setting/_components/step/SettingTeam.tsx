@@ -26,7 +26,7 @@ function SettingTeam() {
     setTeam(team);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (team) putFavoriteTeam(team.name);
   };
 

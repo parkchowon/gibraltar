@@ -3,21 +3,30 @@ import ArrowBtn from "@/assets/icons/arrow_head.svg";
 import { useAuth } from "@/contexts/auth.context";
 import { useProfileStore } from "@/stores/profile.store";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import SearchingPage from "../SearchingPage";
 import { useFollow } from "@/hooks/useUserFollow";
 import ProfileBtn from "@/components/ProfileBtn";
+import RandomUser from "../RandomUser";
 
 function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {};
 
   const { userData } = useAuth();
   const { bio, favoriteTeam, playChamps, playStyle, nickname } =
     useProfileStore();
+
+  const profile = {
+    userId: userData?.id || "",
+    bio: bio,
+    playStyle: playStyle,
+    mainChamps: playChamps.MainChamps,
+    playChamps: playChamps.selectedChamps,
+    favoriteTeam: favoriteTeam,
+  };
 
   const { followMutation, unFollowMutation } = useFollow();
 
@@ -25,17 +34,10 @@ function FollowUser() {
     queryKey: ["recommendedUsers"],
     queryFn: () => {
       if (userData) {
-        const profile = {
-          userId: userData.id,
-          bio: bio,
-          playStyle: playStyle,
-          mainChamps: playChamps.MainChamps,
-          playChamps: playChamps.selectedChamps,
-          favoriteTeam: favoriteTeam,
-        };
         return getRecommendedUsers(profile);
       }
     },
+    enabled: !!userData,
   });
 
   // 카드 넘기는 버튼 누를 시
@@ -68,13 +70,15 @@ function FollowUser() {
     return <SearchingPage />;
   }
 
+  // 추천 유저 알고리즘에 결과가 없을 경우
   if (FollowingList?.length === 0) {
     return (
       <ProfileSettingContainer
-        title="조건과 꼭 맞는 유저를 찾지 못했어요."
-        sub="그 대신 이런 유저를 팔로우 해보시는건 어떤가요?"
+        title="현재 맞는 유저를 찾지 못했어요"
+        sub="그 대신 이런 유저들은 어떤가요?"
       >
-        {/* TODO: 무작위 추천유저 리스트 화면 구현 */}
+        <RandomUser profile={profile} />
+        <NextStepButton onClick={async () => {}} />
       </ProfileSettingContainer>
     );
   }

@@ -25,7 +25,7 @@ function SettingChamp() {
   }, [positionClick]);
 
   // 다음 버튼 클릭 시
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {};
 
   const handleClickRole = (position: string, color: string) => {
     setPositionClick(position);

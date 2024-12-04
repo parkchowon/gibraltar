@@ -22,9 +22,23 @@ export type playChampsType = {
 export type profileType = {
   userId: string;
   bio: string;
-  playStyle: playStyleType;
-  mainChamps?: HeroType[];
-  playChamps?: HeroType[];
+  playStyle: {
+    mode: string[];
+    style: string;
+    time: string[];
+  };
+  mainChamps?: {
+    key: string;
+    name: string;
+    portrait: string;
+    role: "tank" | "damage" | "support";
+  }[];
+  playChamps?: {
+    key: string;
+    name: string;
+    portrait: string;
+    role: "tank" | "damage" | "support";
+  }[];
   favoriteTeam: string;
 };
 
