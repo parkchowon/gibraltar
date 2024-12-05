@@ -37,7 +37,7 @@ function Chips({ text, intent }: ChipProps) {
     if (intent !== "removable") {
       e.stopPropagation();
       console.log("tag 클릭");
-      router.push(`/search?word=${text}`);
+      router.push(`/search?word=${text}&tab=recent`);
     }
   };
 

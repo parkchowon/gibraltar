@@ -23,7 +23,7 @@ export const POST = async (request: NextRequest) => {
         .upload(filePath, file);
 
       if (error) {
-        throw new Error(`Storage에 미디어 저장 중 오류: ${error.message}`);
+        throw new Error(error.name + error.message);
       }
 
       const { data: publicUrlData } = supabase.storage

@@ -145,9 +145,7 @@ function Post({ post }: PostProps) {
             {/* 미디어 */}
             {post.images && (
               // TODO: image (아직 화면이 없음)
-              <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
-                <PostMedia jsons={post.images} />
-              </div>
+              <PostMedia jsons={post.images} />
             )}
             {/* 인용한 트윗 */}
             {post.quoted_post_id && <PostQuote postId={post.quoted_post_id} />}
