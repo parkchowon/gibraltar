@@ -66,47 +66,67 @@ export const DELETE = async (
   const supabase = createClient();
   const postId = params.id;
   const userId = request.nextUrl.searchParams.get("userId");
-
   if (!postId || !userId) {
     return NextResponse.json(
       { message: "post id나 user id가 존재하지 않음" },
       { status: 400 }
     );
   }
-
-  const { error } = await supabase
-    .from("posts")
-    .delete()
-    .eq("id", postId)
-    .eq("user_id", userId);
-
-  if (error?.code === "23503") {
-    console.log(postId, "인 포스터를 소프트 삭제");
-    const { data, error: updateError } = await supabase
+  try {
+    const { data: imgData, error: imgError } = await supabase
       .from("posts")
-      .update({ is_deleted: true })
-      .eq("id", postId);
+      .select("images")
+      .eq("id", postId)
+      .single();
+    if (imgError) throw new Error(imgError.message);
 
-    if (updateError) {
-      return NextResponse.json(
-        { message: "삭제 업데이트 중 서버 오류", updateError },
-        { status: 500 }
+    console.log(imgData);
+    if (imgData && imgData.images) {
+      const paths = (imgData.images as string[]).map(
+        (path) => path.split("/posts/")[1]
+      );
+      const results = await Promise.all(
+        paths.map((path) => {
+          supabase.storage.from("posts").remove([`${path}`]);
+        })
       );
     }
 
-    console.log(data);
-    return NextResponse.json(
-      { message: "삭제 업데이트 성공", data },
-      { status: 200 }
-    );
-  }
+    const { error } = await supabase
+      .from("posts")
+      .delete()
+      .eq("id", postId)
+      .eq("user_id", userId);
 
-  if (error && error.code !== "23503") {
+    if (error && error.code === "23503") {
+      console.log(postId, "인 포스터를 소프트 삭제");
+      const { data, error: updateError } = await supabase
+        .from("posts")
+        .update({ is_deleted: true })
+        .eq("id", postId);
+
+      if (updateError) {
+        return NextResponse.json(
+          { message: "삭제 업데이트 중 서버 오류", updateError },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json(
+        { message: "삭제 업데이트 성공", data },
+        { status: 200 }
+      );
+    }
+
+    if (error && error.code !== "23503") {
+      throw new Error(error.message);
+    }
+
+    return NextResponse.json({ message: "post 삭제 성공" }, { status: 200 });
+  } catch (error) {
     return NextResponse.json(
-      { message: "삭제하는 도중 서버 오류", error },
+      { message: "서버로 인한 오류", error },
       { status: 500 }
     );
   }
-
-  return NextResponse.json({ message: "post 삭제 성공" }, { status: 200 });
 };

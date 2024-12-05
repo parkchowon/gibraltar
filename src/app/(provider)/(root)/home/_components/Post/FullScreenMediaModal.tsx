@@ -30,7 +30,7 @@ function FullScreenMediaModal({
         className="absolute left-8 top-8 w-9 h-9 cursor-pointer"
         onClick={() => setIsFullScreen(false)}
       >
-        <XBtn />
+        <XBtn width="32px" height="32px" />
       </button>
       {idx !== 0 && (
         <button

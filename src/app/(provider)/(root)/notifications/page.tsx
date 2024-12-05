@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 import { groupBy } from "lodash";
 import { userDataReducer } from "@/utils/formatChange";
 import { NOTIFICATION_SIZE } from "@/constants/post";
+import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
@@ -126,7 +127,7 @@ function NotificationPage() {
   if (isPending || isLoading)
     return (
       <MainLayout>
-        <PostLoading />
+        <TimeLineLoading />
       </MainLayout>
     );
 
