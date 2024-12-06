@@ -1,49 +1,36 @@
-import supabase from "@/supabase/client";
+import apiClient from "./apiClient.api";
 
 export const addFollow = async (userId: string, followingId: string) => {
-  const { data, error } = await supabase
-    .from("followers")
-    .insert({ follower_id: userId, following_id: followingId });
-
-  if (data) {
-    console.log("follow 성공");
+  try {
+    const response = await apiClient.post(
+      `api/follow/${userId}?following-id=${followingId}`
+    );
+  } catch (error) {
+    console.error(error);
   }
-  if (error) return console.error(error.message);
-
-  const { data: notiData, error: notiError } = await supabase
-    .from("notifications")
-    .insert({
-      reacted_user_id: userId,
-      user_id: followingId,
-      type: "follow",
-      is_read: false,
-    });
 };
 
 export const deleteFollow = async (userId: string, followingId: string) => {
-  const { data, error } = await supabase
-    .from("followers")
-    .delete()
-    .eq("follower_id", userId)
-    .eq("following_id", followingId);
-
-  const { data: notiData, error: notiError } = await supabase
-    .from("notifications")
-    .delete()
-    .eq("type", "follow")
-    .eq("reacted_user_id", userId)
-    .eq("user_id", followingId);
+  try {
+    const response = await apiClient.delete(
+      `api/follow/${userId}?following-id=${followingId}`
+    );
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-export const checkFollow = async (followerId: string, followingId: string) => {
-  const { data, error } = await supabase
-    .from("followers")
-    .select("id")
-    .eq("follower_id", followerId)
-    .eq("following_id", followingId)
-    .single();
-
-  if (error && error.code !== "PGRST116") console.error(error.message);
-
-  return !!data;
+export const checkFollow = async (
+  followerId: string,
+  followingId: string
+): Promise<boolean> => {
+  try {
+    const response = await apiClient.get(
+      `api/follow/${followerId}/check?following-id=${followingId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 };

@@ -22,6 +22,7 @@ function ProfileBox({ userId }: { userId: string }) {
   const [followings, setFollowings] = useState<number>(0);
   const [isFollowing, setIsFollowing] = useState<boolean>();
   const [editClick, setEditClick] = useState<boolean>(false);
+  const [buttonText, setButtonText] = useState<string>("");
 
   // 지금 프로필 페이지가 내 페이지인지
   const isMyProfile = loginUser && loginUser.id === userId;
@@ -52,7 +53,9 @@ function ProfileBox({ userId }: { userId: string }) {
       const isFollowing = followerList.find(
         (follower) => loginUser && follower.follower_id === loginUser.id
       );
+      console.log(isFollowing);
       setIsFollowing(!!isFollowing);
+      setButtonText(!!isFollowing ? "팔로잉" : "팔로우");
     }
   }, [data, data?.followerList]);
 
@@ -99,6 +102,8 @@ function ProfileBox({ userId }: { userId: string }) {
     } else {
       return (
         <button
+          onMouseOver={() => setButtonText(isFollowing ? "언팔로우" : "팔로우")}
+          onMouseLeave={() => setButtonText(isFollowing ? "팔로잉" : "팔로우")}
           onClick={() => handleFollowClick()}
           className={`${
             isFollowing
@@ -106,7 +111,7 @@ function ProfileBox({ userId }: { userId: string }) {
               : "bg-gray-50"
           } ml-auto h-[35px] px-[15px] text-sm rounded-full `}
         >
-          {isFollowing ? "팔로잉" : "팔로우"}
+          {buttonText}
         </button>
       );
     }
