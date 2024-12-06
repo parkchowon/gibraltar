@@ -9,6 +9,7 @@ import UserTab from "./_components/UserTab";
 import { useQuery } from "@tanstack/react-query";
 import { getUserId } from "@/apis/auth.api";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
+import ProfileLoading from "@/components/Loading/ProfileLoading";
 
 function ProfilePage({ params }: { params: { handle: string } }) {
   const handle = params.handle;
@@ -23,7 +24,12 @@ function ProfilePage({ params }: { params: { handle: string } }) {
   if (isPending)
     return (
       <MainLayout>
-        <TimeLineLoading />
+        <div className="px-6">
+          <ProfileLoading />
+          <ProfileDetail />
+          <TabContainer />
+          <TimeLineLoading />
+        </div>
       </MainLayout>
     );
   return (

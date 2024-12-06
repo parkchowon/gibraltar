@@ -7,11 +7,11 @@ import { usePathname, useRouter } from "next/navigation";
 function SideBar() {
   const router = useRouter();
   const path = usePathname();
-  const { user } = useAuth();
+  const { userData } = useAuth();
 
   const handleClick = (path: string) => {
     if (path === "/mypage") {
-      return router.push(`/${user?.id}`);
+      return router.push(`/${userData?.handle}`);
     }
     router.push(path);
   };
@@ -31,7 +31,7 @@ function SideBar() {
               alt="icon"
               src={
                 path === item.path ||
-                (item.path === "/mypage" && path === `/${user?.id}`)
+                (item.path === "/mypage" && path === `/${userData?.handle}`)
                   ? item.icon.fill
                   : item.icon.line
               }
@@ -39,7 +39,7 @@ function SideBar() {
             />
             <p
               className={`${path === item.path ? "font-extrabold" : ""} ${
-                item.path === "/mypage" && path === `/${user?.id}`
+                item.path === "/mypage" && path === `/${userData?.handle}`
                   ? "font-extrabold"
                   : ""
               } text-sm text-left`}

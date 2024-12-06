@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProfileEditModal from "./ProfileEditModal";
+import ProfileLoading from "@/components/Loading/ProfileLoading";
 
 type followerType = {
   created_at: string;
@@ -63,7 +64,7 @@ function ProfileBox({ userId }: { userId: string }) {
   // 팔로우, 언팔로우 업데이트를 위한 mutation
   const { followMutation, unFollowMutation } = useFollow();
 
-  if (!data || isPending) return <p>loading...</p>;
+  if (!data || isPending) return <ProfileLoading />;
 
   // 팔로우 할 시
   const profileUser = data.profileUser;
