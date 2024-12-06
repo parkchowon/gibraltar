@@ -2,11 +2,11 @@ import ProfileBtn from "@/components/ProfileBtn";
 import React from "react";
 import PostMedia from "./PostMedia";
 import { usePostStore } from "@/stores/post.store";
-import PostLoading from "@/components/Loading/PostLoading";
 import { useQuery } from "@tanstack/react-query";
 import { fetchQuotePost } from "@/apis/post.api";
 import { useRouter } from "next/navigation";
 import { QuoteType } from "@/types/home.type";
+import QuoteLoading from "@/components/Loading/QuoteLoading";
 
 function PostQuote({ postId }: { postId?: string }) {
   const { quotedPost } = usePostStore();
@@ -33,7 +33,7 @@ function PostQuote({ postId }: { postId?: string }) {
     }
   };
 
-  if (!quote || isPending) return <PostLoading />;
+  if (!quote || isPending) return <QuoteLoading />;
 
   return (
     <div
