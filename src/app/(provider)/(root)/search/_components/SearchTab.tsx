@@ -33,19 +33,17 @@ function SearchTab() {
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["searchPost", `${tabName}${searchText}`],
-      queryFn: ({ pageParam }): Promise<SearchPostType | SearchUserType> => {
+      queryFn: ({
+        pageParam = 1,
+      }): Promise<SearchPostType | SearchUserType> => {
         if (user) {
           switch (tabName) {
             case "popular":
               return fetchPopularSearch(searchText, user.id, pageParam);
             case "recent":
-              return fetchRecentSearch(
-                searchText,
-                user.id,
-                pageParam as number
-              );
+              return fetchRecentSearch(searchText, user.id, pageParam);
             case "user":
-              return fetchUserSearch(searchText, pageParam as number);
+              return fetchUserSearch(searchText, pageParam);
             default:
               throw new Error(`Invalid tab name: ${tabName}`);
           }
@@ -55,12 +53,10 @@ function SearchTab() {
       },
       getNextPageParam: (lastPage, allPages) => {
         if (!lastPage || lastPage.length === 0) return undefined;
-        if (tabName === "popular") {
-          return lastPage[lastPage.length - 1].id;
-        }
+
         return allPages.length + 1;
       },
-      initialPageParam: tabName === "popular" ? "" : 1,
+      initialPageParam: 1,
       enabled: !!user?.id,
     });
 
