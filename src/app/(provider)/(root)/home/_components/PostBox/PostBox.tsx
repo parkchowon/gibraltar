@@ -7,11 +7,11 @@ import { TagRow } from "@/types/database";
 import Image from "next/image";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import PhotoBtn from "@/assets/icons/photo.svg";
-import Cancel from "@/assets/icons/cancel_x.svg";
 import TagBox from "./TagBox";
 import SelectTag from "./SelectTag";
 import PostBoxLoading from "@/components/Loading/PostBoxLoading";
 import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
+import SelectMedia from "./SelectMedia";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -180,46 +180,15 @@ function PostBox() {
           maxLength={MAX_POST_TEXT_LENGTH}
           value={text}
         />
-        <div className="flex w-full py-2 overflow-x-hidden gap-x-3">
-          {postImg.length !== 0 &&
-            postImg.map((image, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className="relative rounded-lg w-[100px] h-[100px] aspect-square"
-                >
-                  <button
-                    type="button"
-                    className="absolute top-1 right-1 z-20"
-                    onClick={() => handleDeleteImage(idx)}
-                  >
-                    <Cancel width={15} height={15} />
-                  </button>
-                  <Image
-                    src={image}
-                    fill
-                    className="rounded-lg object-cover"
-                    alt="image"
-                  />
-                </div>
-              );
-            })}
-          {postVideo && (
-            <div className="relative">
-              <button
-                type="button"
-                className="absolute top-2 right-2 z-20"
-                onClick={() => handleDeleteImage()}
-              >
-                <Cancel width={20} height={20} />
-              </button>
-              <video className="w-full rounded-lg" controls>
-                <source src={postVideo} type="video/mp4" />
-                해당 브라우저가 video를 보여줄 수 없습니다.
-              </video>
-            </div>
-          )}
-        </div>
+        {/* 선택한 media가 표시되는 곳 */}
+        <SelectMedia
+          postFile={postFile}
+          postImg={postImg}
+          postVideo={postVideo}
+          setPostFile={setPostFile}
+          setPostImg={setPostImg}
+          setPostVideo={setPostVideo}
+        />
         <div
           ref={tagBoxRef}
           className={`flex px-1.5 items-center w-full ${
