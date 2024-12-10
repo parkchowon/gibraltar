@@ -6,7 +6,7 @@ import { useFollow } from "@/hooks/useUserFollow";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import ProfileEditModal from "./ProfileEditModal";
+import ProfileEditModal from "./ProfileEdit/ProfileEditModal";
 import ProfileLoading from "@/components/Loading/ProfileLoading";
 
 type followerType = {
@@ -53,7 +53,7 @@ function ProfileBox({ userId }: { userId: string }) {
       const isFollowing = followerList.find(
         (follower) => loginUser && follower.follower_id === loginUser.id
       );
-      console.log(isFollowing);
+
       setIsFollowing(!!isFollowing);
       setButtonText(!!isFollowing ? "팔로잉" : "팔로우");
     }

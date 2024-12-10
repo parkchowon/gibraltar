@@ -3,7 +3,14 @@ import ReactDOM from "react-dom";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import CameraIcon from "@/assets/icons/camera_edit.svg";
-import EditInput from "./EditInput";
+import EditInput from "../EditInput";
+import GameTime from "./GameTime";
+import DetailTitle from "./DetailTitle";
+import GameStyle from "./GameStyle";
+import GameTier from "./GameTier";
+import GameMode from "./GameMode";
+import FavHero from "./FavHero";
+import FavTeam from "./FavTeam";
 
 function ProfileEditModal({
   profileUser,
@@ -23,6 +30,13 @@ function ProfileEditModal({
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
   const [handle, setHandle] = useState<string>(profileUser.handle);
 
+  const [isTimeClick, setIsTimeClick] = useState<boolean>(false);
+  const [isStyleClick, setIsStyleClick] = useState<boolean>(false);
+  const [isTeamClick, setIsTeamClick] = useState<boolean>(false);
+  const [isTierClick, setIsTierClick] = useState<boolean>(false);
+  const [isHeroClick, setIsHeroClick] = useState<boolean>(false);
+  const [isModeClick, setIsModeClick] = useState<boolean>(false);
+
   // 닉네임 수정
   const handleNickChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.currentTarget.value);
@@ -31,6 +45,23 @@ function ProfileEditModal({
   // handle(id) 수정
   const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHandle(e.currentTarget.value);
+  };
+
+  const handleDetailEditClick = (type: string) => {
+    switch (type) {
+      case "mode":
+        return setIsModeClick(!isModeClick);
+      case "time":
+        return setIsTimeClick(!isTimeClick);
+      case "style":
+        return setIsStyleClick(!isStyleClick);
+      case "team":
+        return setIsTeamClick(!isTeamClick);
+      case "tier":
+        return setIsTierClick(!isTierClick);
+      case "hero":
+        return setIsHeroClick(!isHeroClick);
+    }
   };
 
   return ReactDOM.createPortal(
@@ -76,28 +107,42 @@ function ProfileEditModal({
           </div>
           <div className="flex flex-col gap-5">
             <p>세부 프로필</p>
-            <div className="flex flex-col gap-4">
-              <EditInput
-                label="닉네임"
-                value={nickname}
-                onChange={handleNickChange}
-              />
-              <EditInput
-                label="닉네임"
-                value={nickname}
-                onChange={handleNickChange}
-              />
-              <EditInput
-                label="닉네임"
-                value={nickname}
-                onChange={handleNickChange}
-              />
-              <EditInput
-                label="닉네임"
-                value={nickname}
-                onChange={handleNickChange}
-              />
-            </div>
+            <DetailTitle
+              title="플레이 모드"
+              type="mode"
+              onClick={handleDetailEditClick}
+            />
+            {isModeClick && <GameMode />}
+            <DetailTitle
+              title="게임 시간대"
+              type="time"
+              onClick={handleDetailEditClick}
+            />
+            {isTimeClick && <GameTime />}
+            <DetailTitle
+              title="게임 스타일"
+              type="style"
+              onClick={handleDetailEditClick}
+            />
+            {isStyleClick && <GameStyle />}
+            <DetailTitle
+              title="티어"
+              type="tier"
+              onClick={handleDetailEditClick}
+            />
+            {isTierClick && <GameTier />}
+            <DetailTitle
+              title="플레이 영웅"
+              type="hero"
+              onClick={handleDetailEditClick}
+            />
+            {isHeroClick && <FavHero />}
+            <DetailTitle
+              title="응원하는 팀"
+              type="team"
+              onClick={handleDetailEditClick}
+            />
+            {isTeamClick && <FavTeam />}
           </div>
         </div>
         <div className="flex w-full h-fit justify-center mt-5">
