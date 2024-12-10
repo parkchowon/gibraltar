@@ -4,12 +4,12 @@ import React from "react";
 
 function FavTeam() {
   return (
-    <div className="relative flex justify-center w-full gap-3">
+    <div className="relative flex justify-center w-full gap-2">
       {OWCSTeam.map((team) => {
         return (
           <button
             key={team.id}
-            className="relative w-10 h-10 rounded-full border-[1px]"
+            className="relative w-14 h-14 rounded-full border-[1px]"
           >
             {team.id === 0 ? (
               <p>없음</p>
