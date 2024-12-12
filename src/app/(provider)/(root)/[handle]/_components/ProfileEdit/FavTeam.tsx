@@ -4,7 +4,7 @@ import React from "react";
 
 function FavTeam() {
   return (
-    <div className="relative flex justify-center w-full gap-2">
+    <div className="relative flex justify-center w-full pb-5 gap-2 bg-white">
       {OWCSTeam.map((team) => {
         return (
           <button

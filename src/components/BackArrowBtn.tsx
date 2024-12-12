@@ -4,12 +4,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { cva, VariantProps } from "class-variance-authority";
 import { usePostStore } from "@/stores/post.store";
 
-const arrowBtnVariants = cva("flex gap-8", {
+const arrowBtnVariants = cva("flex gap-8 py-6", {
   variants: {
     intent: {
-      page: "sticky top-0 z-20 w-full py-6 px-[25px] border-gray-300 border-b-[1px] bg-gray-200 bg-opacity-60 backdrop-blur-md",
-      commentModal: "w-full py-6 px-[25px]",
-      profileEditModal: "",
+      page: "sticky top-0 z-20 w-full px-[25px] border-gray-300 border-b-[1px] bg-gray-200 bg-opacity-60 backdrop-blur-md",
+      commentModal: "w-full px-[25px]",
+      profileEditModal:
+        "fixed absolute w-full h-fit bg-white z-30 border-b-[1px] px-6 rounded-t-2xl",
     },
   },
   defaultVariants: {

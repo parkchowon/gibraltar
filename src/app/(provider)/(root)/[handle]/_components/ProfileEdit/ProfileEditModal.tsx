@@ -1,6 +1,7 @@
 import BackArrowBtn from "@/components/BackArrowBtn";
 import ReactDOM from "react-dom";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import styles from "@/styles/postbox.module.css";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import CameraIcon from "@/assets/icons/camera_edit.svg";
 import EditInput from "../EditInput";
@@ -65,23 +66,28 @@ function ProfileEditModal({
   };
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex justify-center">
+    <div className="fixed inset-0 z-50 flex justify-center items-center">
       <div
         onClick={() => setEditClick(false)}
-        className="absolute inset-0 bg-black opacity-30"
+        className="absolute w-full h-full inset-0 bg-black opacity-30"
       />
-      <div className="relative top-[6.9%] w-[38.3%] h-fit pb-[30px] px-6 py-6 bg-white rounded-2xl">
+      <div
+        className={`relative w-[38.3%] h-[90%] max-h-[90%] pb-[30px] bg-white rounded-2xl`}
+      >
         {/* 홈으로 */}
         <BackArrowBtn
           intent={"profileEditModal"}
           type="modal"
           setModalClick={setEditClick}
         />
-        <div className="flex flex-col pl-[9.7%] pr-[71px]">
-          <div className="flex justify-center items-center w-full py-12 gap-[46px]">
+        <div
+          id="modal"
+          className={`flex flex-col px-6 pl-[9.7%] mt-[73px] pr-[71px] h-[650px] ${styles.customModalScrollbar} overflow-y-auto`}
+        >
+          <div className="flex justify-center items-center w-full py-10 gap-[46px]">
             {/* 프로필 사진 부분 */}
             <div className="relative w-fit h-fit flex items-center justify-center">
-              <button className="absolute grid place-items-center w-[45px] h-[45px] bg-black rounded-full bg-opacity-40 z-20">
+              <button className="absolute grid place-items-center w-10 h-10 bg-black rounded-full bg-opacity-40 z-20">
                 <CameraIcon width="25" height="25" color="white" />
               </button>
               <ProfileBtn
@@ -105,7 +111,7 @@ function ProfileEditModal({
               />
             </div>
           </div>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <p>세부 프로필</p>
             <DetailTitle
               title="플레이 모드"
@@ -145,7 +151,7 @@ function ProfileEditModal({
             {isTeamClick && <FavTeam />}
           </div>
         </div>
-        <div className="flex w-full h-fit justify-center mt-5">
+        <div className="flex w-full h-fit pt-3 justify-center">
           <button className="px-12 py-3.5 text-gray-500 font-medium bg-gray-400 rounded-full">
             변경사항 저장
           </button>
