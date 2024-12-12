@@ -112,7 +112,7 @@ function ProfileEditModal({
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            <p>세부 프로필</p>
+            <p className="font-semibold">세부 프로필</p>
             <DetailTitle
               title="플레이 모드"
               type="mode"
