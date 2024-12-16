@@ -1,8 +1,8 @@
 import { PLAY_STYLE } from "@/constants/profile";
 import React, { useState } from "react";
 
-function GameStyle() {
-  const [gameStyle, setGameStyle] = useState<string>("");
+function GameStyle({ style }: { style: string }) {
+  const [gameStyle, setGameStyle] = useState<string>(style);
 
   const handleStyleClick = (style: string) => {
     setGameStyle(style);

@@ -357,6 +357,8 @@ export type Database = {
           play_mode: Json
           play_style: string
           play_time: Json
+          tier: Json
+          tier_grade: Json
           user_id: string
         }
         Insert: {
@@ -369,6 +371,8 @@ export type Database = {
           play_mode: Json
           play_style: string
           play_time: Json
+          tier?: Json
+          tier_grade?: Json
           user_id: string
         }
         Update: {
@@ -381,6 +385,8 @@ export type Database = {
           play_mode?: Json
           play_style?: string
           play_time?: Json
+          tier?: Json
+          tier_grade?: Json
           user_id?: string
         }
         Relationships: [

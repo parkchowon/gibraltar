@@ -1,11 +1,23 @@
 import { fetchHero } from "@/apis/overwatch.api";
 import { PLAY_POSITION } from "@/constants/profile";
+import { Json } from "@/types/supabase";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React, { useState } from "react";
 
-function FavHero() {
+type heroType = {
+  key: string;
+  name: string;
+  portrait: string;
+  role: string;
+};
+function FavHero({ main, play }: { main: Json; play: Json }) {
+  const selectedMain = (main as heroType[]).map((main) => main.name);
+  const selectedPlay = (play as heroType[]).map((play) => play.name);
+
   const [position, setPosition] = useState<string>("tank");
+  const [mainChamp, setMainChamp] = useState<string[]>(selectedMain);
+  const [playChamp, setPlayChamp] = useState<string[]>(selectedPlay);
 
   // 영웅 목록 불러오기
   const { isPending, data } = useQuery({
@@ -14,6 +26,18 @@ function FavHero() {
       return fetchHero();
     },
   });
+
+  const handleHeroClick = (hero: string) => {
+    if (mainChamp.includes(hero)) {
+      const removeChamp = mainChamp.filter((main) => main !== hero);
+      return setMainChamp(removeChamp);
+    } else if (playChamp.includes(hero)) {
+      const removeChamp = playChamp.filter((play) => play !== hero);
+      setPlayChamp(removeChamp);
+      return setMainChamp([...mainChamp, hero]);
+    }
+    return setPlayChamp([...playChamp, hero]);
+  };
 
   const handlePositionClick = (pos: string) => {
     setPosition(pos);
@@ -36,6 +60,7 @@ function FavHero() {
           );
         })}
       </div>
+      {isPending && <p>loading...</p>}
       {!isPending && data && (
         <div className="flex flex-wrap w-full py-3 gap-2">
           {data.map((hero) => {
@@ -43,7 +68,14 @@ function FavHero() {
               return (
                 <button
                   key={hero.key}
-                  className="relative w-14 h-14 rounded-full"
+                  onClick={() => handleHeroClick(hero.name)}
+                  className={`relative w-14 h-14 rounded-full ${
+                    mainChamp.includes(hero.name)
+                      ? "border-2 border-warning"
+                      : playChamp.includes(hero.name)
+                      ? "border-2 border-mint"
+                      : ""
+                  }`}
                 >
                   <Image
                     src={hero.portrait}

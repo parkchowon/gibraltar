@@ -1,8 +1,10 @@
 import { PLAY_TIME } from "@/constants/profile";
+import { Json } from "@/types/supabase";
 import React, { useState } from "react";
 
-function GameTime() {
-  const [gameTime, setGameTime] = useState<string[]>([]);
+function GameTime({ time }: { time: Json }) {
+  const selectedTime = time as string[];
+  const [gameTime, setGameTime] = useState<string[]>(selectedTime);
 
   const handleTimeClick = (mode: string) => {
     if (gameTime.includes(mode)) {

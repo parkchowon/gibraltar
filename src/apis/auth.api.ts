@@ -1,10 +1,23 @@
 import supabase from "@/supabase/client";
 import apiClient from "./apiClient.api";
 import { FollowType } from "@/types/profile.type";
+import { ProfileDetailType } from "@/types/database";
 
 export const getUser = async (userId: string) => {
   try {
     const response = await apiClient.get(`api/auth/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getUserProfile = async (
+  userId: string
+): Promise<ProfileDetailType | null> => {
+  try {
+    const response = await apiClient.get(`api/auth/user/${userId}/profile`);
     return response.data;
   } catch (error) {
     console.error(error);

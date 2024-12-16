@@ -35,14 +35,39 @@ export const POST = async (request: NextRequest) => {
         main_champs: mainChamps,
         play_champs: playChamps,
       }),
-      supabase.from("play_modes").insert(playModes),
-      supabase.from("play_times").insert(playTime),
+      supabase.from("play_modes").upsert(playModes),
+      supabase.from("play_times").upsert(playTime),
     ]);
     if (profileResult.error) throw new Error(profileResult.error.message);
     if (modeResult.error) throw new Error(modeResult.error.message);
     if (timeResult.error) throw new Error(timeResult.error.message);
 
     return NextResponse.json({ message: "프로필 저장 성공" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "서버로 인한 오류", error },
+      { status: 500 }
+    );
+  }
+};
+
+/** 상세 프로필 받아오는 로직직 */
+export const GET = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const supabase = createClient();
+  const userId = params.id;
+
+  try {
+    const { data, error } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+    if (error) throw new Error(error.message);
+
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       { message: "서버로 인한 오류", error },

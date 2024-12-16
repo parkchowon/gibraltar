@@ -1,22 +1,41 @@
 import { PLAY_POSITION } from "@/constants/profile";
 import { OWTier } from "@/constants/tier";
+import { Json } from "@/types/supabase";
 import Image from "next/image";
 import React, { useState } from "react";
 
-function GameTier() {
-  const [position, setPosition] = useState<string>("돌격");
-  const [grade, setGrade] = useState<number>(0);
-  const [userTier, setUserTier] = useState<string>("");
+function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
+  const selectedTier = tier as string[];
+  const selectedGrade = grade as number[];
+
+  const [position, setPosition] = useState<number>(0);
+  const [tierGrade, setTierGrade] = useState<number[]>(selectedGrade);
+  const [userTier, setUserTier] = useState<string[]>(selectedTier);
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGrade(Number(e.currentTarget.value));
+    const newGrade = Number(e.currentTarget.value);
+    switch (position) {
+      case 0:
+        return setTierGrade([newGrade, tierGrade[1], tierGrade[2]]);
+      case 1:
+        return setTierGrade([tierGrade[0], newGrade, tierGrade[2]]);
+      case 2:
+        return setTierGrade([tierGrade[0], tierGrade[1], newGrade]);
+    }
   };
 
   const handleTierClick = (tier: string) => {
-    setUserTier(tier);
+    switch (position) {
+      case 0:
+        return setUserTier([tier, userTier[1], userTier[2]]);
+      case 1:
+        return setUserTier([userTier[0], tier, userTier[2]]);
+      case 2:
+        return setUserTier([userTier[0], userTier[1], tier]);
+    }
   };
 
-  const handlePositionClick = (pos: string) => {
+  const handlePositionClick = (pos: number) => {
     setPosition(pos);
   };
 
@@ -27,8 +46,8 @@ function GameTier() {
           return (
             <button
               key={pos.id}
-              onClick={() => handlePositionClick(pos.name)}
-              className={`${position === pos.name ? "bg-mint" : ""} ${
+              onClick={() => handlePositionClick(idx)}
+              className={`${position === idx ? "bg-mint" : ""} ${
                 idx === 0 && "rounded-l-xl"
               } ${idx === 2 && "rounded-r-xl"}`}
             >
@@ -39,7 +58,8 @@ function GameTier() {
       </div>
       <div className="flex w-full h-fit justify-center items-center py-2 bg-mint rounded-full">
         <p className="font-bold">
-          {userTier ? userTier : "설정 안함"} {grade !== 0 && 6 - grade}
+          {userTier[position] ? userTier[position] : "설정 안함"}{" "}
+          {tierGrade[position] && 6 - tierGrade[position]}
         </p>
       </div>
       <div className="flex w-full justify-center py-2 gap-2">
@@ -49,7 +69,7 @@ function GameTier() {
               onClick={() => handleTierClick(tier.tier)}
               key={tier.id}
               className={`relative w-14 h-14 border rounded-full ${
-                userTier === tier.tier ? "border-mint border-2" : ""
+                userTier[position] === tier.tier ? "border-mint border-2" : ""
               }`}
             >
               <Image
@@ -69,7 +89,7 @@ function GameTier() {
           ))}
         </div>
         <input
-          value={grade}
+          value={tierGrade[position]}
           onChange={handleNumberChange}
           type="range"
           min={1}

@@ -2,8 +2,8 @@ import { OWCSTeam } from "@/constants/owcsTeam";
 import Image from "next/image";
 import React, { useState } from "react";
 
-function FavTeam() {
-  const [favTeam, setFavTeam] = useState<string>("없음");
+function FavTeam({ team }: { team: string }) {
+  const [favTeam, setFavTeam] = useState<string>(team);
 
   const handleTeamClick = (team: string) => {
     setFavTeam(team);

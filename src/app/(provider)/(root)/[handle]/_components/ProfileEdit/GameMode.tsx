@@ -1,8 +1,10 @@
 import { PLAY_MODE } from "@/constants/profile";
+import { Json } from "@/types/supabase";
 import React, { useState } from "react";
 
-function GameMode() {
-  const [gameMode, setGameMode] = useState<string[]>([]);
+function GameMode({ mode }: { mode: Json }) {
+  const selectedMode = mode as string[];
+  const [gameMode, setGameMode] = useState<string[]>(selectedMode);
   const handleModeClick = (mode: string) => {
     if (gameMode.includes(mode)) {
       setGameMode(gameMode.filter((item) => item !== mode));

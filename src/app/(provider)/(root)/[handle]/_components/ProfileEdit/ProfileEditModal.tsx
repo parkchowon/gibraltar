@@ -1,7 +1,7 @@
 import BackArrowBtn from "@/components/BackArrowBtn";
 import ReactDOM from "react-dom";
 import styles from "@/styles/postbox.module.css";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import CameraIcon from "@/assets/icons/camera_edit.svg";
 import EditInput from "../EditInput";
@@ -12,6 +12,8 @@ import GameTier from "./GameTier";
 import GameMode from "./GameMode";
 import FavHero from "./FavHero";
 import FavTeam from "./FavTeam";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProfile } from "@/apis/auth.api";
 
 function ProfileEditModal({
   profileUser,
@@ -30,6 +32,7 @@ function ProfileEditModal({
 }) {
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
   const [handle, setHandle] = useState<string>(profileUser.handle);
+  const [bio, setBio] = useState<string>("");
 
   const [isTimeClick, setIsTimeClick] = useState<boolean>(false);
   const [isStyleClick, setIsStyleClick] = useState<boolean>(false);
@@ -38,14 +41,25 @@ function ProfileEditModal({
   const [isHeroClick, setIsHeroClick] = useState<boolean>(false);
   const [isModeClick, setIsModeClick] = useState<boolean>(false);
 
+  const { data: profile, isPending } = useQuery({
+    queryKey: ["profileDetail", profileUser.id],
+    queryFn: () => getUserProfile(profileUser.id),
+  });
+
   // 닉네임 수정
   const handleNickChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // TODO: 유효성 검사 추가가
     setNickname(e.currentTarget.value);
   };
 
   // handle(id) 수정
   const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // TODO: handle 유효성 검사 추가
     setHandle(e.currentTarget.value);
+  };
+
+  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBio(e.currentTarget.value);
   };
 
   const handleDetailEditClick = (type: string) => {
@@ -64,6 +78,8 @@ function ProfileEditModal({
         return setIsHeroClick(!isHeroClick);
     }
   };
+
+  if (isPending || !profile) return <p>loading...</p>;
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex justify-center items-center">
@@ -109,6 +125,11 @@ function ProfileEditModal({
                 value={handle}
                 onChange={handleHandleChange}
               />
+              <EditInput
+                label="바이오"
+                value={profile?.bio || bio}
+                onChange={handleBioChange}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-4">
@@ -118,37 +139,41 @@ function ProfileEditModal({
               type="mode"
               onClick={handleDetailEditClick}
             />
-            {isModeClick && <GameMode />}
+            {isModeClick && <GameMode mode={profile.play_mode} />}
             <DetailTitle
               title="게임 시간대"
               type="time"
               onClick={handleDetailEditClick}
             />
-            {isTimeClick && <GameTime />}
+            {isTimeClick && <GameTime time={profile.play_time} />}
             <DetailTitle
               title="게임 스타일"
               type="style"
               onClick={handleDetailEditClick}
             />
-            {isStyleClick && <GameStyle />}
+            {isStyleClick && <GameStyle style={profile.play_style} />}
             <DetailTitle
               title="티어"
               type="tier"
               onClick={handleDetailEditClick}
             />
-            {isTierClick && <GameTier />}
+            {isTierClick && (
+              <GameTier tier={profile.tier} grade={profile.tier_grade} />
+            )}
             <DetailTitle
               title="플레이 영웅"
               type="hero"
               onClick={handleDetailEditClick}
             />
-            {isHeroClick && <FavHero />}
+            {isHeroClick && (
+              <FavHero main={profile.main_champs} play={profile.play_champs} />
+            )}
             <DetailTitle
               title="응원하는 팀"
               type="team"
               onClick={handleDetailEditClick}
             />
-            {isTeamClick && <FavTeam />}
+            {isTeamClick && <FavTeam team={profile.favorite_team} />}
           </div>
         </div>
         <div className="flex w-full h-fit pt-3 justify-center">
