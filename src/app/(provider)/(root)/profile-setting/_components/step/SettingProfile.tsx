@@ -9,6 +9,7 @@ import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import { useProfileStore } from "@/stores/profile.store";
 import { profileUpdate } from "@/apis/profile.api";
+import { MAX_HANDLE_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/textLength";
 
 function SettingProfile() {
   const { userData, isPending } = useAuth();
@@ -143,7 +144,7 @@ function SettingProfile() {
             ref={nickRef}
             className="w-[356px] py-3 px-[18px] border-b-[1px] font-medium outline-none"
             defaultValue={userData.nickname}
-            maxLength={20}
+            maxLength={MAX_NICKNAME_LENGTH}
             onChange={handleNickChange}
             placeholder="닉네임을 입력해주세요"
           />
@@ -162,7 +163,7 @@ function SettingProfile() {
               ref={idRef}
               onChange={handleIdChange}
               type="text"
-              maxLength={15}
+              maxLength={MAX_HANDLE_LENGTH}
               autoFocus
               defaultValue={id}
               placeholder="아이디를 입력해주세요"

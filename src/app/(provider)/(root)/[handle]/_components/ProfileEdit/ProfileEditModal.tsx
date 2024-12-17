@@ -1,7 +1,7 @@
 import BackArrowBtn from "@/components/BackArrowBtn";
 import ReactDOM from "react-dom";
 import styles from "@/styles/postbox.module.css";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import CameraIcon from "@/assets/icons/camera_edit.svg";
 import EditInput from "../EditInput";
@@ -33,6 +33,8 @@ function ProfileEditModal({
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
   const [handle, setHandle] = useState<string>(profileUser.handle);
   const [bio, setBio] = useState<string>("");
+  const [file, setFile] = useState<File>();
+  const [profileImg, setProfileImg] = useState<string>(profileUser.profile_url);
 
   const [isTimeClick, setIsTimeClick] = useState<boolean>(false);
   const [isStyleClick, setIsStyleClick] = useState<boolean>(false);
@@ -46,20 +48,43 @@ function ProfileEditModal({
     queryFn: () => getUserProfile(profileUser.id),
   });
 
+  useEffect(() => {
+    setBio(profile?.bio || "");
+  }, [profile]);
+
   // 닉네임 수정
-  const handleNickChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNickChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // TODO: 유효성 검사 추가가
     setNickname(e.currentTarget.value);
   };
 
   // handle(id) 수정
-  const handleHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // TODO: handle 유효성 검사 추가
     setHandle(e.currentTarget.value);
   };
 
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // bio 수정정
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.currentTarget.value);
+  };
+
+  // img 클릭
+  const handleProfileImgClick = () => {
+    document.getElementById("file-input")?.click();
+  };
+
+  /** 이미지 변경 로직 */
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setFile(file);
+    const reader = new FileReader();
+    if (file) {
+      reader.onloadend = () => {
+        setProfileImg(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDetailEditClick = (type: string) => {
@@ -79,7 +104,13 @@ function ProfileEditModal({
     }
   };
 
-  if (isPending || !profile) return <p>loading...</p>;
+  if (isPending || !profile) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center bg-black/35">
+        <p>loading...</p>
+      </div>
+    );
+  }
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex justify-center items-center">
@@ -103,14 +134,25 @@ function ProfileEditModal({
           <div className="flex justify-center items-center w-full py-10 gap-[46px]">
             {/* 프로필 사진 부분 */}
             <div className="relative w-fit h-fit flex items-center justify-center">
-              <button className="absolute grid place-items-center w-10 h-10 bg-black rounded-full bg-opacity-40 z-20">
+              <button
+                onClick={handleProfileImgClick}
+                className="absolute grid place-items-center w-10 h-10 bg-black rounded-full bg-opacity-40 z-20"
+              >
                 <CameraIcon width="25" height="25" color="white" />
               </button>
               <ProfileBtn
-                profileUrl={profileUser.profile_url}
+                profileUrl={profileImg}
                 handle={profileUser.handle}
                 intent={"edit"}
                 type="non-click"
+              />
+              {/** 컴퓨터에서 사진 받는 input */}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                id="file-input"
+                onChange={handleImageChange}
               />
             </div>
             {/* 닉네임, 아이디 수정 input 부분 */}
@@ -127,7 +169,7 @@ function ProfileEditModal({
               />
               <EditInput
                 label="바이오"
-                value={profile?.bio || bio}
+                value={bio}
                 onChange={handleBioChange}
               />
             </div>

@@ -1,20 +1,40 @@
-import React from "react";
+import {
+  MAX_BIO_LENGTH,
+  MAX_HANDLE_LENGTH,
+  MAX_NICKNAME_LENGTH,
+} from "@/constants/textLength";
+import React, { useEffect, useState } from "react";
 
 type EditInputProps = {
   label: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 function EditInput({ label, value, onChange }: EditInputProps) {
+  const [maxLength, setMaxLength] = useState<number>(15);
+
+  useEffect(() => {
+    switch (label) {
+      case "닉네임":
+        return setMaxLength(MAX_NICKNAME_LENGTH);
+      case "아이디":
+        return setMaxLength(MAX_HANDLE_LENGTH);
+      case "바이오":
+        return setMaxLength(MAX_BIO_LENGTH);
+    }
+  }, []);
+
   return (
-    <label className="flex w-full px-4 py-3 border gap-12 border-gray-300 rounded-2xl">
+    <label className="flex w-full px-4 py-3 border gap-8 border-gray-300 rounded-2xl">
       <p className="text-gray-300">{label}</p>
-      <input
-        type="text"
+      <textarea
+        maxLength={maxLength}
         value={value}
         onChange={onChange}
-        className="text-black bg-transparent"
+        className={`text-black flex-grow resize-none outline-none ${
+          label !== "바이오" ? "h-6" : "h-14"
+        }`}
       />
     </label>
   );

@@ -4,6 +4,7 @@ import { useProfileStore } from "@/stores/profile.store";
 import { useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
+import { MAX_BIO_LENGTH } from "@/constants/textLength";
 
 function SettingText() {
   const [text, setText] = useState<string>("");
@@ -36,6 +37,7 @@ function SettingText() {
         onChange={(e) => setText(e.currentTarget.value)}
         className="w-[404px] resize-none border-[1px] border-black rounded-[15px] h-[367px] px-6 py-5 my-[84px] outline-none"
         placeholder="저는 오버워치를 하는 트레이서라고 해요"
+        maxLength={MAX_BIO_LENGTH}
       ></textarea>
       <NextStepButton isClickable={!!text} onClick={handleSubmit} />
     </ProfileSettingContainer>

@@ -94,7 +94,7 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onClick={handleEditClick}
-          className="ml-auto h-[35px] px-[15px] text-sm rounded-full bg-gray-50"
+          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-gray-50"
         >
           프로필 편집
         </button>
@@ -118,14 +118,14 @@ function ProfileBox({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex pt-[50px] pb-[5.5%] px-[95px]">
+    <div className="flex pt-[50px] pb-[5.5%] px-[70px] gap-14">
       {editClick && profileUser && (
         <ProfileEditModal
           profileUser={profileUser}
           setEditClick={setEditClick}
         />
       )}
-      <div className="relative w-[21.1%] h-[21.1%] mr-[95px] aspect-square">
+      <div className="relative w-[120px] h-[120px] aspect-square">
         <Image
           alt="profile"
           fill
@@ -133,11 +133,12 @@ function ProfileBox({ userId }: { userId: string }) {
           className="absolute rounded-full object-cover"
         />
       </div>
-      <div className="flex flex-col flex-grow justify-between">
+      <div className="flex flex-col flex-grow gap-5 justify-between">
         <div className="flex">
-          <div>
-            <p className="font-semibold text-lg">{profileUser?.nickname}</p>
-            <p className="text-sm mb-1">{profileUser?.handle}</p>
+          <div className="flex-grow">
+            <p className="font-semibold">{profileUser?.nickname}</p>
+            <p className="text-xs mb-1">{profileUser?.handle}</p>
+            <p className="text-sm mb-3">{profileUser?.detail.bio}</p>
             <UserStatus status={status} intent={"page"} />
           </div>
           {buttonRender()}

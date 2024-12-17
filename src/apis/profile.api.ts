@@ -1,4 +1,3 @@
-import supabase from "@/supabase/client";
 import { profileType } from "@/types/hero.type";
 import apiClient from "./apiClient.api";
 import { RecommendedUserType } from "@/types/profile.type";
@@ -62,6 +61,9 @@ export const profileUpdate = async ({
     return true;
   }
 };
+
+// TODO: user_profile 테이블의 update
+export const profileDetailUpdate = async () => {};
 
 // 첫 프로필 세팅 후 추천 유저 불러오기
 export const getRecommendedUsers = async (

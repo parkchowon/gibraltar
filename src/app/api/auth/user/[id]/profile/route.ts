@@ -91,7 +91,7 @@ export const PATCH = async (
       .update({
         profile_url: profile_url || undefined,
         nickname: nickname || undefined,
-        handle: handle,
+        handle: handle || undefined,
       })
       .eq("id", userId);
 
