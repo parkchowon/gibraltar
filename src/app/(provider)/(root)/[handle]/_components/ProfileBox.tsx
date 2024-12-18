@@ -138,7 +138,9 @@ function ProfileBox({ userId }: { userId: string }) {
           <div className="flex-grow">
             <p className="font-semibold">{profileUser?.nickname}</p>
             <p className="text-xs mb-1">{profileUser?.handle}</p>
-            <p className="text-sm mb-3">{profileUser?.detail.bio}</p>
+            <p className="text-sm mb-3">
+              {profileUser && profileUser.detail ? profileUser.detail.bio : ""}
+            </p>
             <UserStatus status={status} intent={"page"} />
           </div>
           {buttonRender()}

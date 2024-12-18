@@ -1,7 +1,13 @@
 import BackArrowBtn from "@/components/BackArrowBtn";
 import ReactDOM from "react-dom";
 import styles from "@/styles/postbox.module.css";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ProfileBtn from "@/components/ProfileBtn";
 import CameraIcon from "@/assets/icons/camera_edit.svg";
 import EditInput from "../EditInput";
@@ -42,6 +48,14 @@ function ProfileEditModal({
   const [isTierClick, setIsTierClick] = useState<boolean>(false);
   const [isHeroClick, setIsHeroClick] = useState<boolean>(false);
   const [isModeClick, setIsModeClick] = useState<boolean>(false);
+
+  // ref
+  const modeRef = useRef<HTMLDivElement>(null);
+  const timeRef = useRef<HTMLDivElement>(null);
+  const styleRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const teamRef = useRef<HTMLDivElement>(null);
+  const tierRef = useRef<HTMLDivElement>(null);
 
   const { data: profile, isPending } = useQuery({
     queryKey: ["profileDetail", profileUser.id],
@@ -90,19 +104,47 @@ function ProfileEditModal({
   const handleDetailEditClick = (type: string) => {
     switch (type) {
       case "mode":
+        scrollToRef(modeRef);
         return setIsModeClick(!isModeClick);
       case "time":
+        scrollToRef(timeRef);
         return setIsTimeClick(!isTimeClick);
       case "style":
+        scrollToRef(styleRef);
         return setIsStyleClick(!isStyleClick);
       case "team":
+        scrollToRef(teamRef);
         return setIsTeamClick(!isTeamClick);
       case "tier":
+        scrollToRef(tierRef);
         return setIsTierClick(!isTierClick);
       case "hero":
+        scrollToRef(heroRef);
         return setIsHeroClick(!isHeroClick);
     }
   };
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    if (isHeroClick) scrollToRef(heroRef);
+    if (isModeClick) scrollToRef(modeRef);
+    if (isStyleClick) scrollToRef(styleRef);
+    if (isTeamClick) scrollToRef(teamRef);
+    if (isTierClick) scrollToRef(tierRef);
+    if (isTimeClick) scrollToRef(timeRef);
+  }, [
+    isHeroClick,
+    isModeClick,
+    isStyleClick,
+    isTeamClick,
+    isTierClick,
+    isTimeClick,
+  ]);
 
   if (isPending || !profile) {
     return (
@@ -174,48 +216,63 @@ function ProfileEditModal({
               />
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             <p className="font-semibold">세부 프로필</p>
-            <DetailTitle
-              title="플레이 모드"
-              type="mode"
-              onClick={handleDetailEditClick}
-            />
-            {isModeClick && <GameMode mode={profile.play_mode} />}
-            <DetailTitle
-              title="게임 시간대"
-              type="time"
-              onClick={handleDetailEditClick}
-            />
-            {isTimeClick && <GameTime time={profile.play_time} />}
-            <DetailTitle
-              title="게임 스타일"
-              type="style"
-              onClick={handleDetailEditClick}
-            />
-            {isStyleClick && <GameStyle style={profile.play_style} />}
-            <DetailTitle
-              title="티어"
-              type="tier"
-              onClick={handleDetailEditClick}
-            />
-            {isTierClick && (
-              <GameTier tier={profile.tier} grade={profile.tier_grade} />
-            )}
-            <DetailTitle
-              title="플레이 영웅"
-              type="hero"
-              onClick={handleDetailEditClick}
-            />
-            {isHeroClick && (
-              <FavHero main={profile.main_champs} play={profile.play_champs} />
-            )}
-            <DetailTitle
-              title="응원하는 팀"
-              type="team"
-              onClick={handleDetailEditClick}
-            />
-            {isTeamClick && <FavTeam team={profile.favorite_team} />}
+            <div className="flex flex-col gap-2" ref={modeRef}>
+              <DetailTitle
+                title="플레이 모드"
+                type="mode"
+                onClick={handleDetailEditClick}
+              />
+              {isModeClick && <GameMode mode={profile.play_mode} />}
+            </div>
+            <div className="flex flex-col gap-2" ref={timeRef}>
+              <DetailTitle
+                title="게임 시간대"
+                type="time"
+                onClick={handleDetailEditClick}
+              />
+              {isTimeClick && <GameTime time={profile.play_time} />}
+            </div>
+            <div className="flex flex-col gap-2" ref={styleRef}>
+              <DetailTitle
+                title="게임 스타일"
+                type="style"
+                onClick={handleDetailEditClick}
+              />
+              {isStyleClick && <GameStyle style={profile.play_style} />}
+            </div>
+            <div className="flex flex-col gap-2" ref={tierRef}>
+              <DetailTitle
+                title="티어"
+                type="tier"
+                onClick={handleDetailEditClick}
+              />
+              {isTierClick && (
+                <GameTier tier={profile.tier} grade={profile.tier_grade} />
+              )}
+            </div>
+            <div className="flex flex-col gap-2" ref={heroRef}>
+              <DetailTitle
+                title="플레이 영웅"
+                type="hero"
+                onClick={handleDetailEditClick}
+              />
+              {isHeroClick && (
+                <FavHero
+                  main={profile.main_champs}
+                  play={profile.play_champs}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-2" ref={teamRef}>
+              <DetailTitle
+                title="응원하는 팀"
+                type="team"
+                onClick={handleDetailEditClick}
+              />
+              {isTeamClick && <FavTeam team={profile.favorite_team} />}
+            </div>
           </div>
         </div>
         <div className="flex w-full h-fit pt-3 justify-center">

@@ -26,7 +26,7 @@ function UserItem({ user }: { user: SearchUserType[number] }) {
   }, [data]);
 
   const handleUserClick = () => {
-    router.push(`/${user.id}`);
+    router.push(`/${user.handle}`);
   };
 
   return (
