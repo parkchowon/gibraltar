@@ -94,7 +94,7 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onClick={handleEditClick}
-          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-gray-50"
+          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-gray-50 hover:bg-gray-100"
         >
           프로필 편집
         </button>

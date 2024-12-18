@@ -2,7 +2,7 @@
 import MainLayout from "@/components/Layout/MainLayout";
 import { useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
-import ProfileDetail from "./_components/ProfileDetail";
+import ProfileDetail from "./_components/ProfileDetail/ProfileDetail";
 import TabContainer from "./_components/TabContainer";
 import UserPost from "./_components/UserPost";
 import UserTab from "./_components/UserTab";
