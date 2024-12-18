@@ -41,7 +41,7 @@ function SideProfile() {
   }
 
   return (
-    <div className="flex w-full mt-[37px] mb-[60px] py-4 px-5 rounded-2xl bg-white">
+    <div className="flex w-full mt-[37px] mb-[60px] py-4 px-5 rounded-2xl bg-white items-center">
       <div className="relative w-[50px] h-[50px] aspect-square mr-[30px]">
         <Image
           alt="profile"
@@ -67,10 +67,13 @@ function SideProfile() {
           </button>
         </div>
       </div>
-      <button onClick={handleProfileClick} className="ml-auto">
+      <button
+        onClick={handleProfileClick}
+        className="grid place-items-center ml-auto rounded-full border-2 border-black w-[30px] h-[30px] w-max-[30px] h-max-[30px]"
+      >
         <Image
-          width={30}
-          height={30}
+          width={25}
+          height={25}
           alt="icon"
           src={"/icons/mypage_line.svg"}
         />

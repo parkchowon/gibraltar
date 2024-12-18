@@ -11,6 +11,9 @@ const pretendardFont = localFont({
 export const metadata: Metadata = {
   title: "지브롤터 | Gibraltar",
   description: "Microblogging platform for overwatch lover",
+  icons: {
+    icon: "/logo/gibraltar_logo.svg",
+  },
 };
 
 export default function RootLayout({

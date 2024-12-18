@@ -7,12 +7,15 @@ import SideBar from "../SideBar";
 import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
 import QuoteModal from "@/app/(provider)/(root)/home/_components/Post/QuoteModal";
 import { usePostStore } from "@/stores/post.store";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import BackArrowBtn from "../BackArrowBtn";
+import Gibraltar from "@/assets/logo/gibraltar_letter.svg";
+import Logo from "@/assets/logo/gibraltar_logo.svg";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
   const path = usePathname();
+  const router = useRouter();
 
   const modalRendering = () => {
     switch (isModalOpen) {
@@ -27,12 +30,23 @@ function MainLayout({ children }: PropsWithChildren) {
     }
   };
 
+  const handleLogoClick = () => {
+    router.push("/home");
+  };
+
   return (
     <>
       {modalRendering()}
       <div className="relative w-screen w-m-[1920px] h-screen overflow-auto">
         {/* 사이드 바 */}
-        <section className="fixed left-[15.5%] top-[11.7%] w-[10.3%]">
+        <section className="fixed left-[15.5%] top-[5%] w-[10.3%]">
+          <button
+            onClick={handleLogoClick}
+            className="flex flex-col items-center w-full pb-10 gap-1"
+          >
+            {/* <Logo width={30} /> */}
+            <Gibraltar width="90%" />
+          </button>
           <SideBar />
         </section>
         {/* 가운데 */}

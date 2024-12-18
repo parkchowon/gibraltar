@@ -13,8 +13,8 @@ export const SIDE_BAR = [
     name: "검색",
     path: "/search",
     icon: {
-      line: "/icons/home_line.svg",
-      fill: "/icons/home_fill.svg",
+      line: "/icons/search.svg",
+      fill: "/icons/search_fill.svg",
     },
   },
   {
@@ -22,8 +22,8 @@ export const SIDE_BAR = [
     name: "알림",
     path: "/notifications",
     icon: {
-      line: "/icons/home_line.svg",
-      fill: "/icons/home_fill.svg",
+      line: "/icons/bell.svg",
+      fill: "/icons/bell_fill.svg",
     },
   },
   {
@@ -31,8 +31,8 @@ export const SIDE_BAR = [
     name: "그룹찾기",
     path: "/group",
     icon: {
-      line: "/icons/home_line.svg",
-      fill: "/icons/home_fill.svg",
+      line: "/icons/group.svg",
+      fill: "/icons/group_fill.svg",
     },
   },
   {
@@ -40,8 +40,8 @@ export const SIDE_BAR = [
     name: "오버워치 정보",
     path: "/info",
     icon: {
-      line: "/icons/home_line.svg",
-      fill: "/icons/home_fill.svg",
+      line: "/icons/overwatch.svg",
+      fill: "/icons/overwatch_fill.svg",
     },
   },
   {
@@ -50,7 +50,7 @@ export const SIDE_BAR = [
     path: "/mypage",
     icon: {
       line: "/icons/mypage_line.svg",
-      fill: "/icons/home_fill.svg",
+      fill: "/icons/mypage_fill.svg",
     },
   },
 ];
