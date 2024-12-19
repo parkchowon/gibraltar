@@ -1,5 +1,5 @@
 import { createClient } from "@/supabase/server";
-import { profileType } from "@/types/hero.type";
+import { ProfileType } from "@/types/profile.type";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -11,7 +11,7 @@ export const POST = async (request: NextRequest) => {
     favoriteTeam,
     userId,
     mainChamps,
-  }: profileType = await request.json();
+  }: ProfileType = await request.json();
 
   const { mode, time, style } = playStyle;
   if (!playStyle || !bio || !favoriteTeam || !userId) {

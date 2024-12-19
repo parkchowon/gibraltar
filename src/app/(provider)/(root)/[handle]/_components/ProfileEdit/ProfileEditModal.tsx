@@ -19,7 +19,9 @@ import GameMode from "./GameMode";
 import FavHero from "./FavHero";
 import FavTeam from "./FavTeam";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProfile } from "@/apis/auth.api";
+import { findDuplicateHandle, getUserProfile } from "@/apis/auth.api";
+import { profileUpdate } from "@/apis/profile.api";
+import { invalidCheckId } from "@/utils/invalidCheck";
 
 function ProfileEditModal({
   profileUser,
@@ -37,10 +39,14 @@ function ProfileEditModal({
   setEditClick: Dispatch<SetStateAction<boolean>>;
 }) {
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
-  const [handle, setHandle] = useState<string>(profileUser.handle);
+  const [handle, setHandle] = useState<string>(profileUser.handle.slice(1));
+  const [handleCheck, setHandleCheck] = useState<string>("");
   const [bio, setBio] = useState<string>("");
   const [file, setFile] = useState<File>();
   const [profileImg, setProfileImg] = useState<string>(profileUser.profile_url);
+
+  // users 테이블 데이터인, 위 4개의 데이터가 바뀌었을 때 check
+  const [usersChange, setUsersChange] = useState<boolean>(false);
 
   const [isTimeClick, setIsTimeClick] = useState<boolean>(false);
   const [isStyleClick, setIsStyleClick] = useState<boolean>(false);
@@ -70,12 +76,40 @@ function ProfileEditModal({
   const handleNickChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // TODO: 유효성 검사 추가가
     setNickname(e.currentTarget.value);
+    if (e.currentTarget.value === profileUser.nickname) {
+      return setUsersChange(false);
+    }
+    return setUsersChange(true);
   };
 
   // handle(id) 수정
-  const handleHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleHandleChange = async (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     // TODO: handle 유효성 검사 추가
+
+    const newHandle = e.currentTarget.value;
+
+    const text = invalidCheckId(newHandle);
     setHandle(e.currentTarget.value);
+    if (
+      text === "사용가능한 아이디예요." &&
+      newHandle !== profileUser.handle.slice(1)
+    ) {
+      const result = await findDuplicateHandle(newHandle);
+      if (result) {
+        return setHandleCheck("중복된 아이디 입니다.");
+      } else {
+        setHandleCheck("");
+        if (newHandle !== profileUser.handle) {
+          return setUsersChange(true);
+        }
+        return setUsersChange(false);
+      }
+    }
+    if (newHandle !== profileUser.handle.slice(1)) {
+      setHandleCheck(text);
+    }
   };
 
   // bio 수정정
@@ -94,6 +128,7 @@ function ProfileEditModal({
     setFile(file);
     const reader = new FileReader();
     if (file) {
+      setUsersChange(true);
       reader.onloadend = () => {
         setProfileImg(reader.result as string);
       };
@@ -146,9 +181,24 @@ function ProfileEditModal({
     isTimeClick,
   ]);
 
+  const handleProfileEditClick = async () => {
+    if (nickname === "" || handle === "") {
+      return console.log("닉네임과 handle은 비워둘 수 없음");
+    }
+    if (usersChange) {
+      const updateData = {
+        nickname: nickname !== profileUser.nickname ? nickname : undefined,
+        handle: handle !== profileUser.handle ? `@${handle}` : undefined,
+        file: file,
+        userId: profileUser.id,
+      };
+      await profileUpdate(updateData);
+    }
+  };
+
   if (isPending || !profile) {
     return (
-      <div className="fixed inset-0 flex justify-center items-center bg-black/35">
+      <div className="fixed inset-0 flex justify-center items-center bg-black/35 z-50">
         <p>loading...</p>
       </div>
     );
@@ -209,6 +259,13 @@ function ProfileEditModal({
                 value={handle}
                 onChange={handleHandleChange}
               />
+              <p
+                className={`${
+                  handleCheck === "" && "hidden"
+                } text-sm text-warning -mt-2 pl-2`}
+              >
+                {handleCheck}
+              </p>
               <EditInput
                 label="바이오"
                 value={bio}
@@ -276,7 +333,10 @@ function ProfileEditModal({
           </div>
         </div>
         <div className="flex w-full h-fit pt-3 justify-center">
-          <button className="px-12 py-3.5 text-gray-500 font-medium bg-gray-400 rounded-full">
+          <button
+            onClick={handleProfileEditClick}
+            className="px-12 py-3.5 text-gray-500 font-medium bg-gray-400 rounded-full"
+          >
             변경사항 저장
           </button>
         </div>

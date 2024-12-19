@@ -1,9 +1,12 @@
-import { profileType } from "@/types/hero.type";
 import apiClient from "./apiClient.api";
-import { RecommendedUserType } from "@/types/profile.type";
+import {
+  ProfileProps,
+  ProfileType,
+  RecommendedUserType,
+} from "@/types/profile.type";
 
 // 회원가입 후 프로필 세팅
-export const insertProfileSetting = async (profile: profileType) => {
+export const insertProfileSetting = async (profile: ProfileType) => {
   try {
     const response = await apiClient.post(
       `api/auth/user/${profile.userId}/profile`,
@@ -20,20 +23,13 @@ export const insertProfileSetting = async (profile: profileType) => {
   }
 };
 
-type profileProps = {
-  nickname?: string;
-  handle: string;
-  file?: File;
-  userId: string;
-};
-
 // users table의 update
 export const profileUpdate = async ({
   nickname,
   handle,
   file,
   userId,
-}: profileProps) => {
+}: ProfileProps) => {
   try {
     const formData = new FormData();
     let profile_url = undefined;
@@ -63,11 +59,21 @@ export const profileUpdate = async ({
 };
 
 // TODO: user_profile 테이블의 update
-export const profileDetailUpdate = async () => {};
+export const profileDetailUpdate = async (profile: ProfileType) => {
+  try {
+    const response = await apiClient.post(
+      `api/auth/user/${profile.userId}/profile/detail`,
+      { profile: profile }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // 첫 프로필 세팅 후 추천 유저 불러오기
 export const getRecommendedUsers = async (
-  profile: profileType
+  profile: ProfileType
 ): Promise<RecommendedUserType> => {
   try {
     const response = await apiClient.post(
@@ -87,7 +93,7 @@ export const getRecommendedUsers = async (
 };
 
 export const randomUserRecommendation = async (
-  profile: profileType
+  profile: ProfileType
 ): Promise<RecommendedUserType> => {
   try {
     const response = await apiClient.post(

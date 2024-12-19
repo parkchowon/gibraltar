@@ -19,29 +19,6 @@ export type playChampsType = {
   selectedChamps: HeroType[];
 };
 
-export type profileType = {
-  userId: string;
-  bio: string;
-  playStyle: {
-    mode: string[];
-    style: string;
-    time: string[];
-  };
-  mainChamps?: {
-    key: string;
-    name: string;
-    portrait: string;
-    role: "tank" | "damage" | "support";
-  }[];
-  playChamps?: {
-    key: string;
-    name: string;
-    portrait: string;
-    role: "tank" | "damage" | "support";
-  }[];
-  favoriteTeam: string;
-};
-
 export type ProfileSettingProps = {
   nickname: string;
   putNickname: (value: string) => void;
