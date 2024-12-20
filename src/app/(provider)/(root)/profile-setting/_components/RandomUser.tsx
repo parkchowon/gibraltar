@@ -1,10 +1,10 @@
 import { randomUserRecommendation } from "@/apis/profile.api";
-import { profileType } from "@/types/hero.type";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import UserItem from "@/components/UserItem";
+import { ProfileType } from "@/types/profile.type";
 
-function RandomUser({ profile }: { profile: profileType }) {
+function RandomUser({ profile }: { profile: ProfileType }) {
   const { data: randoms, isPending } = useQuery({
     queryKey: ["randomUser", profile.userId],
     queryFn: () => randomUserRecommendation(profile),

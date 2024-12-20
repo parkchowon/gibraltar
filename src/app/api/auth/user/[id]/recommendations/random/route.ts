@@ -1,10 +1,10 @@
 import { createClient } from "@/supabase/server";
-import { profileType } from "@/types/hero.type";
+import { ProfileType } from "@/types/profile.type";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
-  const profile = (await request.json()) as profileType;
+  const profile = (await request.json()) as ProfileType;
 
   try {
     const { data, error } = await supabase

@@ -1,10 +1,15 @@
 import { createClient } from "@/supabase/server";
-import { profileType } from "@/types/hero.type";
+import { ProfileType } from "@/types/profile.type";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
-  const profile = (await request.json()) as profileType;
+  const profile = (await request.json()) as ProfileType;
+
+  if (!profile.playStyle || !profile.mainChamps || !profile.favoriteTeam) {
+    return NextResponse.json({ message: "데이터가 없음", status: 400 });
+  }
+
   try {
     const { data: modeResult, error: modeError } = await supabase
       .from("play_modes")
@@ -70,7 +75,7 @@ export const POST = async (request: NextRequest) => {
 
       // 게임 플레이 모드가 맞을 수록
       const modeScore = modeUserId.filter((user) => user === userId).length;
-      if (profile.playStyle.mode.length === modeScore) {
+      if (profile.playStyle?.mode.length === modeScore) {
         score += 160;
       } else {
         score += modeScore * 40;
