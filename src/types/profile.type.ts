@@ -29,8 +29,8 @@ export type RecommendedUserType =
 
 export type ProfileType = {
   userId: string;
-  bio: string;
-  playStyle: {
+  bio?: string;
+  playStyle?: {
     mode: string[];
     style: string;
     time: string[];
@@ -47,7 +47,9 @@ export type ProfileType = {
     portrait: string;
     role: "tank" | "damage" | "support";
   }[];
-  favoriteTeam: string;
+  favoriteTeam?: string;
+  tier?: string[];
+  grade?: number[];
 };
 
 export type ProfileProps = {

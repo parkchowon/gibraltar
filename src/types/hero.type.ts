@@ -30,6 +30,10 @@ export type ProfileSettingProps = {
   putFavoriteTeam: (value: string) => void;
   bio: string;
   putBio: (value: string) => void;
+  tier: string[];
+  putTier: (value: string[]) => void;
+  grade: number[];
+  putGrade: (value: number[]) => void;
 };
 
 export type RankedUsersType = Awaited<ReturnType<typeof getRecommendedUsers>>;

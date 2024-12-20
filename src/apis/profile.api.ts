@@ -63,7 +63,12 @@ export const profileDetailUpdate = async (profile: ProfileType) => {
   try {
     const response = await apiClient.post(
       `api/auth/user/${profile.userId}/profile/detail`,
-      { profile: profile }
+      profile,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return response.data;
   } catch (error) {

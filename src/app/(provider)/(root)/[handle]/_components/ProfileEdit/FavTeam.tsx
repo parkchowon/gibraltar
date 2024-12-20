@@ -1,13 +1,19 @@
 import { OWCSTeam } from "@/constants/owcsTeam";
+import { useProfileStore } from "@/stores/profile.store";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function FavTeam({ team }: { team: string }) {
   const [favTeam, setFavTeam] = useState<string>(team);
+  const { putFavoriteTeam } = useProfileStore();
 
   const handleTeamClick = (team: string) => {
     setFavTeam(team);
   };
+
+  useEffect(() => {
+    putFavoriteTeam(favTeam);
+  }, [favTeam]);
 
   return (
     <div className="w-full flex flex-col">

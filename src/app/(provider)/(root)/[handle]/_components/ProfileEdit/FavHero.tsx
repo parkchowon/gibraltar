@@ -1,23 +1,21 @@
 import { fetchHero } from "@/apis/overwatch.api";
 import { PLAY_POSITION } from "@/constants/profile";
+import { useProfileStore } from "@/stores/profile.store";
+import { HeroType } from "@/types/hero.type";
 import { Json } from "@/types/supabase";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-type heroType = {
-  key: string;
-  name: string;
-  portrait: string;
-  role: string;
-};
 function FavHero({ main, play }: { main: Json; play: Json }) {
-  const selectedMain = (main as heroType[]).map((main) => main.name);
-  const selectedPlay = (play as heroType[]).map((play) => play.name);
+  const selectedMain = (main as HeroType[]).map((main) => main.name);
+  const selectedPlay = (play as HeroType[]).map((play) => play.name);
 
   const [position, setPosition] = useState<string>("tank");
   const [mainChamp, setMainChamp] = useState<string[]>(selectedMain);
   const [playChamp, setPlayChamp] = useState<string[]>(selectedPlay);
+
+  const { playChamps, putPlayChamps } = useProfileStore();
 
   // 영웅 목록 불러오기
   const { isPending, data } = useQuery({
@@ -42,6 +40,23 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
   const handlePositionClick = (pos: string) => {
     setPosition(pos);
   };
+
+  useEffect(() => {
+    if (data) {
+      const selectedMains = mainChamp.map((selected) => {
+        return data.find((item) => item.name === selected) as HeroType;
+      });
+
+      const selectedChamps = playChamp.map((selected) => {
+        return data.find((item) => item.name === selected) as HeroType;
+      });
+
+      putPlayChamps({
+        MainChamps: selectedMains,
+        selectedChamps: selectedChamps,
+      });
+    }
+  }, [mainChamp, playChamp]);
 
   return (
     <div>

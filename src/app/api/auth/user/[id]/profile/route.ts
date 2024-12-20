@@ -13,10 +13,10 @@ export const POST = async (request: NextRequest) => {
     mainChamps,
   }: ProfileType = await request.json();
 
-  const { mode, time, style } = playStyle;
   if (!playStyle || !bio || !favoriteTeam || !userId) {
     return NextResponse.json({ message: "데이터가 없음" }, { status: 400 });
   }
+  const { mode, time, style } = playStyle;
   try {
     const playModes = mode.map((mode) => {
       return { user_id: userId, play_mode: mode };

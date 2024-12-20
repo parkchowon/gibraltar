@@ -1,12 +1,22 @@
 import { PLAY_STYLE } from "@/constants/profile";
-import React, { useState } from "react";
+import { useProfileStore } from "@/stores/profile.store";
+import React, { useEffect, useState } from "react";
 
 function GameStyle({ style }: { style: string }) {
   const [gameStyle, setGameStyle] = useState<string>(style);
+  const { playStyle, putPlayStyle } = useProfileStore();
 
   const handleStyleClick = (style: string) => {
     setGameStyle(style);
   };
+
+  useEffect(() => {
+    putPlayStyle({
+      mode: playStyle.mode,
+      style: gameStyle,
+      time: playStyle.time,
+    });
+  }, [gameStyle]);
 
   return (
     <div className="flex flex-col gap-4">

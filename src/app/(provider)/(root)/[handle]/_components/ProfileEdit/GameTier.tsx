@@ -1,8 +1,9 @@
 import { PLAY_POSITION } from "@/constants/profile";
 import { OWTier } from "@/constants/tier";
+import { useProfileStore } from "@/stores/profile.store";
 import { Json } from "@/types/supabase";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
   const selectedTier = tier as string[];
@@ -12,32 +13,45 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
   const [tierGrade, setTierGrade] = useState<number[]>(selectedGrade);
   const [userTier, setUserTier] = useState<string[]>(selectedTier);
 
+  const {
+    tier: storeTier,
+    grade: storeGrade,
+    putTier,
+    putGrade,
+  } = useProfileStore();
+
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newGrade = Number(e.currentTarget.value);
-    switch (position) {
-      case 0:
-        return setTierGrade([newGrade, tierGrade[1], tierGrade[2]]);
-      case 1:
-        return setTierGrade([tierGrade[0], newGrade, tierGrade[2]]);
-      case 2:
-        return setTierGrade([tierGrade[0], tierGrade[1], newGrade]);
-    }
+    setTierGrade(
+      tierGrade.map((item, index) => (index === position ? newGrade : item))
+    );
   };
 
   const handleTierClick = (tier: string) => {
-    switch (position) {
-      case 0:
-        return setUserTier([tier, userTier[1], userTier[2]]);
-      case 1:
-        return setUserTier([userTier[0], tier, userTier[2]]);
-      case 2:
-        return setUserTier([userTier[0], userTier[1], tier]);
-    }
+    setUserTier(
+      userTier.map((item, index) => (index === position ? tier : item))
+    );
   };
 
   const handlePositionClick = (pos: number) => {
     setPosition(pos);
   };
+
+  useEffect(() => {
+    putTier(
+      userTier.map((item, index) =>
+        index === position ? userTier[position] : item
+      )
+    );
+  }, [userTier]);
+
+  useEffect(() => {
+    putGrade(
+      tierGrade.map((item, index) =>
+        index === position ? tierGrade[position] : item
+      )
+    );
+  }, [tierGrade]);
 
   return (
     <div className="flex flex-col w-full justify-center items-center gap-3">

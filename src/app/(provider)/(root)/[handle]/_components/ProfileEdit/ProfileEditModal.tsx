@@ -20,8 +20,10 @@ import FavHero from "./FavHero";
 import FavTeam from "./FavTeam";
 import { useQuery } from "@tanstack/react-query";
 import { findDuplicateHandle, getUserProfile } from "@/apis/auth.api";
-import { profileUpdate } from "@/apis/profile.api";
+import { profileDetailUpdate, profileUpdate } from "@/apis/profile.api";
 import { invalidCheckId } from "@/utils/invalidCheck";
+import { useProfileStore } from "@/stores/profile.store";
+import { HeroType } from "@/types/hero.type";
 
 function ProfileEditModal({
   profileUser,
@@ -63,6 +65,9 @@ function ProfileEditModal({
   const teamRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
 
+  const { playStyle, tier, grade, playChamps, favoriteTeam } =
+    useProfileStore();
+
   const { data: profile, isPending } = useQuery({
     queryKey: ["profileDetail", profileUser.id],
     queryFn: () => getUserProfile(profileUser.id),
@@ -74,7 +79,7 @@ function ProfileEditModal({
 
   // 닉네임 수정
   const handleNickChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // TODO: 유효성 검사 추가가
+    // TODO: 유효성 검사 추가
     setNickname(e.currentTarget.value);
     if (e.currentTarget.value === profileUser.nickname) {
       return setUsersChange(false);
@@ -86,8 +91,6 @@ function ProfileEditModal({
   const handleHandleChange = async (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    // TODO: handle 유효성 검사 추가
-
     const newHandle = e.currentTarget.value;
 
     const text = invalidCheckId(newHandle);
@@ -112,7 +115,7 @@ function ProfileEditModal({
     }
   };
 
-  // bio 수정정
+  // bio 수정
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.currentTarget.value);
   };
@@ -194,6 +197,28 @@ function ProfileEditModal({
       };
       await profileUpdate(updateData);
     }
+
+    const updateDetail = {
+      userId: profileUser.id,
+      bio: profile?.bio !== bio ? bio : undefined,
+      playStyle: playStyle,
+      mainChamps:
+        profile?.main_champs !== playChamps.MainChamps
+          ? playChamps.MainChamps
+          : undefined,
+      playChamps:
+        profile?.play_champs !== playChamps.selectedChamps
+          ? playChamps.selectedChamps
+          : undefined,
+      favoriteTeam:
+        profile?.favorite_team !== favoriteTeam ? favoriteTeam : undefined,
+      tier: profile?.tier !== tier ? tier : undefined,
+      grade: profile?.tier_grade !== grade ? grade : undefined,
+    };
+
+    // TODO: 이제 업데이트 성공하고나서 상태 업데이트 해주기
+    // 모달에서 수정하고 데이터는 바꿔지는데 보여지는건 다시 렌더링 되면서 원래의 선택값만 보여줌.(고쳐야됨)
+    await profileDetailUpdate(updateDetail);
   };
 
   if (isPending || !profile) {
