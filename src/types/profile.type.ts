@@ -27,6 +27,19 @@ export type RecommendedUserType =
     }[]
   | null;
 
+export type UserProfileType = {
+  created_at: string;
+  email: string;
+  handle: string;
+  id: string;
+  nickname: string;
+  profile_url: string;
+  status: string | null;
+  detail: {
+    bio: string;
+  } | null;
+};
+
 export type ProfileType = {
   userId: string;
   bio?: string;

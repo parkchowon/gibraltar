@@ -23,7 +23,8 @@ import { findDuplicateHandle, getUserProfile } from "@/apis/auth.api";
 import { profileDetailUpdate, profileUpdate } from "@/apis/profile.api";
 import { invalidCheckId } from "@/utils/invalidCheck";
 import { useProfileStore } from "@/stores/profile.store";
-import { HeroType } from "@/types/hero.type";
+import { useRouter } from "next/navigation";
+import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
 
 function ProfileEditModal({
   profileUser,
@@ -40,6 +41,10 @@ function ProfileEditModal({
   };
   setEditClick: Dispatch<SetStateAction<boolean>>;
 }) {
+  const router = useRouter();
+
+  const { mutate } = useProfileUpdateMutation();
+
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
   const [handle, setHandle] = useState<string>(profileUser.handle.slice(1));
   const [handleCheck, setHandleCheck] = useState<string>("");
@@ -216,9 +221,11 @@ function ProfileEditModal({
       grade: profile?.tier_grade !== grade ? grade : undefined,
     };
 
-    // TODO: 이제 업데이트 성공하고나서 상태 업데이트 해주기
-    // 모달에서 수정하고 데이터는 바꿔지는데 보여지는건 다시 렌더링 되면서 원래의 선택값만 보여줌.(고쳐야됨)
-    await profileDetailUpdate(updateDetail);
+    mutate(updateDetail);
+    setEditClick(false);
+    if (handle !== profileUser.handle) {
+      router.push(`/${handle}`);
+    }
   };
 
   if (isPending || !profile) {
