@@ -6,6 +6,7 @@ import {
   fetchPostDetail,
   insertRepost,
 } from "@/apis/post.api";
+import { TagRow } from "@/types/database";
 import {
   CreatePostType,
   CreateQuoteType,
@@ -122,6 +123,30 @@ export const useQuoteMutation = () => {
         queryClient.setQueryData(["timelineData"], {
           ...prevTimeline,
           newState,
+        });
+      }
+      return () => queryClient.setQueryData(["timelineData"], prevTimeline);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["timelineData"],
+      });
+    },
+  });
+};
+
+export const usePostCreateMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ post, tags }: { post: CreatePostType; tags?: TagRow[] }) =>
+      createPost(post, tags),
+    onMutate: async (newState) => {
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+      if (prevTimeline) {
+        queryClient.setQueryData(["timelineData"], {
+          ...prevTimeline,
+          ...[newState],
         });
       }
       return () => queryClient.setQueryData(["timelineData"], prevTimeline);

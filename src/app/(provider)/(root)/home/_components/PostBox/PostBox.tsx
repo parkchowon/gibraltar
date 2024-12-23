@@ -12,6 +12,7 @@ import SelectTag from "./SelectTag";
 import PostBoxLoading from "@/components/Loading/PostBoxLoading";
 import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import SelectMedia from "./SelectMedia";
+import { usePostCreateMutation } from "@/hooks/usePostMutation";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -34,6 +35,9 @@ function PostBox() {
   const postBoxRef = useRef<HTMLDivElement>(null);
   const tagBoxRef = useRef<HTMLDivElement>(null);
   const [tagTop, setTagTop] = useState<number>(0);
+
+  // useMutation으로 post 생성
+  const mutation = usePostCreateMutation();
 
   useEffect(() => {
     const getTag = async () => {
@@ -65,8 +69,9 @@ function PostBox() {
         parent_post_id: null, // post 생성시에는 null
       };
       resetTag();
-      // TODO: 이거 useMutation으로 작업하기
-      await createPost(post, selectedTag);
+
+      const tags = selectedTag.length === 0 ? undefined : selectedTag;
+      mutation.mutate({ post: post, tags: tags });
     }
     setText("");
     setPostVideo(null);
@@ -173,6 +178,11 @@ function PostBox() {
         ref={postBoxRef}
         className="relative flex flex-col px-8 bg-gray-300 rounded-[30px] py-9"
       >
+        {mutation.isPending && (
+          <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center rounded-[30px] bg-black/20">
+            <p>loading...</p>
+          </div>
+        )}
         <textarea
           className="h-[134px] bg-transparent focus:outline-none resize-none"
           placeholder="여기에 오버워치 얘기를 적어보세요"
