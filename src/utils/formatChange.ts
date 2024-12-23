@@ -61,3 +61,12 @@ export const userDataReducer = (post: NotificationType[]) => {
   );
   return result;
 };
+
+export const generateFilePathWithUnicode = (fileName: string) => {
+  const changeFileName = fileName
+    .split("")
+    .map((char) => (char.charCodeAt(0) > 127 ? `u${char.charCodeAt(0)}` : char))
+    .join("");
+
+  return changeFileName;
+};

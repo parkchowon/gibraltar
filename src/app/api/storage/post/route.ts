@@ -1,4 +1,5 @@
 import { createClient } from "@/supabase/server";
+import { generateFilePathWithUnicode } from "@/utils/formatChange";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -16,7 +17,8 @@ export const POST = async (request: NextRequest) => {
 
     for (const file of files) {
       const type = file.type.startsWith("video/") ? "video" : "image";
-      const filePath = `${userId}/${type}/${Date.now()}_${file.name}`;
+      const fileName = generateFilePathWithUnicode(file.name);
+      const filePath = `${userId}/${type}/${Date.now()}_${fileName}`;
 
       const { data, error } = await supabase.storage
         .from("posts")
