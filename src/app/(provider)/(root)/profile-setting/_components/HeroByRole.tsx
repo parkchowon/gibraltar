@@ -46,28 +46,27 @@ function HeroByRole({ heroes, position }: HeroByRoleProps) {
   };
 
   return (
-    <div className="w-[665px] grid grid-cols-6 gap-x-3 gap-y-6">
+    <div className="w-[665px] grid grid-cols-6 gap-x-3 gap-y-4">
       {heroList.map((hero) => {
         return (
-          <button
-            onClick={() => handleHeroClick(hero)}
-            style={{
-              border: mainHeroes.includes(hero)
-                ? "2px solid yellow"
-                : selectedHeroes.includes(hero)
-                ? "2px solid red"
-                : "",
-            }}
-            className="relative w-[100px] h-[120px]"
-            key={hero.key}
-          >
-            <Image
-              alt={hero.name}
-              src={hero.portrait}
-              fill
-              className="absolute rounded-2xl"
-            />
-          </button>
+          <div key={hero.key} className="relative w-24 h-28">
+            <button
+              onClick={() => handleHeroClick(hero)}
+              className="relative w-full h-full bg-white rounded-2xl"
+            >
+              {mainHeroes.includes(hero) ? (
+                <div className="absolute w-full h-full top-0 bg-blue-300/35 rounded-2xl z-20" />
+              ) : selectedHeroes.includes(hero) ? (
+                <div className="absolute w-full h-full top-0 bg-yellow-300/35 rounded-2xl z-20" />
+              ) : null}
+              <Image
+                alt={hero.name}
+                src={hero.portrait}
+                fill
+                className="absolute rounded-2xl object-cover z-10"
+              />
+            </button>
+          </div>
         );
       })}
     </div>

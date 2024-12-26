@@ -9,7 +9,7 @@ import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 import PostLoading from "@/components/Loading/PostLoading";
 
 function TimeLine() {
-  const { userData, isPending } = useAuth();
+  const { userData } = useAuth();
   const loadMoreRef = useRef(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -17,7 +17,6 @@ function TimeLine() {
     useInfiniteQuery({
       queryKey: userData ? ["timelineData", userData.id] : ["timelineData"],
       queryFn: ({ pageParam = null }: { pageParam: string | null }) => {
-        if (isPending) return;
         return getPost(userData ? userData.id : null, pageParam);
       },
       getNextPageParam: (lastPage) => {
@@ -30,6 +29,7 @@ function TimeLine() {
       },
       refetchInterval: 10000,
       initialPageParam: null,
+      enabled: !!userData,
     });
 
   // pending이 200ms 이상일 때만 보여주기

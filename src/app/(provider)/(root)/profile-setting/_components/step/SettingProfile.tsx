@@ -10,6 +10,7 @@ import ProfileSettingContainer from "../ProfileSettingContainer";
 import { useProfileStore } from "@/stores/profile.store";
 import { profileUpdate } from "@/apis/profile.api";
 import { MAX_HANDLE_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/textLength";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function SettingProfile() {
   const { userData, isPending } = useAuth();
@@ -100,7 +101,11 @@ function SettingProfile() {
   const checkPass = isInvalid === "사용가능한 아이디예요." && isNickOK;
 
   if (isPending || !userData) {
-    return <p>loading...</p>;
+    return (
+      <div className="w-full h-screen">
+        <LogoLoading />
+      </div>
+    );
   }
   return (
     <ProfileSettingContainer

@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/auth.context";
 import PostQuote from "./PostQuote";
 import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import { useQuoteMutation } from "@/hooks/usePostMutation";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function QuoteModal() {
   const { userData } = useAuth();
@@ -75,15 +76,15 @@ function QuoteModal() {
           onClick={() => setIsModalOpen("closed")}
           className="absolute inset-0 bg-black opacity-30"
         />
-        <div className="relative top-[6.9%] w-[38.3%] h-fit pb-[30px] px-6 py-6 bg-white rounded-2xl">
-          <BackArrowBtn intent={"profileEditModal"} type="modal" />
+        <div className="relative top-[6.9%] w-[38.3%] h-fit pb-6 px-6 bg-white rounded-2xl">
           {quoteLoading && (
-            <div className="absolute w-full h-full grid place-items-center">
-              <p>loading...</p>
+            <div className="absolute top-0 left-0 w-full h-full grid place-items-center rounded-2xl bg-black/30 z-50">
+              <LogoLoading />
             </div>
           )}
+          <BackArrowBtn intent={"profileEditModal"} type="modal" />
           {/* 인용 적는 곳 */}
-          <div className="flex px-4 py-6 gap-3">
+          <div className="flex px-4 py-6 gap-3 mt-[73px]">
             <ProfileBtn
               profileUrl={userData.profile_url}
               handle={userData.handle}

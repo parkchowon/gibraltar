@@ -1,4 +1,5 @@
 import { fetchHero } from "@/apis/overwatch.api";
+import LogoLoading from "@/components/Loading/LogoLoading";
 import { PLAY_POSITION } from "@/constants/profile";
 import { useProfileStore } from "@/stores/profile.store";
 import { HeroType } from "@/types/hero.type";
@@ -75,7 +76,11 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
           );
         })}
       </div>
-      {isPending && <p>loading...</p>}
+      {isPending && (
+        <div className="w-full py-4">
+          <LogoLoading />
+        </div>
+      )}
       {!isPending && data && (
         <div className="flex flex-wrap w-full py-3 gap-2">
           {data.map((hero) => {

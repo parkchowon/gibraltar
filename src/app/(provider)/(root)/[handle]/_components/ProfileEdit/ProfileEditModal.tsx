@@ -25,6 +25,7 @@ import { invalidCheckId } from "@/utils/invalidCheck";
 import { useProfileStore } from "@/stores/profile.store";
 import { useRouter } from "next/navigation";
 import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function ProfileEditModal({
   profileUser,
@@ -230,8 +231,8 @@ function ProfileEditModal({
 
   if (isPending || !profile) {
     return (
-      <div className="fixed inset-0 flex justify-center items-center bg-black/35 z-50">
-        <p>loading...</p>
+      <div className="fixed inset-0 flex w-full h-screen justify-center items-center bg-black/35 z-50">
+        <LogoLoading />
       </div>
     );
   }

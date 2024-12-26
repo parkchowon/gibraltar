@@ -13,6 +13,7 @@ import PostBoxLoading from "@/components/Loading/PostBoxLoading";
 import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import SelectMedia from "./SelectMedia";
 import { usePostCreateMutation } from "@/hooks/usePostMutation";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -180,7 +181,7 @@ function PostBox() {
       >
         {mutation.isPending && (
           <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center rounded-[30px] bg-black/20">
-            <p>loading...</p>
+            <LogoLoading />
           </div>
         )}
         <textarea

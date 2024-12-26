@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import HeroByRole from "../HeroByRole";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function SettingChamp() {
   const [positionClick, setPositionClick] = useState<string>("tank");
@@ -65,7 +66,9 @@ function SettingChamp() {
           className={`w-[784px] h-[465px] py-7 px-[60px] rounded-r-2xl`}
         >
           {isPending ? (
-            <p>loading...</p>
+            <div className="w-full h-full">
+              <LogoLoading />
+            </div>
           ) : (
             <HeroByRole heroes={data} position={positionClick} />
           )}

@@ -1,3 +1,4 @@
+import LogoLoading from "@/components/Loading/LogoLoading";
 import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import { useAuth } from "@/contexts/auth.context";
 import { useCommentMutation } from "@/hooks/usePostMutation";
@@ -77,8 +78,8 @@ function CommentInput({
     <form onSubmit={(e) => handleCommentSubmit(e)}>
       <div className="relative flex w-full gap-[25px] px-6 py-[14px]">
         {commentLoading && (
-          <div className="absolute flex z-20 top-0 left-0 w-full h-full items-center justify-center bg-black opacity-30">
-            <p className="text-white">loading...</p>
+          <div className="absolute flex z-20 top-0 left-0 w-full h-full items-center justify-center bg-black/30">
+            <LogoLoading />
           </div>
         )}
         <div className="relative h-[46px] w-[46px]">
