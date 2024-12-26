@@ -76,7 +76,6 @@ export const GET = async (
   }
 };
 
-/** 아직까진 가입 할떄 프로필 업데이트만 되는 로직 */
 export const PATCH = async (
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -7,6 +7,7 @@ import Post from "./Post/Post";
 import { useEffect, useRef, useState } from "react";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 import PostLoading from "@/components/Loading/PostLoading";
+import EmptyState from "@/components/EmptyState";
 
 function TimeLine() {
   const { userData } = useAuth();
@@ -74,9 +75,9 @@ function TimeLine() {
       <div className="flex flex-col h-fit px-6 divide-y-[1px] divide-gray-300 bg-gray-200">
         {isLoading ? (
           <TimeLineLoading />
-        ) : data && data.pages.length === 0 ? (
+        ) : data && data.pages.flatMap((page) => page).length === 0 ? (
           // TODO: 팔로한 유저가 없을 시 보여주는 화면
-          <p>아직 포스트가 없습니다.</p>
+          <EmptyState type="포스트" />
         ) : (
           <>
             {data &&

@@ -143,10 +143,7 @@ function Post({ post }: PostProps) {
             </div>
             <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
             {/* 미디어 */}
-            {post.images && (
-              // TODO: image (아직 화면이 없음)
-              <PostMedia jsons={post.images} />
-            )}
+            {post.images && <PostMedia jsons={post.images} />}
             {/* 인용한 트윗 */}
             {post.quoted_post_id && <PostQuote postId={post.quoted_post_id} />}
             {/* 태그 */}

@@ -11,6 +11,7 @@ import Post from "../../home/_components/Post/Post";
 import { useAuth } from "@/contexts/auth.context";
 import UserItem from "@/components/UserItem";
 import { SearchPostType, SearchUserType } from "@/types/search.type";
+import EmptyState from "@/components/EmptyState";
 
 const TAB = [
   { name: "인기순", path: "popular" },
@@ -92,6 +93,8 @@ function SearchTab() {
     router.push(`${path}${query}`);
   };
 
+  console.log(data?.pages.flatMap((page) => page.length));
+
   return (
     <>
       <div className="flex justify-evenly border-y-[1px] border-gray-400">
@@ -115,8 +118,8 @@ function SearchTab() {
         className={`flex flex-col h-fit divide-y-[1px] divide-gray-300 bg-gray-200`}
       >
         {isPending && <PostLoading />}
-        {data && data.pages.length === 0 && (
-          <p className="w-full py-20 text-center">검색 결과가 없습니다.</p>
+        {data && data.pages.flatMap((page) => page.length).length === 1 && (
+          <EmptyState type="검색 결과" />
         )}
         {data &&
           (tabName === "user"
