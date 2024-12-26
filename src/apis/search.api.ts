@@ -49,3 +49,15 @@ export const fetchUserSearch = async (
     return [];
   }
 };
+
+export const searchUserHandle = async (
+  handle: string
+): Promise<SearchUserType> => {
+  try {
+    const response = await apiClient.get(`api/search/${handle}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

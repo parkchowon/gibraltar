@@ -14,6 +14,10 @@ import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
 import SelectMedia from "./SelectMedia";
 import { usePostCreateMutation } from "@/hooks/usePostMutation";
 import LogoLoading from "@/components/Loading/LogoLoading";
+import UserTag from "./UserTag";
+import { handleSearchInvalidCheck } from "@/utils/invalidCheck";
+import { useUserTagStore } from "@/stores/userTag.store";
+import { hightlightHandle } from "@/utils/highlightHandle";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -37,6 +41,12 @@ function PostBox() {
   const tagBoxRef = useRef<HTMLDivElement>(null);
   const [tagTop, setTagTop] = useState<number>(0);
 
+  // 유저 태그 바
+  const [isActiveUserTag, setIsActiveUserTag] = useState<boolean>(false);
+  const [userTag, setUserTag] = useState<string>("");
+  const [taggedUser, setTaggedUser] = useState<string[]>([]);
+  const { selectedHandle, setSelectedUser } = useUserTagStore();
+
   // useMutation으로 post 생성
   const mutation = usePostCreateMutation();
 
@@ -58,6 +68,14 @@ function PostBox() {
       setImgClick(false);
     }
   }, [postImg]);
+
+  useEffect(() => {
+    setUserTag("");
+    setTaggedUser([...taggedUser, `@${selectedHandle}`]);
+    const tagLength = userTag.length;
+    setText(text.slice(0, -tagLength) + selectedHandle + " ");
+    setIsActiveUserTag(false);
+  }, [selectedHandle]);
 
   // post supabase에 저장
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -83,6 +101,29 @@ function PostBox() {
   // post 글
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
+    const lastChar = e.currentTarget.value.slice(-1);
+    // text의 맨 끝에 @이가 오면
+    if (lastChar === "@") {
+      // 1.userTag리스트를 보여주는 tag의 top 위치를 정함
+      if (postBoxRef.current && tagBoxRef.current) {
+        const postBox = postBoxRef.current.getBoundingClientRect();
+        const tagBox = tagBoxRef.current.getBoundingClientRect();
+        const relativeTop = tagBox.top - postBox.top;
+        setTagTop(relativeTop);
+      }
+      // 2.userTag 컴포넌트를 활성화
+      setIsActiveUserTag(true);
+    }
+    // userTag를 검색할 때
+    if (isActiveUserTag) {
+      if (handleSearchInvalidCheck(lastChar)) {
+        setUserTag(userTag + lastChar);
+      } else {
+        setUserTag("");
+        setIsActiveUserTag(false);
+        setSelectedUser(0);
+      }
+    }
     setText(e.target.value);
   };
 
@@ -142,24 +183,6 @@ function PostBox() {
     document.getElementById("post-media-input")?.click();
   };
 
-  // 사진 배열에서 지우기
-  const handleDeleteImage = (idx?: number) => {
-    if (idx?.toString) {
-      const deletedList = postImg.filter((img, index) => {
-        return index !== idx;
-      });
-      const deletedFiles = postFile.filter((file, index) => {
-        return index !== idx;
-      });
-
-      setPostFile(deletedFiles);
-      setPostImg(deletedList);
-    } else {
-      setPostFile([]);
-      setPostVideo(null);
-    }
-  };
-
   // 선택한 tag list
   const handleTagAddClick = () => {
     setTagOpen(!tagOpen);
@@ -184,6 +207,7 @@ function PostBox() {
             <LogoLoading />
           </div>
         )}
+
         <textarea
           className="h-[134px] bg-transparent focus:outline-none resize-none"
           placeholder="여기에 오버워치 얘기를 적어보세요"
@@ -191,6 +215,15 @@ function PostBox() {
           maxLength={MAX_POST_TEXT_LENGTH}
           value={text}
         />
+        <div
+          dangerouslySetInnerHTML={{
+            __html: hightlightHandle(text, [
+              ...taggedUser,
+              `@${selectedHandle}`,
+            ]),
+          }}
+        />
+
         {/* 선택한 media가 표시되는 곳 */}
         <SelectMedia
           postFile={postFile}
@@ -243,6 +276,8 @@ function PostBox() {
             onChange={handleMediaChange}
           />
         </div>
+        {/* userTag 컴포넌트 */}
+        {isActiveUserTag && <UserTag top={tagTop} handle={userTag} />}
         {/* tag 컴포넌트 */}
         {tagOpen && <TagBox top={tagTop} tagList={tagList} />}
         <SelectTag />

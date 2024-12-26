@@ -35,17 +35,19 @@ function BackArrowBtn({
   const [title, setTitle] = useState<string>("뒤로가기");
 
   useEffect(() => {
-    switch (pathname) {
-      case "/home":
-        return setTitle("홈");
-      case "/notifications":
-        return setTitle("알림");
-      case "/info":
-        return setTitle("오버워치 정보");
-      case "/group":
-        return setTitle("그룹찾기");
-      default:
-        return setTitle("뒤로가기");
+    if (type !== "modal") {
+      switch (pathname) {
+        case "/home":
+          return setTitle("홈");
+        case "/notifications":
+          return setTitle("알림");
+        case "/info":
+          return setTitle("오버워치 정보");
+        case "/group":
+          return setTitle("그룹찾기");
+        default:
+          return setTitle("뒤로가기");
+      }
     }
   }, [pathname]);
 
