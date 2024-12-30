@@ -17,7 +17,7 @@ import LogoLoading from "@/components/Loading/LogoLoading";
 import UserTag from "./UserTag";
 import { handleSearchInvalidCheck } from "@/utils/invalidCheck";
 import { useUserTagStore } from "@/stores/userTag.store";
-import { hightlightHandle } from "@/utils/highlightHandle";
+import { highlightHandle } from "@/utils/highlightHandle";
 
 const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
 const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
@@ -47,9 +47,13 @@ function PostBox() {
   const [taggedUser, setTaggedUser] = useState<string[]>([]);
   const { selectedHandle, setSelectedUser } = useUserTagStore();
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const divHighLightRef = useRef<HTMLDivElement>(null);
+
   // useMutation으로 post 생성
   const mutation = usePostCreateMutation();
 
+  // 태그
   useEffect(() => {
     const getTag = async () => {
       const tags = await getTagList();
@@ -60,6 +64,24 @@ function PostBox() {
     getTag();
   }, []);
 
+  // textarea와 div의 스크롤 동기화
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (divHighLightRef.current && textareaRef.current) {
+        divHighLightRef.current.scrollTop = textareaRef.current.scrollTop;
+      }
+    };
+
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.addEventListener("scroll", handleScroll);
+      return () => {
+        textarea.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [text]);
+
   // post에 image 갯수 제한을 위한 상태로직
   useEffect(() => {
     if (postImg.length > 3) {
@@ -69,7 +91,9 @@ function PostBox() {
     }
   }, [postImg]);
 
+  // handle이 선택될 때
   useEffect(() => {
+    if (selectedHandle === "") return;
     setUserTag("");
     setTaggedUser([...taggedUser, `@${selectedHandle}`]);
     const tagLength = userTag.length;
@@ -101,6 +125,14 @@ function PostBox() {
   // post 글
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
+
+    const textarea = textareaRef.current;
+    if (textarea && divHighLightRef.current) {
+      if (textarea.scrollHeight > textarea.clientHeight) {
+        divHighLightRef.current.scrollTop = textareaRef.current.scrollTop;
+      }
+    }
+
     const lastChar = e.currentTarget.value.slice(-1);
     // text의 맨 끝에 @이가 오면
     if (lastChar === "@") {
@@ -207,23 +239,28 @@ function PostBox() {
             <LogoLoading />
           </div>
         )}
-
-        <textarea
-          className="h-[134px] bg-transparent focus:outline-none resize-none"
-          placeholder="여기에 오버워치 얘기를 적어보세요"
-          onChange={handleTextChange}
-          maxLength={MAX_POST_TEXT_LENGTH}
-          value={text}
-        />
-        <div
-          dangerouslySetInnerHTML={{
-            __html: hightlightHandle(text, [
-              ...taggedUser,
-              `@${selectedHandle}`,
-            ]),
-          }}
-        />
-
+        <div className="relative w-full h-[134px]">
+          <textarea
+            ref={textareaRef}
+            className="absolute top-0 left-0 w-full h-full bg-transparent focus:outline-none resize-none text-base leading-[normal] whitespace-pre-wrap break-words overflow-y-auto text-transparent caret-black z-20"
+            placeholder="여기에 오버워치 얘기를 적어보세요"
+            onChange={handleTextChange}
+            maxLength={MAX_POST_TEXT_LENGTH}
+            spellCheck="false"
+            autoComplete="false"
+            value={text}
+          />
+          <div
+            ref={divHighLightRef}
+            className="absolute w-full text-bla h-full top-0 left-0 z-10 text-base leading-[normal] whitespace-pre-wrap break-words overflow-y-auto pointer-events-none"
+            dangerouslySetInnerHTML={{
+              __html: highlightHandle(text, [
+                ...taggedUser,
+                `@${selectedHandle}`,
+              ]),
+            }}
+          />
+        </div>
         {/* 선택한 media가 표시되는 곳 */}
         <SelectMedia
           postFile={postFile}

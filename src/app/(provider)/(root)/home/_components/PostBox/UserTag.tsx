@@ -26,6 +26,7 @@ function UserTag({ top, handle }: { top: number; handle?: string }) {
         setSelectedUser(selectedUser + 1);
       } else if (e.key === "Enter" || e.key === "Tab" || e.key === " ") {
         e.preventDefault();
+        setSelectedUser(0);
         setSelectedHandle(users[selectedUser].handle);
       }
     };
@@ -45,7 +46,7 @@ function UserTag({ top, handle }: { top: number; handle?: string }) {
       <div
         className={`${styles.customScrollbar} overflow-auto overscroll-x-hidden h-full pr-3`}
       >
-        {isPending && <LogoLoading />}
+        {!!handle && isPending && <LogoLoading />}
         {users?.map((user, index) => {
           return <UserItem key={user.id} user={user} tag order={index} />;
         })}

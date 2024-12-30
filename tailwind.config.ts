@@ -13,6 +13,8 @@ const config: Config = {
         foreground: "var(--foreground)",
         mint: "#A2D5C6",
         warning: "#FF6F61",
+        mainGray: "#B2B2B2",
+        subGray: "#FAFAFA",
       },
       keyframes: {
         shimmer: {

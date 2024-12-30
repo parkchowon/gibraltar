@@ -1,12 +1,13 @@
-export const hightlightHandle = (text: string, handles: string[]) => {
-  let hightlighted = text;
+export const highlightHandle = (text: string, handles: string[]) => {
+  let highlighted = text;
 
   handles.forEach((handle) => {
     const regex = new RegExp(`(${handle})`, "g");
-    hightlighted = hightlighted.replace(
+    highlighted = highlighted.replace(
       regex,
       '<span style="color: blue;">$1</span>'
     );
   });
-  return hightlighted;
+
+  return highlighted;
 };
