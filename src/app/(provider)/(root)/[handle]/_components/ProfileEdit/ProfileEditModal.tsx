@@ -20,7 +20,7 @@ import FavHero from "./FavHero";
 import FavTeam from "./FavTeam";
 import { useQuery } from "@tanstack/react-query";
 import { findDuplicateHandle, getUserProfile } from "@/apis/auth.api";
-import { profileDetailUpdate, profileUpdate } from "@/apis/profile.api";
+import { profileUpdate } from "@/apis/profile.api";
 import { invalidCheckId } from "@/utils/invalidCheck";
 import { useProfileStore } from "@/stores/profile.store";
 import { useRouter } from "next/navigation";
@@ -225,7 +225,7 @@ function ProfileEditModal({
     mutate(updateDetail);
     setEditClick(false);
     if (handle !== profileUser.handle) {
-      router.push(`/${handle}`);
+      router.push(`/@${handle}`);
     }
   };
 

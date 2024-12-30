@@ -1,10 +1,23 @@
 import ArrowHeadBtn from "@/assets/icons/arrow_head.svg";
 import { useState } from "react";
 import TierBox from "./TierBox";
-import { PLAY_POSITION } from "@/constants/profile";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProfile } from "@/apis/auth.api";
+import { useAuth } from "@/contexts/auth.context";
+import LogoLoading from "@/components/Loading/LogoLoading";
 import HeroBox from "./HeroBox";
+import ModeBox from "./ModeBox";
+import TimeBox from "./TimeBox";
+import StyleBox from "./StyleBox";
+import TeamBox from "./TeamBox";
 function ProfileDetail() {
-  // TODO: 세부 프로필 보여주기 (화면이 없음)
+  const { user } = useAuth();
+
+  const { data: profile, isPending } = useQuery({
+    queryKey: ["profileDetail", user?.id],
+    queryFn: () => getUserProfile(user ? user.id : ""),
+    enabled: !!user,
+  });
 
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
 
@@ -26,22 +39,24 @@ function ProfileDetail() {
           </div>
         </button>
       </div>
+      {isPending && <LogoLoading />}
       {isDetailOpen && (
-        <div className="flex flex-col w-full h-[428px] py-5 gap-6">
-          <div className="flex border-[1px] border-gray-400 w-full rounded-md px-3 py-4 gap-4">
+        <div className="flex flex-col w-full h-fit py-5 gap-3">
+          <div className="flex w-full px-3 gap-4">
             {/* 티어 */}
-            <div className="flex w-fit px-2 py-2 text-center bg-white/30 rounded-2xl">
-              <p className="font-semibold">티어</p>
-              <div className="flex gap-2">
-                {PLAY_POSITION.map((pos) => {
-                  return <TierBox key={pos.id} pos={pos.name} />;
-                })}
-              </div>
-            </div>
+            <TierBox
+              tier={profile?.tier as string[]}
+              grade={profile?.tier_grade as number[]}
+            />
             {/* 플레이 영웅 */}
-            <div className="flex-grow py-2 px-2 bg-white/30 rounded-2xl text-center"></div>
+            <HeroBox />
           </div>
-          <div className="flex w-full flex-grow border-[1px] border-gray-400 rounded-md"></div>
+          <div className="flex w-full h-[272px] max-h-72 grid-cols-4 px-3 gap-4">
+            <ModeBox mode={profile?.play_mode as string[]} />
+            <TimeBox time={profile?.play_time as string[]} />
+            <StyleBox style={profile?.play_style} />
+            <TeamBox team={profile?.favorite_team} />
+          </div>
         </div>
       )}
     </>
