@@ -3,20 +3,16 @@ import { useState } from "react";
 import TierBox from "./TierBox";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "@/apis/auth.api";
-import { useAuth } from "@/contexts/auth.context";
-import LogoLoading from "@/components/Loading/LogoLoading";
 import HeroBox from "./HeroBox";
 import ModeBox from "./ModeBox";
 import TimeBox from "./TimeBox";
 import StyleBox from "./StyleBox";
 import TeamBox from "./TeamBox";
-function ProfileDetail() {
-  const { user } = useAuth();
-
+function ProfileDetail({ userId }: { userId: string }) {
   const { data: profile, isPending } = useQuery({
-    queryKey: ["profileDetail", user?.id],
-    queryFn: () => getUserProfile(user ? user.id : ""),
-    enabled: !!user,
+    queryKey: ["profileDetail", userId],
+    queryFn: () => getUserProfile(userId),
+    enabled: !!userId,
   });
 
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
@@ -39,7 +35,7 @@ function ProfileDetail() {
           </div>
         </button>
       </div>
-      {isPending && <LogoLoading />}
+      {isPending && <></>}
       {isDetailOpen && (
         <div className="flex flex-col w-full h-fit py-5 gap-3">
           <div className="flex w-full px-3 gap-4">

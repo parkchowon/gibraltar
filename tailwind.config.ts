@@ -11,7 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        mint: "#A2D5C6",
+        mint: "#3E97B2",
+        carrot: "#FC7B3D",
         warning: "#FF6F61",
         mainGray: "#B2B2B2",
         subGray: "#FAFAFA",

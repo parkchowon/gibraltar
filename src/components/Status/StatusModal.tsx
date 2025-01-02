@@ -36,7 +36,7 @@ function StatusModal({
   return (
     <div
       ref={modalRef}
-      className="absolute top-0 -left-2 w-[124px] h-fit bg-white rounded-xl border-[#B2B2B2] border-[1px] py-[9px] px-[5px] shadow-xl shadow-gray-400 z-30"
+      className="absolute top-0 -left-2 w-[124px] h-fit bg-white rounded-xl border border-mainGray py-[9px] px-[5px] shadow-xl shadow-mainGray z-30"
     >
       {USER_STATUS.map((status) => {
         return (

@@ -38,7 +38,7 @@ function PostQuote({ postId }: { postId?: string }) {
   return (
     <div
       onClick={handleQuoteClick}
-      className={`w-full h-fit px-6 py-4 border border-gray-300 rounded-3xl bg-gray-200 ${
+      className={`w-full h-fit px-6 py-4 border border-mainGray rounded-3xl bg-white ${
         data && "cursor-pointer"
       }`}
     >
@@ -53,7 +53,7 @@ function PostQuote({ postId }: { postId?: string }) {
               intent="miniQuote"
             />
             <p className="font-semibold ml-2">{quote.user?.nickname}</p>
-            <p className="text-sm text-gray-500">{quote.user?.handle}</p>
+            <p className="text-sm text-mainGray">{quote.user?.handle}</p>
           </div>
           <div>
             <p className="mt-[7px] mb-[6px] leading-snug">{quote.content}</p>

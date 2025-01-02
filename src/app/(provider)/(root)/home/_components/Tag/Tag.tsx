@@ -1,7 +1,7 @@
 import { useTagStore } from "@/stores/tag.store";
 import { TagRow } from "@/types/database";
 
-function Tag({ tag }: { tag: TagRow }) {
+function Tag({ tag, checked }: { tag: TagRow; checked: boolean }) {
   const { setSelectTag } = useTagStore();
 
   const handleTagClick = (
@@ -16,7 +16,11 @@ function Tag({ tag }: { tag: TagRow }) {
       onClick={(e) => handleTagClick(e)}
       className="flex w-full py-3 px-3 text-left gap-3 rounded-2xl hover:bg-gray-100"
     >
-      <div className="w-[25px] h-[25px] rounded-[10px] bg-gray-200" />
+      <div
+        className={`w-[25px] h-[25px] rounded-[10px] ${
+          checked ? "bg-mint" : "bg-gray-200"
+        } `}
+      />
       <p>{tag.tag_name}</p>
     </button>
   );

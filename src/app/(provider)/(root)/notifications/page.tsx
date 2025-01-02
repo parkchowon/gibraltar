@@ -133,7 +133,7 @@ function NotificationPage() {
 
   return (
     <MainLayout>
-      <div className="px-6 w-full divide-y-[1px] divide-gray-300">
+      <div className="w-full divide-y-[1px] divide-gray-300">
         {data &&
           data.pages &&
           data.pages.map((page) => {

@@ -8,8 +8,8 @@ const chipVariants = cva("flex", {
   variants: {
     intent: {
       removable:
-        "text-sm text-center py-1.5 px-4 bg-gray-100 rounded-[10px] gap-1.5 items-center whitespace-nowrap inline-block",
-      post: "items-center h-6 px-2.5 border-[1.5px] text-[11px] font-medium border-gray-400 bg-gray-300 rounded-lg inline-block",
+        "text-sm text-center py-1.5 px-3 bg-white rounded-[10px] gap-1.5 items-center whitespace-nowrap inline-block border border-mainGray",
+      post: "items-center h-6 px-2.5 border-[1.5px] text-[11px] font-medium border-mainGray bg-subGray rounded-lg inline-block hover:brightness-95",
     },
   },
   defaultVariants: {

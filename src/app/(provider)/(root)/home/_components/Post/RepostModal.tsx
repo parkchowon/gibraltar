@@ -4,7 +4,6 @@ import { usePostStore } from "@/stores/post.store";
 import ReactDOM from "react-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { PostType } from "@/types/home.type";
 
 export const REPOST_LIST = [
   {
@@ -66,13 +65,13 @@ function RepostModal() {
       className={`fixed inset-0 w-screen h-full z-30`}
     >
       <div
-        className="absolute flex flex-col w-[80px] h-fit rounded-xl bg-white"
+        className="absolute flex flex-col w-[80px] h-fit rounded-xl bg-white border border-mainGray"
         style={{ top: `${modal.top}px`, left: `${modal.left}px` }}
       >
         {REPOST_LIST.map((repost) => {
           return (
             <button
-              className={`px-1 py-2 hover:bg-gray-100 ${
+              className={`px-1 py-2 hover:bg-subGray ${
                 repost.id === 1 ? "hover:rounded-t-xl" : "hover:rounded-b-xl"
               }`}
               onClick={(e) => handleRepostClick(e, repost.name)}

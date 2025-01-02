@@ -33,11 +33,11 @@ function DetailPostPage({ params }: { params: { postId: string } }) {
     <MainLayout>
       <div className="h-screen">
         {post.parent_post_id && (
-          <div className="px-6">
+          <div className="">
             <PostParents postId={post.parent_post_id} />
           </div>
         )}
-        <div ref={scrollRef} className="px-6 divide-y-[1px] divide-gray-400">
+        <div ref={scrollRef} className="divide-y-[1px] divide-gray-400">
           {/* 포스트 내용 */}
           <Post post={post} />
           {/* 댓글 작성 창 */}

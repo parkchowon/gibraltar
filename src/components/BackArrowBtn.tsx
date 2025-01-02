@@ -7,7 +7,7 @@ import { usePostStore } from "@/stores/post.store";
 const arrowBtnVariants = cva("flex gap-8 py-6", {
   variants: {
     intent: {
-      page: "sticky top-0 z-20 w-full px-[25px] border-gray-300 border-b-[1px] bg-gray-200 bg-opacity-60 backdrop-blur-md",
+      page: "sticky top-0 z-20 w-full px-[25px] border-mainGray border-b-[1px] bg-white bg-opacity-60 backdrop-blur-md",
       commentModal: "w-full px-[25px]",
       profileEditModal:
         "absolute top-0 left-0 w-full h-fit bg-white z-30 border-b-[1px] px-6 rounded-t-2xl",

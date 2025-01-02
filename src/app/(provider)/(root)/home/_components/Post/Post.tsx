@@ -101,12 +101,12 @@ function Post({ post }: PostProps) {
       )}
       <div
         onClick={handlePostClick}
-        className={`flex flex-col w-full px-6 ${
+        className={`flex flex-col w-full px-12 ${
           post.isReposted && post.reposted_by ? "pt-1 pb-4" : "py-4"
-        }  cursor-pointer bg-gray-200 hover:bg-gray-100`}
+        }  cursor-pointer bg-white hover:bg-subGray`}
       >
         {post.isReposted && post.reposted_by && (
-          <p className="text-sm ml-16 text-gray-400">
+          <p className="text-sm ml-16 text-mainGray">
             {post.reposted_by === userData?.nickname ||
             post.reposted_by === user?.id
               ? "재게시했습니다"
@@ -121,8 +121,8 @@ function Post({ post }: PostProps) {
           <div className="ml-6 w-full">
             <div className="flex items-center">
               <p className="font-semibold">{post.user.nickname}</p>
-              <p className="ml-1.5 text-sm text-gray-500">{post.user.handle}</p>
-              <p className="text-sm text-gray-500 ml-1.5">{postTime}</p>
+              <p className="ml-1.5 text-sm text-mainGray">{post.user.handle}</p>
+              <p className="text-sm text-mainGray ml-1.5">{postTime}</p>
               {optionClick && (
                 <OptionModal
                   post={{
@@ -136,7 +136,7 @@ function Post({ post }: PostProps) {
               {/* 트윗 더보기 ... 버튼 */}
               <button
                 onClick={handleOptionClick}
-                className="grid place-items-center w-6 h-6 ml-auto rotate-90 rounded-full hover:bg-gray-300"
+                className="grid place-items-center w-6 h-6 ml-auto rotate-90 rounded-full hover:bg-mainGray/20"
               >
                 <OptionDot width="7" height="12" />
               </button>
@@ -153,7 +153,7 @@ function Post({ post }: PostProps) {
               <div className="flex">
                 <button
                   onClick={handleCommentClick}
-                  className="flex rounded-full p-1 hover:bg-gray-300"
+                  className="flex rounded-full p-1 hover:bg-mainGray/20"
                 >
                   <Image
                     alt="icon"

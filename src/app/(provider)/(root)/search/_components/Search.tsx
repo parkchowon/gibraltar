@@ -11,7 +11,7 @@ function Search() {
 
   return (
     <MainLayout>
-      <div className="w-full px-12 py-8 border-gray-300 border-b-[1px]">
+      <div className="w-full px-12 py-8 border-mainGray border-b-[1px]">
         <SearchBar searchValue={searchText} tab={tab} />
       </div>
       {searchText ? (

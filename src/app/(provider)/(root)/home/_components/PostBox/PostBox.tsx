@@ -232,7 +232,7 @@ function PostBox() {
     <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
       <div
         ref={postBoxRef}
-        className="relative flex flex-col px-8 bg-gray-300 rounded-[30px] py-9"
+        className="relative flex flex-col px-8 bg-subGray rounded-[30px] py-9 border border-mainGray"
       >
         {mutation.isPending && (
           <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center rounded-[30px] bg-black/20">
@@ -242,7 +242,7 @@ function PostBox() {
         <div className="relative w-full h-[134px]">
           <textarea
             ref={textareaRef}
-            className="absolute top-0 left-0 w-full h-full bg-transparent focus:outline-none resize-none text-base leading-[normal] whitespace-pre-wrap break-words overflow-y-auto text-transparent caret-black z-20"
+            className="absolute top-0 left-0 w-full h-full bg-transparent focus:outline-none resize-none text-base leading-[normal] whitespace-pre-wrap break-words overflow-y-auto text-transparent caret-black z-20 placeholder:text-mainGray"
             placeholder="여기에 오버워치 얘기를 적어보세요"
             onChange={handleTextChange}
             maxLength={MAX_POST_TEXT_LENGTH}
@@ -321,9 +321,8 @@ function PostBox() {
       </div>
       <button
         type="submit"
-        className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-gray-300 ${
-          text ? "cursor-pointer" : "cursor-not-allowed"
-        }`}
+        disabled={!text.trim()}
+        className={`mt-[30px] ml-auto px-6 py-3 rounded-full bg-black text-white disabled:bg-mainGray`}
       >
         게시하기
       </button>

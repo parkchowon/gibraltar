@@ -55,7 +55,7 @@ function ProfileBox({ userId }: { userId: string }) {
       );
 
       setIsFollowing(!!isFollowing);
-      setButtonText(!!isFollowing ? "팔로잉" : "팔로우");
+      setButtonText(!!isFollowing ? "팔로잉 중" : "팔로우");
     }
   }, [data, data?.followerList]);
 
@@ -94,7 +94,7 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onClick={handleEditClick}
-          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-gray-50 hover:bg-gray-100"
+          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-white border border-mainGray hover:brightness-95"
         >
           프로필 편집
         </button>
@@ -103,12 +103,14 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onMouseOver={() => setButtonText(isFollowing ? "언팔로우" : "팔로우")}
-          onMouseLeave={() => setButtonText(isFollowing ? "팔로잉" : "팔로우")}
+          onMouseLeave={() =>
+            setButtonText(isFollowing ? "팔로잉 중" : "팔로우")
+          }
           onClick={() => handleFollowClick()}
           className={`${
             isFollowing
-              ? "bg-transparent border-[1px] border-gray-400 hover:bg-warning"
-              : "bg-gray-50"
+              ? "bg-transparent border-[1px] border-mainGray hover:bg-warning"
+              : "bg-subGray border border-mainGray hover:bg-carrot"
           } ml-auto h-[35px] px-[15px] text-sm rounded-full `}
         >
           {buttonText}

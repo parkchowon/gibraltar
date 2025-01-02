@@ -22,17 +22,24 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                   className="absolute object-cover"
                 />
               </div>
-
-              <Image
-                src={OWTier.find((item) => item.tier === tier[idx])?.img || ""}
-                alt="tier"
-                height={60}
-                width={60}
-              />
-              <p className="font-bold text-xs text-[#6a6a6a]">
-                {tier[idx]}
-                {grade[idx]}
-              </p>
+              {tier.length === 0 ? (
+                <p>티어 설정 안함</p>
+              ) : (
+                <>
+                  <Image
+                    src={
+                      OWTier.find((item) => item.tier === tier[idx])?.img || ""
+                    }
+                    alt="tier"
+                    height={60}
+                    width={60}
+                  />
+                  <p className="font-bold text-xs text-[#6a6a6a]">
+                    {tier[idx]}
+                    {grade[idx]}
+                  </p>
+                </>
+              )}
             </div>
           );
         })}

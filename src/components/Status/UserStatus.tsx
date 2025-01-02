@@ -7,7 +7,7 @@ const statusVariants = cva(
   {
     variants: {
       intent: {
-        page: "gap-[8.7px] w-fit px-3 rounded-full bg-[#D9D9D9]",
+        page: "gap-[8.7px] w-fit px-3 rounded-full bg-[#FAFAFA]",
         side: "gap-[7px] px-2",
         modal: "rounded-full w-full px-2 gap-[7px] hover:bg-[#F0F0F0]",
       },

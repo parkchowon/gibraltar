@@ -10,7 +10,6 @@ import { usePostStore } from "@/stores/post.store";
 import { usePathname, useRouter } from "next/navigation";
 import BackArrowBtn from "../BackArrowBtn";
 import Gibraltar from "@/assets/logo/gibraltar_letter.svg";
-import Logo from "@/assets/logo/gibraltar_logo.svg";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
@@ -44,13 +43,12 @@ function MainLayout({ children }: PropsWithChildren) {
             onClick={handleLogoClick}
             className="flex flex-col items-center w-full pb-10 gap-1"
           >
-            {/* <Logo width={30} /> */}
             <Gibraltar width="90%" />
           </button>
           <SideBar />
         </section>
         {/* 가운데 */}
-        <section className="absolute left-1/2 transform -translate-x-1/2 w-[40.8%] min-h-screen h-auto bg-gray-200">
+        <section className="absolute left-1/2 transform -translate-x-1/2 w-[40.8%] min-h-screen h-auto bg-white">
           {path != "/search" && <BackArrowBtn type="page" />}
           {children}
         </section>

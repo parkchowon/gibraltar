@@ -33,12 +33,12 @@ function SearchBar({
   return (
     <form
       onSubmit={handleSearchSubmit}
-      className="flex w-full h-[58px] px-8 py-[15px] gap-3 rounded-full bg-gray-300"
+      className="flex w-full h-[58px] px-8 py-[15px] gap-3 rounded-full bg-subGray border border-mainGray"
     >
       <input
         value={searchText}
         onChange={handleInputChange}
-        className="flex-grow min-w-0 bg-inherit outline-none"
+        className="flex-grow min-w-0 bg-inherit outline-none placeholder:text-mainGray"
         placeholder="검색어를 입력하세요"
       />
       <button>

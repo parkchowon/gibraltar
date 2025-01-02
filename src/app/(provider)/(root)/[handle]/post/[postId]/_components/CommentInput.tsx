@@ -95,14 +95,14 @@ function CommentInput({
             ref={textRef}
             value={comment}
             maxLength={MAX_POST_TEXT_LENGTH}
-            className="w-full h-auto overflow-hidden resize-none bg-transparent outline-none"
+            className="w-full h-auto overflow-hidden resize-none bg-transparent outline-none placeholder:text-mainGray"
             placeholder="댓글을 입력해주세요."
             onInput={handleInputChange}
           ></textarea>
         </div>
         <button
           disabled={!comment.trim()}
-          className={`h-fit mt-auto px-6 py-2.5 bg-gray-400 rounded-full disabled:brightness-75`}
+          className={`h-fit mt-auto px-6 py-2.5 bg-black text-white rounded-full disabled:bg-mainGray`}
         >
           게시하기
         </button>

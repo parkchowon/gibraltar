@@ -39,7 +39,7 @@ export const formatToPostDate = (postTimeStamp: string) => {
   }
 
   // 현재 년도가 아닌 post의 time
-  return `${postYear}년 ${postYear}월 ${postDay}일`;
+  return `${postYear}년 ${postMonth}월 ${postDay}일`;
 };
 
 // 알림 페이지 reactedUser 데이터 배열 재구성 함수

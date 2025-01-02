@@ -3,6 +3,8 @@ import { usePostStore } from "@/stores/post.store";
 import { PostType } from "@/types/home.type";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import Repost from "@/assets/icons/post_repeat.svg";
+import Like from "@/assets/icons/post_heart.svg";
 
 type PostReactionProps = {
   post: PostType;
@@ -72,27 +74,40 @@ function PostReactButton({ post, userId, reaction }: PostReactionProps) {
     }
   };
 
+  const renderingIcon = () => {
+    if (reaction.type === "repost") {
+      if (reaction.byMe) {
+        return <Repost width={18} height={18} style={{ color: "#FC7B3D" }} />;
+      }
+      return <Repost width={18} height={18} style={{ color: "#000000" }} />;
+    } else {
+      if (reaction.byMe) {
+        return (
+          <Like
+            width={18}
+            height={18}
+            style={{ color: "#3E97B2", fill: "#3E97B2" }}
+          />
+        );
+      }
+      return <Like width={18} height={18} style={{ color: "#000000" }} />;
+    }
+  };
+
   return (
     <div className="relative flex">
       <button
         onClick={(e) => handleReactClick(e, post.id, reaction.type)}
-        className="flex rounded-full p-1 hover:bg-gray-300"
+        className="flex rounded-full p-1 hover:bg-mainGray/20"
       >
-        <Image
-          alt="icon"
-          width={18}
-          height={18}
-          src={`/icons/${
-            reaction.type === "repost" ? "post_repeat" : "post_heart"
-          }${reaction.byMe ? "_click" : ""}.svg`}
-        />
+        {renderingIcon()}
       </button>
       <p
         className={`${
           reactionClick
             ? reaction.type === "repost"
-              ? "text-mint"
-              : "text-warning"
+              ? "text-carrot"
+              : "text-mint"
             : "text-black"
         }`}
       >

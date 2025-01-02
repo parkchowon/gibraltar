@@ -23,7 +23,7 @@ function SideBar() {
           <button
             key={item.id}
             onClick={() => handleClick(item.path)}
-            className="flex justify-left items-center w-full h-[58px] hover:bg-gray-100 hover:rounded-full"
+            className="flex justify-left items-center w-full h-[58px] hover:bg-subGray hover:rounded-full"
           >
             <Image
               width={24}

@@ -26,7 +26,10 @@ function ProfilePage({ params }: { params: { handle: string } }) {
       <MainLayout>
         <div className="px-6">
           <ProfileLoading />
-          <ProfileDetail />
+          <button className="flex gap-10">
+            <p className="text-xs font-semibold">세부 프로필 펼치기</p>
+            <div className="grid place-items-center w-4 h-4 rotate-90"></div>
+          </button>
           <TabContainer />
           <TimeLineLoading />
         </div>
@@ -38,7 +41,7 @@ function ProfilePage({ params }: { params: { handle: string } }) {
         {/* 프로필 부분 */}
         <ProfileBox userId={userId} />
         {/* 세부프로필 부분 */}
-        <ProfileDetail />
+        <ProfileDetail userId={userId} />
         {/* 탭 영역 */}
         <TabContainer>
           {tab ? (

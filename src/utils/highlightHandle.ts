@@ -5,7 +5,7 @@ export const highlightHandle = (text: string, handles: string[]) => {
     const regex = new RegExp(`(${handle})`, "g");
     highlighted = highlighted.replace(
       regex,
-      '<span style="color: blue;">$1</span>'
+      '<span style="color: #FC7B3D;">$1</span>'
     );
   });
 

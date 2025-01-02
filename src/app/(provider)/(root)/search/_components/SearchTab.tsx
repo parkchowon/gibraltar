@@ -97,7 +97,7 @@ function SearchTab() {
 
   return (
     <>
-      <div className="flex justify-evenly border-y-[1px] border-gray-400">
+      <div className="flex justify-evenly border-b-[1px] border-mainGray">
         {TAB.map((tab) => {
           return (
             <button
@@ -106,7 +106,7 @@ function SearchTab() {
                 tabName === tab.path
                   ? "after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-[40px] after:h-[1px] after:bg-black"
                   : null
-              } hover:bg-gray-100`}
+              } hover:bg-subGray`}
               onClick={() => handleClickTab(tab.path)}
             >
               {tab.name}
@@ -115,7 +115,7 @@ function SearchTab() {
         })}
       </div>
       <div
-        className={`flex flex-col h-fit divide-y-[1px] divide-gray-300 bg-gray-200`}
+        className={`flex flex-col h-fit divide-y-[1px] divide-mainGray bg-white`}
       >
         {isPending && <PostLoading />}
         {data && data.pages.flatMap((page) => page.length).length === 1 && (
