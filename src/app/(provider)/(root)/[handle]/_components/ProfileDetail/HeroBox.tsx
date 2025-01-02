@@ -41,7 +41,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
         </div>
       </button>
       {posClick && (
-        <div className="absolute flex flex-col border border-mainGray bg-white rounded-lg">
+        <div className="absolute flex flex-col border left-4 top-10 border-mainGray bg-white rounded-lg">
           {PLAY_POSITION.filter((pos) => pos.name !== position.name).map(
             (filteredPos, idx) => (
               <button
