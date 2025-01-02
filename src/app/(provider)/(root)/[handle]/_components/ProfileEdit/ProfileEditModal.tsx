@@ -192,6 +192,7 @@ function ProfileEditModal({
 
   const handleProfileEditClick = async () => {
     if (nickname === "" || handle === "") {
+      // TODO : 오류 경고창 띄우기
       return console.log("닉네임과 handle은 비워둘 수 없음");
     }
     if (usersChange) {

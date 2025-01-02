@@ -93,8 +93,6 @@ function SearchTab() {
     router.push(`${path}${query}`);
   };
 
-  console.log(data?.pages.flatMap((page) => page.length));
-
   return (
     <>
       <div className="flex justify-evenly border-b-[1px] border-mainGray">

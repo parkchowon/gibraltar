@@ -15,11 +15,10 @@ function OptionItem({ text, post }: ItemProps) {
   const handleOptionClick = (text: string) => {
     switch (text) {
       case "삭제하기":
-        mutation.mutate({
+        return mutation.mutate({
           postId: post.postId,
           userId: post.userId,
         });
-        return console.log(post.postId);
     }
   };
 

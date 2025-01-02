@@ -47,8 +47,6 @@ function UserPost({ userId }: { userId: string }) {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  console.log(data?.pages);
-
   return (
     <div className="flex flex-col h-fit divide-y-2 divide-gray-300">
       {isPending ? (

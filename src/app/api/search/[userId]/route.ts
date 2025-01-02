@@ -8,8 +8,6 @@ export const GET = async (
   const supabase = createClient();
   const handle = params.userId;
 
-  console.log(handle);
-
   try {
     const { data, error } = await supabase
       .from("users")

@@ -12,7 +12,6 @@ export const GET = async (request: NextRequest) => {
     const start = (pageParams - 1) * POST_SIZE;
     const end = pageParams * POST_SIZE - 1;
 
-    console.log(searchParams.get("page-params"), pageParams);
     const { data, error } = await supabase
       .from("users")
       .select("id, profile_url, nickname, handle, user_profiles(bio)")

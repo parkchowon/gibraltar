@@ -17,7 +17,6 @@ export const insertProfileSetting = async (profile: ProfileType) => {
         },
       }
     );
-    console.log(response.data);
   } catch (error) {
     console.error(error);
   }

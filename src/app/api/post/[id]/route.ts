@@ -80,7 +80,6 @@ export const DELETE = async (
       .single();
     if (imgError) throw new Error(imgError.message);
 
-    console.log(imgData);
     if (imgData && imgData.images) {
       const paths = (imgData.images as string[]).map(
         (path) => path.split("/posts/")[1]
