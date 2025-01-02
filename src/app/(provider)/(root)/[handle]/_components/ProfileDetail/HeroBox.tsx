@@ -72,7 +72,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
         className={`flex w-full h-full items-center gap-3 overflow-x-auto py-3 ${styles.customScrollbar}`}
       >
         {mainByRole.length + playByRole.length > 0 && (
-          <div className="flex items-center justify-center w-[110px] h-[110px]">
+          <div className="flex items-center justify-center w-[110px] h-[110px] min-w-[110px] min-h-[110px]">
             <Image
               src={
                 mainByRole && mainByRole.length !== 0
@@ -92,48 +92,50 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
             />
           </div>
         )}
-        <div className="grid grid-rows-2 grid-flow-col gap-3 items-center">
-          {mainByRole &&
-            mainByRole.map((main, idx) => {
-              return (
-                <div
-                  key={main.key}
-                  className={`flex items-center justify-center ${
-                    idx === 0 ? "hidden" : "w-[52px] h-[52px]"
-                  }`}
-                >
-                  <Image
-                    src={main.portrait}
-                    alt={main.key}
-                    width={52}
-                    height={52}
-                    className={`rounded-full border-2 border-carrot bg-carrot ${
+        <div className="flex flex-grow">
+          <div className="grid grid-rows-2 w-full grid-flow-col gap-3 items-center">
+            {mainByRole &&
+              mainByRole.map((main, idx) => {
+                return (
+                  <div
+                    key={main.key}
+                    className={`flex items-center justify-center ${
                       idx === 0 ? "hidden" : "w-[52px] h-[52px]"
                     }`}
-                  />
-                </div>
-              );
-            })}
-          {playByRole &&
-            playByRole.map((play, idx) => {
-              return (
-                <div
-                  key={play.key}
-                  className={`flex items-center justify-center w-[52px] h-[52px] ${
-                    mainByRole.length === 0 && idx === 0 && "hidden"
-                  }`}
-                >
-                  <Image
+                  >
+                    <Image
+                      src={main.portrait}
+                      alt={main.key}
+                      width={52}
+                      height={52}
+                      className={`rounded-full border-2 border-carrot bg-carrot ${
+                        idx === 0 ? "hidden" : "w-[52px] h-[52px]"
+                      }`}
+                    />
+                  </div>
+                );
+              })}
+            {playByRole &&
+              playByRole.map((play, idx) => {
+                return (
+                  <div
                     key={play.key}
-                    src={play.portrait}
-                    alt={play.key}
-                    width={52}
-                    height={52}
-                    className="rounded-full border-2 border-mint bg-mint "
-                  />
-                </div>
-              );
-            })}
+                    className={`flex items-center justify-center w-[52px] h-[52px] ${
+                      mainByRole.length === 0 && idx === 0 && "hidden"
+                    }`}
+                  >
+                    <Image
+                      key={play.key}
+                      src={play.portrait}
+                      alt={play.key}
+                      width={52}
+                      height={52}
+                      className="rounded-full border-2 border-mint bg-mint "
+                    />
+                  </div>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>
