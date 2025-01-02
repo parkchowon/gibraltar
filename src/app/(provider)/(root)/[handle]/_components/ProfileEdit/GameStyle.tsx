@@ -3,8 +3,10 @@ import { useProfileStore } from "@/stores/profile.store";
 import React, { useEffect, useState } from "react";
 
 function GameStyle({ style }: { style: string }) {
-  const [gameStyle, setGameStyle] = useState<string>(style);
   const { playStyle, putPlayStyle } = useProfileStore();
+  const [gameStyle, setGameStyle] = useState<string>(
+    playStyle.style ? playStyle.style : style
+  );
 
   const handleStyleClick = (style: string) => {
     setGameStyle(style);
@@ -27,7 +29,7 @@ function GameStyle({ style }: { style: string }) {
               onClick={() => handleStyleClick(style.name)}
               key={style.id}
               className={`${idx === 0 ? "rounded-l-xl" : "rounded-r-xl"} ${
-                gameStyle === style.name && "bg-mint"
+                gameStyle === style.name && "bg-mint text-white"
               }`}
             >
               {style.name}

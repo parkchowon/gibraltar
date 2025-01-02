@@ -13,7 +13,7 @@ function DetailTitle({
   return (
     <button
       onClick={() => onClick(type)}
-      className="flex justify-between items-center w-full bg-gray-200 rounded-full px-6 py-3"
+      className="flex justify-between items-center w-full bg-subGray border border-mainGray rounded-full px-6 py-3"
     >
       <p>{title}</p>
       <div className="w-fit h-fit rotate-90">

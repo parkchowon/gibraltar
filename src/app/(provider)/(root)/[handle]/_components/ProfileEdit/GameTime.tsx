@@ -5,8 +5,10 @@ import React, { useEffect, useState } from "react";
 
 function GameTime({ time }: { time: Json }) {
   const selectedTime = time as string[];
-  const [gameTime, setGameTime] = useState<string[]>(selectedTime);
   const { playStyle, putPlayStyle } = useProfileStore();
+  const [gameTime, setGameTime] = useState<string[]>(
+    playStyle.time.length !== 0 ? playStyle.time : selectedTime
+  );
 
   const handleTimeClick = (mode: string) => {
     if (gameTime.includes(mode)) {
@@ -33,7 +35,7 @@ function GameTime({ time }: { time: Json }) {
             key={time.id}
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
-            } ${gameTime.includes(time.name) && "bg-mint"}`}
+            } ${gameTime.includes(time.name) && "bg-mint text-white"}`}
           >
             {time.name}
           </button>

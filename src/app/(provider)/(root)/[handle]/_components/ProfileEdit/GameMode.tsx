@@ -5,8 +5,10 @@ import React, { useEffect, useState } from "react";
 
 function GameMode({ mode }: { mode: Json }) {
   const selectedMode = mode as string[];
-  const [gameMode, setGameMode] = useState<string[]>(selectedMode);
   const { playStyle, putPlayStyle } = useProfileStore();
+  const [gameMode, setGameMode] = useState<string[]>(
+    playStyle.mode.length !== 0 ? playStyle.mode : selectedMode
+  );
 
   const handleModeClick = (mode: string) => {
     if (gameMode.includes(mode)) {
@@ -33,7 +35,7 @@ function GameMode({ mode }: { mode: Json }) {
             onClick={() => handleModeClick(mode.name)}
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
-            } ${gameMode.includes(mode.name) && "bg-mint"}`}
+            } ${gameMode.includes(mode.name) && "bg-mint text-white"}`}
           >
             {mode.name}
           </button>

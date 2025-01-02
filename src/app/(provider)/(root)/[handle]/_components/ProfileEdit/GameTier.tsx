@@ -61,17 +61,17 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
             <button
               key={pos.id}
               onClick={() => handlePositionClick(idx)}
-              className={`${position === idx ? "bg-mint" : ""} ${
-                idx === 0 && "rounded-l-xl"
-              } ${idx === 2 && "rounded-r-xl"}`}
+              className={`${
+                position === idx ? "bg-mint text-white" : "text-black"
+              } ${idx === 0 && "rounded-l-xl"} ${idx === 2 && "rounded-r-xl"}`}
             >
               {pos.name}
             </button>
           );
         })}
       </div>
-      <div className="flex w-full h-fit justify-center items-center py-2 bg-mint rounded-full">
-        <p className="font-bold">
+      <div className="flex w-full h-fit justify-center items-center py-2 bg-mint text-white rounded-full">
+        <p className="font-semibold">
           {userTier[position] ? userTier[position] : "설정 안함"}{" "}
           {tierGrade[position] && 6 - tierGrade[position]}
         </p>

@@ -33,14 +33,11 @@ function HeroByRole({ heroes, position }: HeroByRoleProps) {
   const handleHeroClick = (hero: HeroType) => {
     if (mainHeroes.includes(hero)) {
       const removeMain = mainHeroes.filter((remove) => remove !== hero);
+      return setMainHeroes(removeMain);
+    } else if (selectedHeroes.includes(hero)) {
       const removeSelect = selectedHeroes.filter((remove) => remove !== hero);
       setSelectedHeroes(removeSelect);
-      return setMainHeroes(removeMain);
-    }
-    if (selectedHeroes.includes(hero)) {
-      if (!mainHeroes.includes(hero)) {
-        return setMainHeroes([...mainHeroes, hero]);
-      }
+      return setMainHeroes([...mainHeroes, hero]);
     }
     return setSelectedHeroes([...selectedHeroes, hero]);
   };

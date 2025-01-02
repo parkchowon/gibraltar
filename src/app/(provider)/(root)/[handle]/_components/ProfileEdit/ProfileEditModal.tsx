@@ -71,7 +71,7 @@ function ProfileEditModal({
   const teamRef = useRef<HTMLDivElement>(null);
   const tierRef = useRef<HTMLDivElement>(null);
 
-  const { playStyle, tier, grade, playChamps, favoriteTeam } =
+  const { playStyle, tier, grade, playChamps, favoriteTeam, putPlayStyle } =
     useProfileStore();
 
   const { data: profile, isPending } = useQuery({
@@ -229,6 +229,15 @@ function ProfileEditModal({
     }
   };
 
+  const handleCloseModal = () => {
+    putPlayStyle({
+      mode: [],
+      style: "",
+      time: [],
+    });
+    setEditClick(false);
+  };
+
   if (isPending || !profile) {
     return (
       <div className="fixed inset-0 flex w-full h-screen justify-center items-center bg-black/35 z-50">
@@ -240,7 +249,7 @@ function ProfileEditModal({
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex justify-center items-center">
       <div
-        onClick={() => setEditClick(false)}
+        onClick={handleCloseModal}
         className="absolute w-full h-full inset-0 bg-black opacity-30"
       />
       <div
@@ -368,7 +377,7 @@ function ProfileEditModal({
         <div className="flex w-full h-fit pt-3 justify-center">
           <button
             onClick={handleProfileEditClick}
-            className="px-12 py-3.5 text-gray-500 font-medium bg-gray-400 rounded-full"
+            className="px-12 py-3.5 text-white font-medium bg-black rounded-full"
           >
             변경사항 저장
           </button>

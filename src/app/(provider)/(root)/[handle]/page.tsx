@@ -26,10 +26,12 @@ function ProfilePage({ params }: { params: { handle: string } }) {
       <MainLayout>
         <div className="px-6">
           <ProfileLoading />
-          <button className="flex gap-10">
-            <p className="text-xs font-semibold">세부 프로필 펼치기</p>
-            <div className="grid place-items-center w-4 h-4 rotate-90"></div>
-          </button>
+          <div className={`flex py-3 border-t justify-center border-mainGray`}>
+            <button className="flex gap-10">
+              <p className="text-xs font-semibold">세부 프로필 펼치기</p>
+              <div className="grid place-items-center w-4 h-4 rotate-90"></div>
+            </button>
+          </div>
           <TabContainer />
           <TimeLineLoading />
         </div>

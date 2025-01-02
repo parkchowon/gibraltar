@@ -67,9 +67,9 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
             <button
               key={pos.id}
               onClick={() => handlePositionClick(pos.id)}
-              className={`${position === pos.id ? "bg-mint" : ""} ${
-                idx === 0 && "rounded-l-xl"
-              } ${idx === 2 && "rounded-r-xl"}`}
+              className={`${
+                position === pos.id ? "bg-mint text-white" : "text-black"
+              } ${idx === 0 && "rounded-l-xl"} ${idx === 2 && "rounded-r-xl"}`}
             >
               {pos.name}
             </button>
@@ -91,9 +91,9 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
                   onClick={() => handleHeroClick(hero.name)}
                   className={`relative w-14 h-14 rounded-full ${
                     mainChamp.includes(hero.name)
-                      ? "border-2 border-warning"
+                      ? "border-2 border-carrot bg-carrot"
                       : playChamp.includes(hero.name)
-                      ? "border-2 border-mint"
+                      ? "border-2 border-mint bg-mint"
                       : ""
                   }`}
                 >

@@ -8,6 +8,7 @@ import ModeBox from "./ModeBox";
 import TimeBox from "./TimeBox";
 import StyleBox from "./StyleBox";
 import TeamBox from "./TeamBox";
+import { HeroType } from "@/types/hero.type";
 function ProfileDetail({ userId }: { userId: string }) {
   const { data: profile, isPending } = useQuery({
     queryKey: ["profileDetail", userId],
@@ -26,7 +27,7 @@ function ProfileDetail({ userId }: { userId: string }) {
       <div
         className={`flex py-3 border-t-[1px] ${
           isDetailOpen && "border-b-[1px]"
-        } justify-center border-gray-400`}
+        } justify-center border-mainGray`}
       >
         <button onClick={handleDetailProfileClick} className="flex gap-10">
           <p className="text-xs font-semibold">세부 프로필 펼치기</p>
@@ -45,7 +46,10 @@ function ProfileDetail({ userId }: { userId: string }) {
               grade={profile?.tier_grade as number[]}
             />
             {/* 플레이 영웅 */}
-            <HeroBox />
+            <HeroBox
+              main={profile?.main_champs as HeroType[]}
+              play={profile?.play_champs as HeroType[]}
+            />
           </div>
           <div className="flex w-full h-[272px] max-h-72 grid-cols-4 px-3 gap-4">
             <ModeBox mode={profile?.play_mode as string[]} />

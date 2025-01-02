@@ -17,7 +17,7 @@ function FavTeam({ team }: { team: string }) {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="flex w-full rounded-full px-6 py-2 justify-center bg-mint">
+      <div className="flex w-full rounded-full px-6 py-2 justify-center bg-mint text-white font-bold">
         <p>{favTeam}</p>
       </div>
       <div className="flex w-full justify-center gap-2 py-4">

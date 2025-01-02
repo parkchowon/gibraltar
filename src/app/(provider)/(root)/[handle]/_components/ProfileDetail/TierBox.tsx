@@ -23,7 +23,7 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                 />
               </div>
               {tier.length === 0 ? (
-                <p>티어 설정 안함</p>
+                <p className="text-sm">설정 안함</p>
               ) : (
                 <>
                   <Image
