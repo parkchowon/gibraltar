@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Logo from "@/assets/logo/gibraltar_logo.svg";
 
 function ModeBox({ mode }: { mode: string[] }) {
   const renderingGrid = () => {
@@ -93,6 +94,14 @@ function ModeBox({ mode }: { mode: string[] }) {
   return (
     <div className="relative flex flex-col w-full h-full py-4 justify-between border items-center text-center border-mainGray rounded-md bg-subGray">
       <p className="font-bold text-sm z-20 bg-white px-1">게임모드</p>
+      {mode.length === 0 && (
+        <div className="opacity-35">
+          <Logo width={92} height={92} />
+        </div>
+      )}
+      {!mode.length && (
+        <p className="font-bold text-sm z-20 bg-white px-1">없음</p>
+      )}
       {mode.length === 1 && (
         <p className="font-bold text-sm z-20 bg-white px-1">{mode[0]}</p>
       )}
@@ -110,6 +119,7 @@ function ModeBox({ mode }: { mode: string[] }) {
           )}
         </div>
       )}
+
       <div
         className={`absolute inset-0 z-10 ${
           mode.length > 1 && "grid grid-cols-2 grid-rows-2"

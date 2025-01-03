@@ -4,6 +4,7 @@ import { HeroType } from "@/types/hero.type";
 import { PLAY_POSITION } from "@/constants/profile";
 import Image from "next/image";
 import styles from "@/styles/postbox.module.css";
+import Logo from "@/assets/logo/gibraltar_logo.svg";
 
 type PositionType = {
   id: string;
@@ -29,10 +30,10 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
   }, [position]);
 
   return (
-    <div className="relative flex flex-col w-[50%] max-h-[270px] px-5 py-4 items-center border border-mainGray rounded-md bg-subGray">
+    <div className="relative flex flex-col w-[50%] max-h-[270px] flex-grow px-5 py-4 items-center border border-mainGray rounded-md bg-subGray">
       <button
         onClick={() => setPosClick(!posClick)}
-        className="flex items-center mr-auto gap-2"
+        className="flex flex-shrink-0 items-center mr-auto gap-2 h-6"
       >
         <Image src={position.icon} alt={position.name} width={10} height={10} />
         <p className="font-bold text-sm">{position.name}</p>
@@ -41,7 +42,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
         </div>
       </button>
       {posClick && (
-        <div className="absolute flex flex-col border left-4 top-10 border-mainGray bg-white rounded-lg">
+        <div className="absolute flex flex-col border left-4 top-10 border-mainGray bg-white rounded-lg z-10">
           {PLAY_POSITION.filter((pos) => pos.name !== position.name).map(
             (filteredPos, idx) => (
               <button
@@ -63,81 +64,83 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
           )}
         </div>
       )}
-      {mainByRole.length + playByRole.length === 0 && (
-        <div className="grid w-full h-full place-items-center">
-          <p className="text-sm">없음</p>
+      {mainByRole.length + playByRole.length === 0 ? (
+        <div className="flex flex-col flex-grow w-full h-full items-center justify-center gap-2 opacity-35 z-0">
+          <Logo width={50} height={50} />
+          <p className="text-xs">없음</p>
         </div>
-      )}
-      <div
-        className={`flex w-full h-full items-center gap-3 overflow-x-auto py-3 ${styles.customScrollbar}`}
-      >
-        {mainByRole.length + playByRole.length > 0 && (
-          <div className="flex items-center justify-center w-[110px] h-[110px] min-w-[110px] min-h-[110px]">
-            <Image
-              src={
-                mainByRole && mainByRole.length !== 0
-                  ? mainByRole[0].portrait
-                  : playByRole && playByRole.length !== 0
-                  ? playByRole[0].portrait
-                  : ""
-              }
-              width={110}
-              height={110}
-              alt="캐릭터"
-              className={`rounded-full border-2 w-[110px] h-[110px] ${
-                mainByRole.length !== 0
-                  ? "border-carrot bg-carrot"
-                  : "border-mint bg-mint"
-              }`}
-            />
-          </div>
-        )}
-        <div className="flex flex-grow">
-          <div className="grid grid-rows-2 w-full grid-flow-col gap-3 items-center">
-            {mainByRole &&
-              mainByRole.map((main, idx) => {
-                return (
-                  <div
-                    key={main.key}
-                    className={`flex items-center justify-center ${
-                      idx === 0 ? "hidden" : "w-[52px] h-[52px]"
-                    }`}
-                  >
-                    <Image
-                      src={main.portrait}
-                      alt={main.key}
-                      width={52}
-                      height={52}
-                      className={`rounded-full border-2 border-carrot bg-carrot ${
+      ) : (
+        <div
+          className={`flex w-full h-full items-center gap-3 overflow-x-auto py-3 ${styles.customScrollbar}`}
+        >
+          {mainByRole.length + playByRole.length > 0 && (
+            <div className="flex items-center justify-center w-[110px] h-[110px] min-w-[110px] min-h-[110px]">
+              <Image
+                src={
+                  mainByRole && mainByRole.length !== 0
+                    ? mainByRole[0].portrait
+                    : playByRole && playByRole.length !== 0
+                    ? playByRole[0].portrait
+                    : ""
+                }
+                width={110}
+                height={110}
+                alt="캐릭터"
+                className={`rounded-full border-2 w-[110px] h-[110px] ${
+                  mainByRole.length !== 0
+                    ? "border-carrot bg-carrot"
+                    : "border-mint bg-mint"
+                }`}
+              />
+            </div>
+          )}
+          <div className="flex flex-grow">
+            <div className="grid grid-rows-2 w-full grid-flow-col gap-3 items-center">
+              {mainByRole &&
+                mainByRole.map((main, idx) => {
+                  return (
+                    <div
+                      key={main.key}
+                      className={`flex items-center justify-center ${
                         idx === 0 ? "hidden" : "w-[52px] h-[52px]"
                       }`}
-                    />
-                  </div>
-                );
-              })}
-            {playByRole &&
-              playByRole.map((play, idx) => {
-                return (
-                  <div
-                    key={play.key}
-                    className={`flex items-center justify-center w-[52px] h-[52px] ${
-                      mainByRole.length === 0 && idx === 0 && "hidden"
-                    }`}
-                  >
-                    <Image
+                    >
+                      <Image
+                        src={main.portrait}
+                        alt={main.key}
+                        width={52}
+                        height={52}
+                        className={`rounded-full border-2 border-carrot bg-carrot ${
+                          idx === 0 ? "hidden" : "w-[52px] h-[52px]"
+                        }`}
+                      />
+                    </div>
+                  );
+                })}
+              {playByRole &&
+                playByRole.map((play, idx) => {
+                  return (
+                    <div
                       key={play.key}
-                      src={play.portrait}
-                      alt={play.key}
-                      width={52}
-                      height={52}
-                      className="rounded-full border-2 border-mint bg-mint "
-                    />
-                  </div>
-                );
-              })}
+                      className={`flex items-center justify-center w-[52px] h-[52px] ${
+                        mainByRole.length === 0 && idx === 0 && "hidden"
+                      }`}
+                    >
+                      <Image
+                        key={play.key}
+                        src={play.portrait}
+                        alt={play.key}
+                        width={52}
+                        height={52}
+                        className="rounded-full border-2 border-mint bg-mint "
+                      />
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

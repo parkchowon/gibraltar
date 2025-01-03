@@ -34,7 +34,9 @@ function TimeBox({ time }: { time: string[] }) {
           }`}
         />
       </div>
-      <p className="font-bold text-sm">{time.join(" ")}</p>
+      <p className="font-bold text-sm">
+        {time.length ? time.join(" ") : "없음"}
+      </p>
     </div>
   );
 }
