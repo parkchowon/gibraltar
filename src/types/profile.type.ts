@@ -44,9 +44,9 @@ export type ProfileType = {
   userId: string;
   bio?: string;
   playStyle?: {
-    mode: string[];
-    style: string;
-    time: string[];
+    mode?: string[];
+    style?: string;
+    time?: string[];
   };
   mainChamps?: {
     key: string;

@@ -44,7 +44,14 @@ function ProfileEditModal({
 }) {
   const router = useRouter();
 
-  const { mutate } = useProfileUpdateMutation();
+  const mutation = useProfileUpdateMutation({
+    onSuccess: () => {
+      setEditClick(false);
+      if (handle !== profileUser.handle) {
+        router.push(`/@${handle}`);
+      }
+    },
+  });
 
   const [nickname, setNickname] = useState<string>(profileUser.nickname);
   const [handle, setHandle] = useState<string>(profileUser.handle.slice(1));
@@ -223,18 +230,14 @@ function ProfileEditModal({
       grade: profile?.tier_grade !== grade ? grade : undefined,
     };
 
-    mutate(updateDetail);
-    setEditClick(false);
-    if (handle !== profileUser.handle) {
-      router.push(`/@${handle}`);
-    }
+    mutation.mutate(updateDetail);
   };
 
   const handleCloseModal = () => {
     putPlayStyle({
-      mode: [],
-      style: "",
-      time: [],
+      mode: undefined,
+      style: undefined,
+      time: undefined,
     });
     setEditClick(false);
   };
@@ -262,6 +265,7 @@ function ProfileEditModal({
           type="modal"
           setModalClick={setEditClick}
         />
+        {mutation.isPending && <LogoLoading />}
         <div
           id="modal"
           className={`flex flex-col px-6 pl-[9.7%] mt-[73px] pr-[71px] h-[650px] ${styles.customModalScrollbar} overflow-y-auto`}

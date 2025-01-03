@@ -7,9 +7,9 @@ export const useProfileStore = create(
     (set) => ({
       nickname: "",
       playStyle: {
-        mode: [],
-        style: "",
-        time: [],
+        mode: undefined,
+        style: undefined,
+        time: undefined,
       },
       playChamps: {
         MainChamps: [],

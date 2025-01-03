@@ -9,9 +9,9 @@ export type HeroType = {
 };
 
 export type playStyleType = {
-  mode: string[];
-  style: string;
-  time: string[];
+  mode?: string[];
+  style?: string;
+  time?: string[];
 };
 
 export type playChampsType = {

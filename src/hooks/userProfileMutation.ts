@@ -2,7 +2,9 @@ import { profileDetailUpdate } from "@/apis/profile.api";
 import { ProfileType, UserProfileType } from "@/types/profile.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useProfileUpdateMutation = () => {
+export const useProfileUpdateMutation = (options?: {
+  onSuccess?: () => void;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -41,5 +43,6 @@ export const useProfileUpdateMutation = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["sideProfileData"] });
     },
+    onSuccess: options?.onSuccess,
   });
 };
