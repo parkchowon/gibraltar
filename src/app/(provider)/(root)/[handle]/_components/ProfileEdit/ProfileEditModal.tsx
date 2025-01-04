@@ -70,6 +70,9 @@ function ProfileEditModal({
   const [isHeroClick, setIsHeroClick] = useState<boolean>(false);
   const [isModeClick, setIsModeClick] = useState<boolean>(false);
 
+  // 비공개 계정 toggle
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+
   // ref
   const modeRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef<HTMLDivElement>(null);
@@ -199,8 +202,7 @@ function ProfileEditModal({
 
   const handleProfileEditClick = async () => {
     if (nickname === "" || handle === "") {
-      // TODO : 오류 경고창 띄우기
-      return confirm("닉네임과 handle은 비워둘 수 없음");
+      return confirm("닉네임과 아이디는 비워둘 수 없습니다.");
     }
     if (usersChange) {
       const updateData = {
@@ -240,6 +242,10 @@ function ProfileEditModal({
       time: undefined,
     });
     setEditClick(false);
+  };
+
+  const handlePrivateClick = () => {
+    setIsPrivate(!isPrivate);
   };
 
   if (isPending || !profile) {
@@ -296,6 +302,32 @@ function ProfileEditModal({
             </div>
             {/* 닉네임, 아이디 수정 input 부분 */}
             <div className="flex flex-col flex-grow gap-3">
+              {/* 비공개 계정 설정 토글 버튼튼 */}
+              <div className="flex items-center justify-end px-2">
+                <p className="text-sm text-mainGray mr-2">계정 잠금</p>
+                <button
+                  onClick={handlePrivateClick}
+                  className={`flex items-center w-14 h-6 px-1 py-1 rounded-full border ${
+                    isPrivate ? "bg-carrot" : "border-mainGray"
+                  }`}
+                >
+                  {!isPrivate ? (
+                    <>
+                      <div className="h-full aspect-square bg-mainGray rounded-full" />
+                      <p className="text-sm font-semibold text-mainGray ml-auto mr-1">
+                        off
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm font-semibold text-white mr-auto ml-1">
+                        on
+                      </p>
+                      <div className="h-full aspect-square bg-white rounded-full" />
+                    </>
+                  )}
+                </button>
+              </div>
               <EditInput
                 label="닉네임"
                 value={nickname}
