@@ -225,7 +225,7 @@ function ProfileEditModal({
           ? playChamps.selectedChamps
           : undefined,
       favoriteTeam:
-        profile?.favorite_team !== favoriteTeam ? favoriteTeam : undefined,
+        profile?.favorite_team !== favoriteTeam ? favoriteTeam : null,
       tier: profile?.tier !== tier ? tier : undefined,
       grade: profile?.tier_grade !== grade ? grade : undefined,
     };
@@ -236,7 +236,7 @@ function ProfileEditModal({
   const handleCloseModal = () => {
     putPlayStyle({
       mode: undefined,
-      style: undefined,
+      style: null,
       time: undefined,
     });
     setEditClick(false);
@@ -344,7 +344,7 @@ function ProfileEditModal({
                 type="style"
                 onClick={handleDetailEditClick}
               />
-              {isStyleClick && <GameStyle style={profile.play_style} />}
+              {isStyleClick && <GameStyle style={profile?.play_style} />}
             </div>
             <div className="flex flex-col gap-2" ref={tierRef}>
               <DetailTitle

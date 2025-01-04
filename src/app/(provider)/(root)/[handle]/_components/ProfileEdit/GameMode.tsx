@@ -7,7 +7,9 @@ function GameMode({ mode }: { mode: Json }) {
   const selectedMode = mode as string[];
   const { playStyle, putPlayStyle } = useProfileStore();
   const [gameMode, setGameMode] = useState<string[]>(
-    playStyle.mode.length !== 0 ? playStyle.mode : selectedMode
+    playStyle.mode && playStyle.mode.length !== 0
+      ? playStyle.mode
+      : selectedMode
   );
 
   const handleModeClick = (mode: string) => {

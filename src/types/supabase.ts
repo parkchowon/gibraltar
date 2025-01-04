@@ -348,45 +348,45 @@ export type Database = {
       }
       user_profiles: {
         Row: {
-          bio: string
+          bio: string | null
           created_at: string
-          favorite_team: string
+          favorite_team: string | null
           id: string
           main_champs: Json | null
           play_champs: Json | null
-          play_mode: Json
-          play_style: string
-          play_time: Json
-          tier: Json
-          tier_grade: Json
+          play_mode: Json | null
+          play_style: string | null
+          play_time: Json | null
+          tier: Json | null
+          tier_grade: Json | null
           user_id: string
         }
         Insert: {
-          bio: string
+          bio?: string | null
           created_at?: string
-          favorite_team: string
+          favorite_team?: string | null
           id?: string
           main_champs?: Json | null
           play_champs?: Json | null
-          play_mode: Json
-          play_style: string
-          play_time: Json
-          tier?: Json
-          tier_grade?: Json
+          play_mode?: Json | null
+          play_style?: string | null
+          play_time?: Json | null
+          tier?: Json | null
+          tier_grade?: Json | null
           user_id: string
         }
         Update: {
-          bio?: string
+          bio?: string | null
           created_at?: string
-          favorite_team?: string
+          favorite_team?: string | null
           id?: string
           main_champs?: Json | null
           play_champs?: Json | null
-          play_mode?: Json
-          play_style?: string
-          play_time?: Json
-          tier?: Json
-          tier_grade?: Json
+          play_mode?: Json | null
+          play_style?: string | null
+          play_time?: Json | null
+          tier?: Json | null
+          tier_grade?: Json | null
           user_id?: string
         }
         Relationships: [
@@ -401,6 +401,7 @@ export type Database = {
       }
       users: {
         Row: {
+          account_type: string | null
           created_at: string
           email: string
           handle: string
@@ -410,6 +411,7 @@ export type Database = {
           status: string | null
         }
         Insert: {
+          account_type?: string | null
           created_at?: string
           email: string
           handle?: string
@@ -419,6 +421,7 @@ export type Database = {
           status?: string | null
         }
         Update: {
+          account_type?: string | null
           created_at?: string
           email?: string
           handle?: string

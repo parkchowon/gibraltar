@@ -7,7 +7,9 @@ function GameTime({ time }: { time: Json }) {
   const selectedTime = time as string[];
   const { playStyle, putPlayStyle } = useProfileStore();
   const [gameTime, setGameTime] = useState<string[]>(
-    playStyle.time.length !== 0 ? playStyle.time : selectedTime
+    playStyle.time && playStyle.time.length !== 0
+      ? playStyle.time
+      : selectedTime
   );
 
   const handleTimeClick = (mode: string) => {

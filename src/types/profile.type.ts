@@ -45,7 +45,7 @@ export type ProfileType = {
   bio?: string;
   playStyle?: {
     mode?: string[];
-    style?: string;
+    style: string | null;
     time?: string[];
   };
   mainChamps?: {
@@ -60,7 +60,7 @@ export type ProfileType = {
     portrait: string;
     role: "tank" | "damage" | "support";
   }[];
-  favoriteTeam?: string;
+  favoriteTeam?: string | null;
   tier?: string[];
   grade?: number[];
 };

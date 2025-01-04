@@ -129,7 +129,7 @@ function FollowUser() {
                     {nickname !== "" ? nickname : userData?.nickname}님처럼{" "}
                     <span className="font-bold text-black">
                       {followModes
-                        .filter((mode) => playStyle.mode.includes(mode))
+                        .filter((mode) => playStyle.mode?.includes(mode))
                         .join(",")}
                     </span>
                     을 즐기는 유저예요
@@ -140,7 +140,7 @@ function FollowUser() {
                       같은{" "}
                       <span className="font-bold text-black">
                         {followTimes
-                          .filter((time) => playStyle.time.includes(time))
+                          .filter((time) => playStyle.time?.includes(time))
                           .join(",")}
                       </span>
                       에 게임을 즐기는 유저예요

@@ -54,8 +54,8 @@ function ProfileDetail({ userId }: { userId: string }) {
           <div className="flex w-full h-[272px] max-h-72 grid-cols-4 px-3 gap-4">
             <ModeBox mode={profile?.play_mode as string[]} />
             <TimeBox time={profile?.play_time as string[]} />
-            <StyleBox style={profile?.play_style} />
-            <TeamBox team={profile?.favorite_team} />
+            <StyleBox style={profile?.play_style ?? undefined} />
+            <TeamBox team={profile?.favorite_team ?? undefined} />
           </div>
         </div>
       )}

@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
     const { data: modeResult, error: modeError } = await supabase
       .from("play_modes")
       .select("user_id")
-      .in("play_mode", profile.playStyle.mode)
+      .in("play_mode", profile.playStyle.mode as string[])
       .neq("user_id", profile.userId)
       .range(0, 10);
 
@@ -44,12 +44,12 @@ export const POST = async (request: NextRequest) => {
         .from("user_profiles")
         .select("user_id")
         .in("user_id", sameModePlayer)
-        .eq("play_style", profile.playStyle.style),
+        .eq("play_style", profile.playStyle.style as string),
       supabase
         .from("play_times")
         .select("user_id")
         .in("user_id", sameModePlayer)
-        .in("play_time", profile.playStyle.time),
+        .in("play_time", profile.playStyle.time as string[]),
       supabase
         .from("followers")
         .select("*")
@@ -75,7 +75,7 @@ export const POST = async (request: NextRequest) => {
 
       // 게임 플레이 모드가 맞을 수록
       const modeScore = modeUserId.filter((user) => user === userId).length;
-      if (profile.playStyle?.mode.length === modeScore) {
+      if (profile.playStyle?.mode?.length === modeScore) {
         score += 160;
       } else {
         score += modeScore * 40;

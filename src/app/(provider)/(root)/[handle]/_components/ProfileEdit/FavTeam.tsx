@@ -3,8 +3,8 @@ import { useProfileStore } from "@/stores/profile.store";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
-function FavTeam({ team }: { team: string }) {
-  const [favTeam, setFavTeam] = useState<string>(team);
+function FavTeam({ team }: { team: string | null }) {
+  const [favTeam, setFavTeam] = useState<string | null>(team);
   const { putFavoriteTeam } = useProfileStore();
 
   const handleTeamClick = (team: string) => {

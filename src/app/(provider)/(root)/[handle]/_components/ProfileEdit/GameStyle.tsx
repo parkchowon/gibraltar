@@ -2,9 +2,9 @@ import { PLAY_STYLE } from "@/constants/profile";
 import { useProfileStore } from "@/stores/profile.store";
 import React, { useEffect, useState } from "react";
 
-function GameStyle({ style }: { style: string }) {
+function GameStyle({ style }: { style: string | null }) {
   const { playStyle, putPlayStyle } = useProfileStore();
-  const [gameStyle, setGameStyle] = useState<string>(
+  const [gameStyle, setGameStyle] = useState<string | null>(
     playStyle.style ? playStyle.style : style
   );
 

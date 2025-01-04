@@ -18,10 +18,10 @@ export const POST = async (request: NextRequest) => {
   try {
     if (playStyle) {
       const { mode, time, style } = playStyle;
-      const playModes = mode.map((mode) => {
+      const playModes = mode?.map((mode) => {
         return { user_id: userId, play_mode: mode };
       });
-      const playTime = time.map((time) => {
+      const playTime = time?.map((time) => {
         return { user_id: userId, play_time: time };
       });
 
@@ -32,12 +32,14 @@ export const POST = async (request: NextRequest) => {
       if (deleteModes.error) throw new Error(deleteModes.error.message);
       if (deleteTimes.error) throw new Error(deleteTimes.error.message);
 
-      const [modeResult, timeResult] = await Promise.all([
-        supabase.from("play_modes").upsert(playModes),
-        supabase.from("play_times").upsert(playTime),
-      ]);
-      if (modeResult.error) throw new Error(modeResult.error.message);
-      if (timeResult.error) throw new Error(timeResult.error.message);
+      if (playModes && playTime) {
+        const [modeResult, timeResult] = await Promise.all([
+          supabase.from("play_modes").upsert(playModes),
+          supabase.from("play_times").upsert(playTime),
+        ]);
+        if (modeResult.error) throw new Error(modeResult.error.message);
+        if (timeResult.error) throw new Error(timeResult.error.message);
+      }
     }
 
     const { data, error } = await supabase

@@ -8,14 +8,14 @@ export const useProfileStore = create(
       nickname: "",
       playStyle: {
         mode: undefined,
-        style: undefined,
+        style: null,
         time: undefined,
       },
       playChamps: {
         MainChamps: [],
         selectedChamps: [],
       },
-      favoriteTeam: "",
+      favoriteTeam: null,
       bio: "",
       tier: ["", "", ""],
       grade: [0, 0, 0],

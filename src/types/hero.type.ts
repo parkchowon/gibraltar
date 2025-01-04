@@ -10,7 +10,7 @@ export type HeroType = {
 
 export type playStyleType = {
   mode?: string[];
-  style?: string;
+  style: string | null;
   time?: string[];
 };
 
@@ -26,8 +26,8 @@ export type ProfileSettingProps = {
   putPlayStyle: (value: playStyleType) => void;
   playChamps: playChampsType;
   putPlayChamps: (value: playChampsType) => void;
-  favoriteTeam: string;
-  putFavoriteTeam: (value: string) => void;
+  favoriteTeam: string | null;
+  putFavoriteTeam: (value: string | null) => void;
   bio: string;
   putBio: (value: string) => void;
   tier: string[];
