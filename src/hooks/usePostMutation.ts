@@ -138,8 +138,15 @@ export const useQuoteMutation = () => {
 export const usePostCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ post, tags }: { post: CreatePostType; tags?: TagRow[] }) =>
-      createPost(post, tags),
+    mutationFn: ({
+      post,
+      tags,
+      handles,
+    }: {
+      post: CreatePostType;
+      tags?: TagRow[];
+      handles?: string[];
+    }) => createPost(post, tags, handles),
     onMutate: async (newState) => {
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });

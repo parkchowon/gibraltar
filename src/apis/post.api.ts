@@ -9,7 +9,11 @@ import {
 } from "@/types/home.type";
 import apiClient from "./apiClient.api";
 
-export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
+export const createPost = async (
+  post: CreatePostType,
+  tags?: TagRow[],
+  handles?: string[]
+) => {
   let postMediaURLs = null;
 
   try {
@@ -55,6 +59,34 @@ export const createPost = async (post: CreatePostType, tags?: TagRow[]) => {
         mentioned_post_id: data.data.postId,
         related_post_id: post.parent_post_id,
       });
+    }
+
+    /** tag된 유저에게 알림 가게 */
+    if (handles && handles.length > 0) {
+      const getUserIds = async () => {
+        return await Promise.all(
+          handles.map(async (handle) => {
+            const response = await apiClient.get(
+              `api/auth/user/handle/${handle}`
+            );
+            return response.data as string;
+          })
+        );
+      };
+
+      const userIds = await getUserIds();
+
+      await Promise.all(
+        userIds.map(async (userId) => {
+          const { data: notiData } = await apiClient.post("/api/notification", {
+            reacted_user_id: post.user_id,
+            type: "comment",
+            user_id: userId,
+            mentioned_post_id: data.data.postId,
+            related_post_id: null,
+          });
+        })
+      );
     }
   } catch (error) {
     console.error(error);

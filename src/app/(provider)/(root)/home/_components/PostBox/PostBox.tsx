@@ -1,6 +1,6 @@
 "use client";
 
-import { createPost, getTagList } from "@/apis/post.api";
+import { getTagList } from "@/apis/post.api";
 import { useAuth } from "@/contexts/auth.context";
 import { useTagStore } from "@/stores/tag.store";
 import { TagRow } from "@/types/database";
@@ -42,9 +42,9 @@ function PostBox() {
   const [tagTop, setTagTop] = useState<number>(0);
 
   // 유저 태그 바
-  const [isActiveUserTag, setIsActiveUserTag] = useState<boolean>(false);
-  const [userTag, setUserTag] = useState<string>("");
-  const [taggedUser, setTaggedUser] = useState<string[]>([]);
+  const [isActiveUserTag, setIsActiveUserTag] = useState<boolean>(false); // user handle 검색되면 나오는 모달
+  const [userTag, setUserTag] = useState<string>(""); // 선택한 한 명의 유저의 handle
+  const [taggedUser, setTaggedUser] = useState<string[]>([]); // text안에 입력된 handle array
   const { selectedHandle, setSelectedUser } = useUserTagStore();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -108,13 +108,13 @@ function PostBox() {
       const post = {
         content: text,
         user_id: userData.id,
-        images: postFile.length === 0 ? null : postFile, // 나중에 이미지 넣을 때 여기에
+        images: postFile.length === 0 ? null : postFile,
         parent_post_id: null, // post 생성시에는 null
       };
       resetTag();
 
       const tags = selectedTag.length === 0 ? undefined : selectedTag;
-      mutation.mutate({ post: post, tags: tags });
+      mutation.mutate({ post: post, tags: tags, handles: taggedUser });
     }
     setText("");
     setPostVideo(null);
