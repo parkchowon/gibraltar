@@ -55,3 +55,9 @@ export const PLAY_POSITION = [
     icon: "/icons/position/heal_icon.svg",
   },
 ];
+
+export const COMMUNICATION = [
+  { id: "off", name: "사용안함", icon: "" },
+  { id: "game", name: "인게임", icon: "" },
+  { id: "discord", name: "디스코드", icon: "" },
+];
