@@ -1,9 +1,22 @@
 import LogoLoading from "@/components/Loading/LogoLoading";
-import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
+import {
+  IMAGE_MAX_SIZE,
+  MAX_POST_TEXT_LENGTH,
+  VIDEO_MAX_SIZE,
+} from "@/constants/post";
 import { useAuth } from "@/contexts/auth.context";
 import { useCommentMutation } from "@/hooks/usePostMutation";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import Photo from "@/assets/icons/photo.svg";
+import SelectMedia from "@/app/(provider)/(root)/home/_components/PostBox/SelectMedia";
 
 function CommentInput({
   postId,
@@ -17,6 +30,14 @@ function CommentInput({
   const { userData } = useAuth();
   const [comment, setComment] = useState<string>("");
   const [commentLoading, setCommentLoading] = useState<boolean>(true);
+
+  // 포스트 사진 첨부
+  const [postImg, setPostImg] = useState<string[]>([]);
+  const [postVideo, setPostVideo] = useState<string | null>(null);
+  const [imgClick, setImgClick] = useState<boolean>(false);
+  // 포스트 사진, 동영상 파일
+  const [postFile, setPostFile] = useState<File[]>([]);
+
   const textRef = useRef<HTMLTextAreaElement>(null);
   const mutation = useCommentMutation();
 
@@ -66,12 +87,68 @@ function CommentInput({
         parent_post_id: postId,
         parent_user_id: postUserId,
         user_id: userData.id,
-        images: null, // TODO: 나중에 사진 넣을때 여기에
+        images: postFile,
       };
       setComment("");
       // 낙관적 업데이트
       mutation.mutate({ comment: newComment });
     }
+  };
+
+  // 이미지 아이콘 클릭 시
+  const handleMediaClick = () => {
+    document.getElementById("comment-media-input")?.click();
+  };
+
+  // post 이미지(사진, 동영상)
+  const handleMediaChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const video = Array.from(files).filter((file) =>
+      file.type.startsWith("video/")
+    ).length;
+
+    // 동영상 일 시
+    if (video) {
+      if (video > 1) {
+        return alert("동영상은 하나씩만 올릴 수 있습니다.");
+      } else if (postImg.length > 0 || files.length > 1) {
+        return alert("사진과 동영상을 같이 올릴 수 없습니다.");
+      } else {
+        if (files[0].size > VIDEO_MAX_SIZE) {
+          return alert("동영상 크기가 너무 큽니다. 50mb이하로 올려주세요");
+        }
+        setPostFile([...Array.from(files)]);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPostVideo(reader.result as string);
+        };
+        reader.onerror = () => {
+          alert("동영상 게시 중에 오류가 발생했습니다. 다시 시도해주세요.");
+        };
+        return reader.readAsDataURL(files[0]);
+      }
+    }
+
+    // 이미지 일 시
+    if (postImg.length + files.length > 4) {
+      return alert("사진은 최대 4개 까지 게시 가능합니다.");
+    }
+
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      if (file.size > IMAGE_MAX_SIZE) {
+        return alert("이미지의 용량이 너무 큽니다.");
+      }
+      setPostFile([...postFile, ...Array.from(files)]);
+      reader.onloadend = () => {
+        return setPostImg((prevImages) => [
+          ...prevImages,
+          reader.result as string,
+        ]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
@@ -90,7 +167,7 @@ function CommentInput({
             className="absolute rounded-full object-cover"
           />
         </div>
-        <div className="flex-grow">
+        <div className="flex flex-col flex-grow">
           <textarea
             ref={textRef}
             value={comment}
@@ -99,6 +176,27 @@ function CommentInput({
             placeholder="댓글을 입력해주세요."
             onInput={handleInputChange}
           ></textarea>
+          {/* 선택한 media가 표시되는 곳 */}
+          <SelectMedia
+            postFile={postFile}
+            postImg={postImg}
+            postVideo={postVideo}
+            setPostFile={setPostFile}
+            setPostImg={setPostImg}
+            setPostVideo={setPostVideo}
+          />
+          <div className="cursor-pointer" onClick={handleMediaClick}>
+            <Photo width={15} height={15} />
+            {/** 컴퓨터에서 사진 받는 input */}
+            <input
+              type="file"
+              accept="image/*, video/*"
+              hidden
+              multiple
+              id="comment-media-input"
+              onChange={handleMediaChange}
+            />
+          </div>
         </div>
         <button
           disabled={!comment.trim()}

@@ -10,7 +10,11 @@ import PhotoBtn from "@/assets/icons/photo.svg";
 import TagBox from "./TagBox";
 import SelectTag from "./SelectTag";
 import PostBoxLoading from "@/components/Loading/PostBoxLoading";
-import { MAX_POST_TEXT_LENGTH } from "@/constants/post";
+import {
+  IMAGE_MAX_SIZE,
+  MAX_POST_TEXT_LENGTH,
+  VIDEO_MAX_SIZE,
+} from "@/constants/post";
 import SelectMedia from "./SelectMedia";
 import { usePostCreateMutation } from "@/hooks/usePostMutation";
 import LogoLoading from "@/components/Loading/LogoLoading";
@@ -18,9 +22,6 @@ import UserTag from "./UserTag";
 import { handleSearchInvalidCheck } from "@/utils/invalidCheck";
 import { useUserTagStore } from "@/stores/userTag.store";
 import { highlightHandle } from "@/utils/highlightHandle";
-
-const IMAGE_MAX_SIZE = 3 * 1024 * 1024; // 2mb
-const VIDEO_MAX_SIZE = 50 * 1024 * 1024; // 50mb
 
 function PostBox() {
   const { userData, isPending } = useAuth();

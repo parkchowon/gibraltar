@@ -76,7 +76,6 @@ function TimeLine() {
         {isLoading ? (
           <TimeLineLoading />
         ) : data && data.pages.flatMap((page) => page).length === 0 ? (
-          // TODO: 팔로한 유저가 없을 시 보여주는 화면
           <EmptyState type="포스트" />
         ) : (
           <>

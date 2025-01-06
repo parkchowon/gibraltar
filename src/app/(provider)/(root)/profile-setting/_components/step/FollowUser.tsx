@@ -157,7 +157,6 @@ function FollowUser() {
                       을 좋아해요
                     </p>
                   ) : null}
-                  {/* TODO: 같은 게임 성향(즐겜/빡겜) */}
                   <button
                     onClick={() => handleFollowClick(idx)}
                     className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"

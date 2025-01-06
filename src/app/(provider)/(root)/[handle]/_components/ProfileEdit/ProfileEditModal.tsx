@@ -95,7 +95,6 @@ function ProfileEditModal({
 
   // 닉네임 수정
   const handleNickChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // TODO: 유효성 검사 추가
     setNickname(e.currentTarget.value);
     if (e.currentTarget.value === profileUser.nickname) {
       return setUsersChange(false);

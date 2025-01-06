@@ -1,5 +1,11 @@
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Cancel from "@/assets/icons/cancel_x.svg";
 import NextBtn from "@/assets/icons/arrow_head.svg";
 
@@ -21,6 +27,15 @@ function SelectMedia({
   setPostVideo,
 }: SelectMediaProps) {
   const [currentIdx, setCurrentIdx] = useState<number>(0);
+  const [height, setHeight] = useState<number>(100);
+
+  const mediaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mediaRef.current) {
+      setHeight(mediaRef.current.offsetWidth / 2);
+    }
+  }, [postImg]);
 
   // 사진 배열에서 지우기
   const handleDeleteImage = (idx?: number) => {
@@ -62,7 +77,10 @@ function SelectMedia({
   };
 
   return (
-    <div className="relative flex w-full py-2 gap-x-3 items-center">
+    <div
+      className="relative flex w-full h-fit py-2 gap-x-3 items-center"
+      ref={mediaRef}
+    >
       {postImg && postImg.length !== 0 && (
         <>
           <button
@@ -73,7 +91,10 @@ function SelectMedia({
           >
             <NextBtn width={20} height={15} />
           </button>
-          <div className="relative rounded-lg w-[50%] h-[100px]">
+          <div
+            className={`relative rounded-lg w-[50%]`}
+            style={{ height: `${height}px` }}
+          >
             <button
               type="button"
               className="absolute top-1 right-1 z-20"
@@ -84,12 +105,15 @@ function SelectMedia({
             <Image
               src={postImg[currentIdx]}
               fill
-              className="rounded-lg object-cover"
+              className="rounded-lg object-fill"
               alt="image"
             />
           </div>
           {postImg[currentIdx + 1] && (
-            <div className="relative rounded-lg w-[50%] h-[100px]">
+            <div
+              className={`relative rounded-lg w-[50%]`}
+              style={{ height: `${height}px` }}
+            >
               <button
                 type="button"
                 className="absolute top-1 right-1 z-20"
@@ -100,7 +124,7 @@ function SelectMedia({
               <Image
                 src={postImg[currentIdx + 1]}
                 fill
-                className="rounded-lg object-cover"
+                className="rounded-lg object-fill"
                 alt="image"
               />
             </div>

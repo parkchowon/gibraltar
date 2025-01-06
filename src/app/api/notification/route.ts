@@ -63,7 +63,6 @@ export const GET = async (request: NextRequest) => {
       throw new Error(typeError.message);
     }
 
-    // TODO: 댓글이랑 인용에 필요한 데이터 받아오기
     const noti = data.map((noti) => {
       const matchType = typeData?.find((type) => type.id === noti.id)?.type;
       return { ...noti, type: matchType };

@@ -57,7 +57,7 @@ export const profileUpdate = async ({
   }
 };
 
-// TODO: user_profile 테이블의 update
+// user_profile 테이블의 update
 export const profileDetailUpdate = async (profile: ProfileType) => {
   try {
     const response = await apiClient.post(

@@ -13,6 +13,7 @@ import { formatToPostDate } from "@/utils/formatChange";
 import PostQuote from "./PostQuote";
 import OptionDot from "@/assets/icons/more_option_dot.svg";
 import OptionModal from "../../../../../../components/OptionModal/OptionModal";
+import PostTextHighlighted from "./PostTextHighlighted";
 
 type PostProps = {
   post: PostType;
@@ -141,11 +142,16 @@ function Post({ post }: PostProps) {
                 <OptionDot width="7" height="12" />
               </button>
             </div>
-            <p className="mt-[7px] mb-[6px] leading-snug">{post.content}</p>
-            {/* 미디어 */}
-            {post.images && <PostMedia jsons={post.images} />}
-            {/* 인용한 트윗 */}
-            {post.quoted_post_id && <PostQuote postId={post.quoted_post_id} />}
+            {/* post 글 내용 */}
+            <PostTextHighlighted text={post.content} />
+            <div className="flex flex-col gap-3">
+              {/* 미디어 */}
+              {post.images && <PostMedia jsons={post.images} />}
+              {/* 인용한 트윗 */}
+              {post.quoted_post_id && (
+                <PostQuote postId={post.quoted_post_id} />
+              )}
+            </div>
             {/* 태그 */}
             {tags.length !== 0 && <PostTag tagList={tags} />}
             <div className="flex gap-6 mt-[7px] items-center">
