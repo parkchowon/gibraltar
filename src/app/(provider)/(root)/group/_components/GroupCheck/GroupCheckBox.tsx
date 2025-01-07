@@ -17,7 +17,7 @@ function GroupCheckBox() {
                 <p className="text-mainGray text-sm">아직 참여자가 없습니다</p>
               )}
               {participantUser.map((user) => (
-                <ParticipantUserItem user={user} />
+                <ParticipantUserItem key={user.handle} user={user} />
               ))}
             </div>
           </div>

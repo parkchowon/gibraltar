@@ -3,7 +3,7 @@ import React from "react";
 import GroupForm from "./GroupForm";
 import FormItem from "./FormItem";
 import { useGroupStore } from "@/stores/group.store";
-import { userParticipantCreateMutation } from "@/hooks/useGroupMutation";
+import { useParticipantCreateMutation } from "@/hooks/useGroupMutation";
 
 function GroupItem({
   group,
@@ -13,7 +13,7 @@ function GroupItem({
   userId: string;
 }) {
   const { searchingStatus, participantPos } = useGroupStore();
-  const mutation = userParticipantCreateMutation();
+  const mutation = useParticipantCreateMutation();
 
   const EmptyState = () => {
     return (

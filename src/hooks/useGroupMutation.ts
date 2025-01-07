@@ -28,7 +28,7 @@ export const useGroupCreateMutation = (options?: {
   });
 };
 
-export const userParticipantCreateMutation = () => {
+export const useParticipantCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
