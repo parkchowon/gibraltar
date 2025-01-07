@@ -45,6 +45,56 @@ export type Database = {
           },
         ]
       }
+      group: {
+        Row: {
+          content: string
+          created_at: string
+          group_status: string
+          id: string
+          mic: string | null
+          mode: string
+          position: Json[]
+          style: string | null
+          tier: Json[] | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          group_status?: string
+          id?: string
+          mic?: string | null
+          mode: string
+          position: Json[]
+          style?: string | null
+          tier?: Json[] | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          group_status?: string
+          id?: string
+          mic?: string | null
+          mode?: string
+          position?: Json[]
+          style?: string | null
+          tier?: Json[] | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           created_at: string
@@ -137,6 +187,45 @@ export type Database = {
           {
             foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      participant_group: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          participant_status: string
+          participant_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          participant_status?: string
+          participant_user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          participant_status?: string
+          participant_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participant_group_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "group"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "participant_group_participant_user_id_fkey"
+            columns: ["participant_user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

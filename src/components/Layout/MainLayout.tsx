@@ -10,6 +10,7 @@ import { usePostStore } from "@/stores/post.store";
 import { usePathname, useRouter } from "next/navigation";
 import BackArrowBtn from "../BackArrowBtn";
 import Gibraltar from "@/assets/logo/gibraltar_letter.svg";
+import GroupCheckBox from "@/app/(provider)/(root)/group/_components/GroupCheck/GroupCheckBox";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
@@ -56,7 +57,8 @@ function MainLayout({ children }: PropsWithChildren) {
         <section className="fixed w-[18.3%] left-[75.1%] top-[7.12%]">
           {path !== "/search" ? <SearchBar /> : null}
           <SideProfile />
-          <PostBox />
+          {path === "/home" && <PostBox />}
+          {path === "/group" && <GroupCheckBox />}
         </section>
       </div>
     </>

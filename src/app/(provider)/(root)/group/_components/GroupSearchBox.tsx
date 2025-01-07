@@ -1,14 +1,59 @@
-import React from "react";
+import React, { useRef } from "react";
 import GroupForm from "./GroupForm";
 import SelectOption from "./SelectOption";
+import { useGroupStore } from "@/stores/group.store";
+import { useGroupCreateMutation } from "@/hooks/useGroupMutation";
+import { useAuth } from "@/contexts/auth.context";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function GroupSearchBox() {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLInputElement>(null);
+
+  const { mode, position, tier, style, mic } = useGroupStore();
+  const { user } = useAuth();
+
+  const mutation = useGroupCreateMutation();
+
+  const handleSubmitClick = () => {
+    if (titleRef.current && !titleRef.current.value) {
+      return confirm("제목을 비워둘 수 없습니다");
+    } else if (contentRef.current && !contentRef.current.value) {
+      return confirm("내용을 비워둘 수 없습니다");
+    } else if (mode === "") {
+      return confirm("모드를 비워둘 수 없습니다");
+    } else if (position.every((pos) => pos === "X" || pos === "")) {
+      return confirm("구하는 포지션을 선택해 주세요");
+    } else if (
+      !tier.every((tier) => tier === "") &&
+      tier[0] + tier[1] === (tier[0] || tier[1])
+    ) {
+      return confirm("티어는 하나만 채워둘 수 없습니다");
+    }
+
+    if (titleRef.current && contentRef.current && user) {
+      mutation.mutate({
+        userId: user.id,
+        title: titleRef.current.value,
+        content: contentRef.current.value,
+        mode,
+        position,
+        tier,
+        style,
+        mic,
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray rounded-xl">
+    <div className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
+      {mutation.isPending && <LogoLoading />}
       <input
         type="text"
         placeholder="제목을 입력하세요."
-        className="outline-none font-semibold py-1 px-2"
+        ref={titleRef}
+        maxLength={30}
+        className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray"
       />
       <div className="flex gap-3 justify-center">
         <GroupForm title="모드">
@@ -16,18 +61,18 @@ function GroupSearchBox() {
         </GroupForm>
         <GroupForm title="포지션">
           <div className="flex gap-2">
-            <SelectOption type="position" />
-            <SelectOption type="position" />
-            <SelectOption type="position" />
-            <SelectOption type="position" />
-            <SelectOption type="position" />
+            {Array(5)
+              .fill(null)
+              .map((_, idx) => {
+                return <SelectOption key={idx} type="position" index={idx} />;
+              })}
           </div>
         </GroupForm>
         <GroupForm title="티어">
           <div className="flex gap-2 items-center">
-            <SelectOption type="tier" />
+            <SelectOption type="tier" index={0} />
             <div className="w-3 h-[2px] rounded-full bg-mainGray" />
-            <SelectOption type="tier" />
+            <SelectOption type="tier" index={1} />
           </div>
         </GroupForm>
         <GroupForm title="성향">
@@ -37,7 +82,17 @@ function GroupSearchBox() {
           <SelectOption type="mic" />
         </GroupForm>
       </div>
-      <button className="py-2 px-3 bg-black rounded-full text-white">
+      <input
+        type="text"
+        placeholder="내용을 입력하세요."
+        ref={contentRef}
+        maxLength={100}
+        className="bg-transparent text-sm outline-none px-3 py-1 placeholder:text-mainGray"
+      />
+      <button
+        onClick={handleSubmitClick}
+        className="py-2 px-3 bg-black rounded-full text-white"
+      >
         작성하기
       </button>
     </div>
