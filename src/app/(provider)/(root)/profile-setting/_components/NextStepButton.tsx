@@ -33,10 +33,12 @@ function NextStepButton({
       onClick={handleClickNext}
       disabled={!isClickable}
       className={`w-[352px] ${
-        isClickable ? "bg-mint" : "bg-gray-300 cursor-not-allowed"
-      } rounded-full py-[19px] font-medium text-xl text-[#6A6A6A]`}
+        isClickable
+          ? "bg-mint text-white font-extrabold text-lg"
+          : "bg-[#E5E5E5] cursor-not-allowed"
+      } rounded-full py-[19px] font-extrabold text-lg text-[#6A6A6A]`}
     >
-      {step === "6" ? "지브롤터 시작하기" : "다음으로"}
+      {step === "6" ? "지브롤터 시작하기" : "다음 단계로"}
     </button>
   );
 }

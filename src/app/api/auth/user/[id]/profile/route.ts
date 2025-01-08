@@ -1,6 +1,7 @@
 import { createClient } from "@/supabase/server";
 import { ProfileType } from "@/types/profile.type";
 import { Json } from "@/types/supabase";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -14,19 +15,31 @@ export const POST = async (request: NextRequest) => {
     mainChamps,
   }: ProfileType = await request.json();
 
-  if (!playStyle || !bio || !favoriteTeam || !userId) {
-    return NextResponse.json({ message: "데이터가 없음" }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json(
+      { message: "유저 아이디가가 없음" },
+      { status: 400 }
+    );
   }
-  const { mode, time, style } = playStyle;
-  try {
-    const playModes = mode?.map((mode) => {
-      return { user_id: userId, play_mode: mode };
-    });
-    const playTime = time?.map((time) => {
-      return { user_id: userId, play_time: time };
-    });
+  const { mode, time, style } = playStyle as {
+    mode?: string[];
+    style: string | null;
+    time?: string[];
+  };
 
-    const { data, error } = await supabase.from("user_profiles").insert({
+  try {
+    const playModes = mode
+      ? (mode as string[]).map((mode) => {
+          return { user_id: userId, play_mode: mode };
+        })
+      : undefined;
+    const playTime = time
+      ? (time as string[]).map((time) => {
+          return { user_id: userId, play_time: time };
+        })
+      : undefined;
+
+    const { data, error } = await supabase.from("user_profiles").upsert({
       user_id: userId,
       bio: bio,
       favorite_team: favoriteTeam,
@@ -48,6 +61,15 @@ export const POST = async (request: NextRequest) => {
       if (modeResult.error) throw new Error(modeResult.error.message);
       if (timeResult.error) throw new Error(timeResult.error.message);
     }
+
+    // session에 cookie 저장
+    const expires = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000); // 100일 후
+    cookies().set("hasProfileSetting", "true", {
+      expires,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
     return NextResponse.json({ message: "프로필 저장 성공" }, { status: 200 });
   } catch (error) {

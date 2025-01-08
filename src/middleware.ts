@@ -14,9 +14,27 @@ export async function middleware(request: NextRequest) {
     ) {
       url.pathname = "/login";
       return NextResponse.redirect(url);
+    } else {
+      if (!request.cookies.get("hasProfileSetting")) {
+        return NextResponse.redirect(
+          new URL("/profile-setting?step=1", request.url)
+        );
+      }
+
+      url.pathname = "/home";
+      return NextResponse.redirect(url);
     }
-    url.pathname = "/home";
-    return NextResponse.redirect(url);
+  }
+
+  if (pathname === "/login") {
+    if (
+      request.cookies.get(`${LOGIN_KEY}.1`) &&
+      request.cookies.get(`${LOGIN_KEY}.0`)
+    ) {
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+    return;
   }
 
   if (

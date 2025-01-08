@@ -7,6 +7,7 @@ import HeroByRole from "../HeroByRole";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import LogoLoading from "@/components/Loading/LogoLoading";
+import Image from "next/image";
 
 function SettingChamp() {
   const [positionClick, setPositionClick] = useState<string>("tank");
@@ -49,9 +50,10 @@ function SettingChamp() {
                 }`}
                 onClick={() => handleClickRole(item.id, item.color)}
               >
-                <p className="absolute top-16 left-1/2 transform -translate-x-1/2">
-                  {item.name}
-                </p>
+                <div className="flex flex-col absolute top-14 left-1/2 transform -translate-x-1/2 items-center justify-center gap-2">
+                  <p className="">{item.name}</p>
+                  <Image src={item.icon} alt="icon" width={15} height={15} />
+                </div>
                 <LeftButton
                   width="66"
                   hight="178"

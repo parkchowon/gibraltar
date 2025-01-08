@@ -49,13 +49,14 @@ function HeroByRole({ heroes, position }: HeroByRoleProps) {
           <div key={hero.key} className="relative w-24 h-28">
             <button
               onClick={() => handleHeroClick(hero)}
-              className="relative w-full h-full bg-white rounded-2xl"
+              className={`relative w-full h-full border ${
+                mainHeroes.includes(hero)
+                  ? "bg-carrot border-carrot"
+                  : selectedHeroes.includes(hero)
+                  ? "bg-mint border-mint"
+                  : "bg-white"
+              } rounded-2xl`}
             >
-              {mainHeroes.includes(hero) ? (
-                <div className="absolute w-full h-full top-0 bg-blue-300/35 rounded-2xl z-20" />
-              ) : selectedHeroes.includes(hero) ? (
-                <div className="absolute w-full h-full top-0 bg-yellow-300/35 rounded-2xl z-20" />
-              ) : null}
               <Image
                 alt={hero.name}
                 src={hero.portrait}
