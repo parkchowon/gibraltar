@@ -56,7 +56,7 @@ export const GET = async (request: NextRequest) => {
           .from("participant_group")
           .select("*", { count: "exact", head: true })
           .eq("group_id", id)
-          .eq("participant_status", "참가 중");
+          .eq("participant_status", "승인");
         if (error) {
           Error(error.message);
           return { id, count: 0 };

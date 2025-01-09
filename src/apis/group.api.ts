@@ -48,3 +48,17 @@ export const getUserGroup = async (userId: string) => {
     return [];
   }
 };
+
+export const updateParticipantGroup = async (
+  userId: string,
+  groupId: string,
+  status: string
+) => {
+  try {
+    await apiClient.post(
+      `api/group/${userId}/permission?group_id=${groupId}&status=${status}`
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -10,7 +10,7 @@ function GroupSearchBox() {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  const { mode, position, tier, style, mic } = useGroupStore();
+  const { mode, position, tier, style, mic, searchingStatus } = useGroupStore();
   const { user } = useAuth();
 
   const mutation = useGroupCreateMutation();
@@ -31,7 +31,12 @@ function GroupSearchBox() {
       return confirm("티어는 하나만 채워둘 수 없습니다");
     }
 
-    if (titleRef.current && contentRef.current && user) {
+    if (
+      titleRef.current &&
+      contentRef.current &&
+      user &&
+      searchingStatus === "안함"
+    ) {
       mutation.mutate({
         userId: user.id,
         title: titleRef.current.value,
@@ -45,8 +50,21 @@ function GroupSearchBox() {
     }
   };
 
+  const handleInputClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (searchingStatus === "모집") {
+      e.stopPropagation();
+      confirm("이미 생성한 그룹이 있습니다.");
+    } else if (searchingStatus === "참가") {
+      e.stopPropagation();
+      confirm("이미 참가한 그룹이 있습니다.");
+    }
+  };
+
   return (
-    <div className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
+    <div
+      onClick={handleInputClick}
+      className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl"
+    >
       {mutation.isPending && <LogoLoading />}
       <input
         type="text"
@@ -91,7 +109,8 @@ function GroupSearchBox() {
       />
       <button
         onClick={handleSubmitClick}
-        className="py-2 px-3 bg-black rounded-full text-white"
+        disabled={searchingStatus !== "안함"}
+        className="py-2 px-3 bg-black rounded-full text-white disabled:bg-mainGray"
       >
         작성하기
       </button>

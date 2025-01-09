@@ -15,6 +15,7 @@ function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
   const handleSubmit = async () => {};
 
+  // TODO : 팔로우 버튼 누를때 오류나는거 고쳐야됨
   const { userData } = useAuth();
   const { bio, favoriteTeam, playChamps, playStyle, nickname } =
     useProfileStore();
@@ -164,14 +165,15 @@ function FollowUser() {
                     {follow.isFollowing ? "언팔로우" : "팔로우"}
                   </button>
                   <div className="absolute bottom-[22px] flex gap-[8px]">
-                    {FollowingList.map((card, index) => (
-                      <div
-                        key={card.user?.id}
-                        className={`w-1.5 h-1.5 ${
-                          cardIndex === index ? "bg-mint" : "bg-gray-400"
-                        } rounded-full`}
-                      />
-                    ))}
+                    {FollowingList &&
+                      FollowingList.map((card, index) => (
+                        <div
+                          key={card.user?.id}
+                          className={`w-1.5 h-1.5 ${
+                            cardIndex === index ? "bg-mint" : "bg-gray-400"
+                          } rounded-full`}
+                        />
+                      ))}
                   </div>
                 </div>
               );

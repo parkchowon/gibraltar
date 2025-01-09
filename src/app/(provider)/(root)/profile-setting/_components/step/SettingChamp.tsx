@@ -51,7 +51,7 @@ function SettingChamp() {
                 onClick={() => handleClickRole(item.id, item.color)}
               >
                 <div className="flex flex-col absolute top-14 left-1/2 transform -translate-x-1/2 items-center justify-center gap-2">
-                  <p className="">{item.name}</p>
+                  <p className="text-sm font-semibold">{item.name}</p>
                   <Image src={item.icon} alt="icon" width={15} height={15} />
                 </div>
                 <LeftButton

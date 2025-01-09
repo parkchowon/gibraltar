@@ -12,7 +12,7 @@ function GroupItem({
   group: GroupType[number];
   userId: string;
 }) {
-  const { searchingStatus, participantPos } = useGroupStore();
+  const { searchingStatus, participantPos, participantGroup } = useGroupStore();
   const mutation = useParticipantCreateMutation();
 
   const EmptyState = () => {
@@ -23,23 +23,19 @@ function GroupItem({
     );
   };
 
-  const handleButtonClick = (groupId: string) => {
-    if (userId === group.user_id) {
-      // TODO: group 삭제
-    } else {
-      if (participantPos === "") {
-        return confirm("역할군을 선택해주세요");
-      } else if (searchingStatus === "모집") {
-        return confirm("이미 모집하고 있는 그룹이 있습니다");
-      } else if (searchingStatus === "참가") {
-        return confirm("이미 참가 중인 그룹이 있습니다.");
-      }
-      return mutation.mutate({ groupId, userId });
+  const handleParticipantClick = (groupId: string) => {
+    if (participantPos === "") {
+      return confirm("역할군을 선택해주세요");
+    } else if (searchingStatus === "모집") {
+      return confirm("이미 모집하고 있는 그룹이 있습니다");
+    } else if (searchingStatus === "참가") {
+      return confirm("이미 참가 중인 그룹이 있습니다.");
     }
+    return mutation.mutate({ groupId, userId });
   };
 
   return (
-    <div className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
+    <div className="flex flex-col w-full h-fit px-5 py-4 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
       <div className="flex items-center">
         <p className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray whitespace-nowrap">
           {group.title}
@@ -95,15 +91,28 @@ function GroupItem({
         </GroupForm>
       </div>
       <p className="text-sm px-3 py-1">{group.content}</p>
-      <button
-        disabled={group.group_status === "모집 완료"}
-        onClick={() => handleButtonClick(group.id)}
-        className={`rounded-full py-2 px-3 text-white disabled:bg-mainGray disabled:cursor-not-allowed ${
-          userId === group.user_id ? "bg-warning" : "bg-black"
-        }`}
-      >
-        {userId === group.user_id ? "삭제하기" : "참가하기"}
-      </button>
+      {userId === group.user_id ? (
+        <button
+          disabled={group.group_status === "모집 완료"}
+          className={`rounded-full py-2 px-3 text-white disabled:bg-mainGray disabled:cursor-not-allowed bg-warning`}
+        >
+          삭제하기
+        </button>
+      ) : (
+        <button
+          disabled={searchingStatus !== "안함"}
+          onClick={() => handleParticipantClick(group.id)}
+          className={`rounded-full py-2 px-3 text-white disabled:bg-mainGray disabled:cursor-not-allowed bg-black`}
+        >
+          {participantGroup.participant_status === "승인"
+            ? "참가 완료"
+            : participantGroup.participant_status === "거절"
+            ? "거절 됨"
+            : participantGroup.group_id === group.id
+            ? "참가 중"
+            : "참가하기"}
+        </button>
+      )}
     </div>
   );
 }

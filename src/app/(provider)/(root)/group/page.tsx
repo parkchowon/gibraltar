@@ -4,7 +4,12 @@ import GroupSearchBox from "./_components/GroupSearchBox";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getGroup, getUserGroup } from "@/apis/group.api";
 import { useAuth } from "@/contexts/auth.context";
-import { GroupStatusType, GroupType } from "@/types/group.type";
+import {
+  GroupStatusType,
+  GroupType,
+  ParticipantGroupType,
+  ParticipantUserType,
+} from "@/types/group.type";
 import GroupItem from "./_components/GroupItem";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useEffect, useRef } from "react";
@@ -13,7 +18,13 @@ import { useGroupStore } from "@/stores/group.store";
 function GroupPage() {
   const { user } = useAuth();
   const loadMoreRef = useRef(null);
-  const { putStatus, putParticipantUser } = useGroupStore();
+  const {
+    putStatus,
+    putParticipantUser,
+    putParticipantGroup,
+    putGroupId,
+    putRejectedGroup,
+  } = useGroupStore();
 
   const {
     data: groups,
@@ -42,14 +53,28 @@ function GroupPage() {
     if (data) {
       putStatus(data.status);
       if (data.status === "모집") {
-        data.data?.map((parti) => {
+        (data.data as ParticipantUserType)?.map((parti) => {
+          putGroupId(parti.group_id);
           if (parti.users) {
-            putParticipantUser(parti.users);
+            putParticipantUser({
+              ...parti.users,
+              status: parti.participant_status,
+            });
           }
+        });
+      } else if (data.status === "참가") {
+        putParticipantGroup({
+          group_id: (data.data as ParticipantGroupType).group_id,
+          participant_status: (data.data as ParticipantGroupType)
+            .participant_status,
+        });
+      } else if (data.status === "안함") {
+        (data.data as ParticipantGroupType[])?.map((parti) => {
+          putRejectedGroup(parti);
         });
       }
     }
-  }, [data]);
+  }, [data, isLoading]);
 
   // observer로 스크롤 감지
   useEffect(() => {
@@ -80,10 +105,10 @@ function GroupPage() {
       <div className="flex flex-col gap-3 py-10">
         {groups &&
           groups.pages.map((page) => {
-            return page.map((group) => {
+            return page.map((group, idx) => {
               return (
                 <GroupItem
-                  key={group.id}
+                  key={idx + group.id}
                   group={group}
                   userId={user?.id ?? ""}
                 />

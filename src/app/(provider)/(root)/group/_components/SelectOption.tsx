@@ -18,7 +18,8 @@ function SelectOption({ type, index }: { type: string; index?: number }) {
   const [label, setLabel] = useState<string>("");
   const [iconName, setIconName] = useState<string | null>(null);
 
-  const { putMic, putMode, putPosition, putStyle, putTier } = useGroupStore();
+  const { putMic, putMode, putPosition, putStyle, putTier, searchingStatus } =
+    useGroupStore();
 
   useEffect(() => {
     switch (type) {
@@ -61,7 +62,9 @@ function SelectOption({ type, index }: { type: string; index?: number }) {
   ) as React.FC<IconProps>;
 
   const handleOptionClick = () => {
-    setLabelClick(!labelClick);
+    if (searchingStatus === "안함") {
+      setLabelClick(!labelClick);
+    }
   };
 
   return (

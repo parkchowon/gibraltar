@@ -9,10 +9,21 @@ export type GroupStoreProps = {
   searchingStatus: "모집" | "참가" | "안함" | "";
   participantPos: string;
   participantUser: {
+    id: string;
     profile_url: string;
     nickname: string;
     handle: string;
+    status: string;
   }[];
+  participantGroup: {
+    group_id: string;
+    participant_status: string;
+  };
+  rejectedGroup: {
+    group_id: string;
+    participant_status: string;
+  }[];
+  groupId: string;
   putMode: (value: string) => void;
   putPosition: (value: string, index: number) => void;
   putTier: (value: string, index: number) => void;
@@ -21,9 +32,20 @@ export type GroupStoreProps = {
   putStatus: (value: "모집" | "참가" | "안함") => void;
   putParticipantPos: (value: string) => void;
   putParticipantUser: (value: {
+    id: string;
     profile_url: string;
     nickname: string;
     handle: string;
+    status: string;
+  }) => void;
+  putParticipantGroup: (value: {
+    group_id: string;
+    participant_status: string;
+  }) => void;
+  putGroupId: (value: string) => void;
+  putRejectedGroup: (value: {
+    group_id: string;
+    participant_status: string;
   }) => void;
 };
 
@@ -53,16 +75,24 @@ export type GroupType = {
   user_id: string;
 }[];
 
-export type ParticipantUser = {
+export type ParticipantUserType = {
+  group_id: string;
   participant_user_id: string;
+  participant_status: string;
   users: {
+    id: string;
     profile_url: string;
     nickname: string;
     handle: string;
   } | null;
 }[];
 
+export type ParticipantGroupType = {
+  group_id: string;
+  participant_status: string;
+};
+
 export type GroupStatusType = {
-  data?: ParticipantUser;
+  data?: ParticipantUserType | ParticipantGroupType;
   status: "모집" | "참가" | "안함";
 };
