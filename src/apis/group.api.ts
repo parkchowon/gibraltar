@@ -6,6 +6,7 @@ export const createGroup = async (group: GroupCreateType) => {
     await apiClient.post("/api/group", {
       userId: group.userId,
       title: group.title,
+      battle_tag: group.battleTag,
       content: group.content,
       mode: group.mode,
       position: group.position,

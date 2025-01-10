@@ -63,6 +63,7 @@ export type GroupItemType = {
 export type GroupCreateType = {
   userId: string;
   title: string;
+  battleTag: string;
   content: string;
   mode: string;
   position: string[];

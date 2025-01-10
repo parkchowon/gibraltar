@@ -9,6 +9,7 @@ import LogoLoading from "@/components/Loading/LogoLoading";
 function GroupSearchBox() {
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
+  const battleTagRef = useRef<HTMLInputElement>(null);
 
   const { mode, position, tier, style, mic, searchingStatus } = useGroupStore();
   const { user } = useAuth();
@@ -18,6 +19,8 @@ function GroupSearchBox() {
   const handleSubmitClick = () => {
     if (titleRef.current && !titleRef.current.value) {
       return confirm("제목을 비워둘 수 없습니다");
+    } else if (battleTagRef.current && !battleTagRef.current.value) {
+      return confirm("배틀태그를 비워둘 수 없습니다");
     } else if (contentRef.current && !contentRef.current.value) {
       return confirm("내용을 비워둘 수 없습니다");
     } else if (mode === "") {
@@ -34,6 +37,7 @@ function GroupSearchBox() {
     if (
       titleRef.current &&
       contentRef.current &&
+      battleTagRef.current &&
       user &&
       searchingStatus === "안함"
     ) {
@@ -41,6 +45,7 @@ function GroupSearchBox() {
         userId: user.id,
         title: titleRef.current.value,
         content: contentRef.current.value,
+        battleTag: battleTagRef.current.value,
         mode,
         position,
         tier,
@@ -68,10 +73,17 @@ function GroupSearchBox() {
       {mutation.isPending && <LogoLoading />}
       <input
         type="text"
-        placeholder="제목을 입력하세요."
+        placeholder="제목을 입력하세요.(필수)"
         ref={titleRef}
         maxLength={30}
         className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray"
+      />
+      <input
+        type="text"
+        placeholder="배틀태그#1234(필수)"
+        ref={battleTagRef}
+        maxLength={20}
+        className="text-sm placeholder:text-mainGray outline-none font-semibold py-1 px-2 bg-transparent"
       />
       <div className="flex gap-3 justify-center">
         <GroupForm title="모드">
@@ -102,7 +114,7 @@ function GroupSearchBox() {
       </div>
       <input
         type="text"
-        placeholder="내용을 입력하세요."
+        placeholder="내용을 입력하세요.(필수)"
         ref={contentRef}
         maxLength={100}
         className="bg-transparent text-sm outline-none px-3 py-1 placeholder:text-mainGray"

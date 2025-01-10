@@ -5,8 +5,17 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
   try {
-    const { userId, title, content, mode, position, tier, style, mic } =
-      await request.json();
+    const {
+      userId,
+      title,
+      content,
+      battle_tag,
+      mode,
+      position,
+      tier,
+      style,
+      mic,
+    } = await request.json();
 
     const { data, error } = await supabase
       .from("group")
@@ -14,6 +23,7 @@ export const POST = async (request: NextRequest) => {
         user_id: userId,
         title,
         content,
+        battle_tag,
         mode,
         position,
         tier,

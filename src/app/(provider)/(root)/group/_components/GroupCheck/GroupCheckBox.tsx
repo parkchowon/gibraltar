@@ -29,7 +29,9 @@ function GroupCheckBox() {
               <p className="font-semibold">모집 중</p>
               <div className="flex items-center px-2 bg-carrot rounded-full">
                 <p className="text-sm text-white font-semibold flex items-center justify-center">
-                  {`(${partyUser.length}/`}
+                  {`(${
+                    partyUser.filter((user) => user.status === "승인").length
+                  }/`}
                   {groupCount}
                   {")"}
                 </p>

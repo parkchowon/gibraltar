@@ -47,6 +47,7 @@ export type Database = {
       }
       group: {
         Row: {
+          battle_tag: string
           content: string
           created_at: string
           group_status: string
@@ -60,6 +61,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          battle_tag?: string
           content: string
           created_at?: string
           group_status?: string
@@ -73,6 +75,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          battle_tag?: string
           content?: string
           created_at?: string
           group_status?: string
