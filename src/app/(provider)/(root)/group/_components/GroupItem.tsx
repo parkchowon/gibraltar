@@ -15,6 +15,12 @@ function GroupItem({
   const { searchingStatus, participantPos, participantGroup } = useGroupStore();
   const mutation = useParticipantCreateMutation();
 
+  const partiGroup = participantGroup.find(
+    (parti) => parti.group_id === group.id
+  );
+
+  console.log(participantGroup, partiGroup);
+
   const EmptyState = () => {
     return (
       <div className="flex items-center justify-center">
@@ -24,14 +30,16 @@ function GroupItem({
   };
 
   const handleParticipantClick = (groupId: string) => {
-    if (participantPos === "") {
+    if (group.group_status !== "모집 중") {
+      return confirm("이미 모집이 끝난 그룹입니다.");
+    } else if (participantPos === "") {
       return confirm("역할군을 선택해주세요");
     } else if (searchingStatus === "모집") {
       return confirm("이미 모집하고 있는 그룹이 있습니다");
     } else if (searchingStatus === "참가") {
       return confirm("이미 참가 중인 그룹이 있습니다.");
     }
-    return mutation.mutate({ groupId, userId });
+    return mutation.mutate({ groupId, userId, position: participantPos });
   };
 
   return (
@@ -40,7 +48,11 @@ function GroupItem({
         <p className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray whitespace-nowrap">
           {group.title}
         </p>
-        <div className="flex rounded-full bg-mint px-3 py-1 gap-2 ml-auto">
+        <div
+          className={`flex rounded-full ${
+            group.group_status === "모집 중" ? "bg-mint" : "bg-carrot"
+          } px-3 py-1 gap-2 ml-auto`}
+        >
           <p className="text-sm text-white">
             {`( ${group.participant_count} / `}
             {
@@ -63,7 +75,12 @@ function GroupItem({
           <div className="flex gap-2">
             {(group.position as string[]).map((pos, idx) => {
               return (
-                <FormItem key={pos} id={idx} label={pos} type="position" />
+                <FormItem
+                  key={group.id + idx}
+                  id={group.id + idx}
+                  label={pos}
+                  type="position"
+                />
               );
             })}
           </div>
@@ -93,22 +110,40 @@ function GroupItem({
       <p className="text-sm px-3 py-1">{group.content}</p>
       {userId === group.user_id ? (
         <button
-          disabled={group.group_status === "모집 완료"}
-          className={`rounded-full py-2 px-3 text-white disabled:bg-mainGray disabled:cursor-not-allowed bg-warning`}
+          disabled={group.group_status !== "모집 중"}
+          className={`rounded-full py-2 px-3 text-white disabled:bg-white disabled:border disabled:border-mainGray disabled:text-mainGray disabled:cursor-not-allowed bg-warning`}
         >
-          삭제하기
+          {group.group_status === "모집 중" ? "삭제하기" : group.group_status}
         </button>
       ) : (
         <button
-          disabled={searchingStatus !== "안함"}
+          disabled={searchingStatus === "모집"}
           onClick={() => handleParticipantClick(group.id)}
-          className={`rounded-full py-2 px-3 text-white disabled:bg-mainGray disabled:cursor-not-allowed bg-black`}
+          className={`rounded-full py-2 px-3 ${
+            !partiGroup && group.group_status !== "모집 중"
+              ? "bg-white border border-mainGray text-mainGray cursor-not-allowed"
+              : !partiGroup
+              ? "bg-black text-white"
+              : partiGroup.participant_status === "승인" &&
+                group.id === partiGroup.group_id
+              ? "bg-carrot text-white"
+              : partiGroup.participant_status === "거절"
+              ? "bg-mainGray text-white"
+              : partiGroup.group_id === group.id
+              ? "bg-mint text-white"
+              : "bg-black text-white"
+          } disabled:bg-mainGray disabled:cursor-not-allowed `}
         >
-          {participantGroup.participant_status === "승인"
+          {!partiGroup && group.group_status !== "모집 중"
+            ? group.group_status
+            : !partiGroup
+            ? "참가하기"
+            : partiGroup.participant_status === "승인" &&
+              group.id === partiGroup.group_id
             ? "참가 완료"
-            : participantGroup.participant_status === "거절"
+            : partiGroup.participant_status === "거절"
             ? "거절 됨"
-            : participantGroup.group_id === group.id
+            : partiGroup.group_id === group.id
             ? "참가 중"
             : "참가하기"}
         </button>

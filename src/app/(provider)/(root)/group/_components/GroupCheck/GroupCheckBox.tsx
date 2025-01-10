@@ -2,11 +2,20 @@ import { useGroupStore } from "@/stores/group.store";
 import React from "react";
 import ParticipantUserItem from "./ParticipantUserItem";
 import LogoLoading from "@/components/Loading/LogoLoading";
-import { group } from "console";
+import ParticipantGroupItem from "./ParticipantGroupItem";
 
 function GroupCheckBox() {
-  const { participantUser, searchingStatus, participantGroup, rejectedGroup } =
-    useGroupStore();
+  const {
+    participantUser,
+    searchingStatus,
+    participantGroup,
+    rejectedGroup,
+    group,
+  } = useGroupStore();
+
+  const groupCount = (group.position as string[]).filter(
+    (pos) => pos !== "" && pos !== "X"
+  ).length;
 
   const renderingGroupState = () => {
     switch (searchingStatus) {
@@ -16,14 +25,29 @@ function GroupCheckBox() {
         );
         return (
           <div className="flex flex-col gap-4">
-            <p className="font-semibold">모집 중</p>
+            <div className="flex gap-1 items-center">
+              <p className="font-semibold">모집 중</p>
+              <div className="flex items-center px-2 bg-carrot rounded-full">
+                <p className="text-sm text-white font-semibold flex items-center justify-center">
+                  {`(${partyUser.length}/`}
+                  {groupCount}
+                  {")"}
+                </p>
+              </div>
+            </div>
             <div className="flex w-full h-fit items-center">
               {partyUser.length === 0 && (
                 <p className="text-mainGray text-sm">아직 참여자가 없습니다</p>
               )}
-              {partyUser.map((user) => (
-                <ParticipantUserItem key={user.handle} user={user} />
-              ))}
+              <div className="flex flex-col w-full h-fit gap-3">
+                {partyUser.map((user) => (
+                  <ParticipantUserItem
+                    key={user.handle}
+                    user={user}
+                    lastUser={partyUser.length === groupCount}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -31,24 +55,26 @@ function GroupCheckBox() {
         return (
           <div className="flex flex-col gap-4">
             <p className="font-semibold">그룹 참가</p>
-            <p>참가 중</p>
-            <p>참가 상태 : {participantGroup.participant_status}</p>
+            <div className="flex flex-col">
+              {participantGroup.map((group) => {
+                return (
+                  <ParticipantGroupItem key={group.group_id} group={group} />
+                );
+              })}
+            </div>
           </div>
         );
       case "안함":
         return (
           <div className="flex flex-col gap-4">
-            <p className="font-semibold">그룹 참가</p>
+            <p className="font-semibold">그룹 찾기</p>
             <p>그룹찾기를 통해 같이 게임 할 유저를 찾아보세요!</p>
             {rejectedGroup && rejectedGroup.length > 0 && (
               <div>
                 <p>거절된 그룹</p>
                 {rejectedGroup.map((group) => {
                   return (
-                    <>
-                      <p>{group.group_id}</p>
-                      <p>거절이유 : {group.participant_status}</p>
-                    </>
+                    <ParticipantGroupItem key={group.group_id} group={group} />
                   );
                 })}
               </div>

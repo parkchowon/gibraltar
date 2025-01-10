@@ -10,10 +10,11 @@ import SearchingPage from "../SearchingPage";
 import { useFollow } from "@/hooks/useUserFollow";
 import ProfileBtn from "@/components/ProfileBtn";
 import RandomUser from "../RandomUser";
+import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
+import LogoLoading from "@/components/Loading/LogoLoading";
 
 function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
-  const handleSubmit = async () => {};
 
   // TODO : 팔로우 버튼 누를때 오류나는거 고쳐야됨
   const { userData } = useAuth();
@@ -27,6 +28,11 @@ function FollowUser() {
     mainChamps: playChamps.MainChamps,
     playChamps: playChamps.selectedChamps,
     favoriteTeam: favoriteTeam,
+  };
+
+  const mutation = useProfileUpdateMutation();
+  const handleSubmit = async () => {
+    mutation.mutate(profile);
   };
 
   const { followMutation, unFollowMutation } = useFollow();
@@ -85,110 +91,114 @@ function FollowUser() {
   }
 
   return (
-    <ProfileSettingContainer
-      title={`나와 공통점이 있는 계정을\n${
-        FollowingList ? FollowingList.length : 0
-      }개 찾았어요!`}
-    >
-      <div className="flex justify-center gap-[30px] mb-[68px]">
-        <button onClick={() => handleClickArrow(false)}>
-          <ArrowBtn
-            width="24"
-            height="42"
-            style={{ transform: "rotate(180deg)" }}
-          />
-        </button>
-        <div className="relative w-[404px] h-[463px]">
-          {FollowingList &&
-            FollowingList.map((follow, idx) => {
-              const followModes = follow.user?.profile?.play_mode as string[];
-              const followTimes = follow.user?.profile?.play_time as string[];
-              return (
-                <div
-                  key={`${follow.user?.id}${follow.score}`}
-                  className={`absolute flex-col w-[404px] h-[463px] items-center bg-white top-0 left-0 pt-[35px] px-6 pb-[22px] border border-black rounded-2xl ${
-                    idx === cardIndex ? "flex" : "hidden"
-                  }`}
-                >
-                  <ProfileBtn
-                    profileUrl={follow.user?.profile_url || ""}
-                    intent={"card"}
-                    type="non-click"
-                  />
-                  <p className="text-lg font-medium mt-3.5">
-                    {follow.user?.nickname}
-                  </p>
-                  <p className="font-medium text-gray-400 mb-1">
-                    {follow.user?.handle}
-                  </p>
-                  <p className=" w-full h-12 mb-1.5 text-center">
-                    {follow.user?.profile?.bio}
-                  </p>
+    <>
+      {mutation.isPending && <LogoLoading />}
+      <ProfileSettingContainer
+        title={`나와 공통점이 있는 계정을\n${
+          FollowingList ? FollowingList.length : 0
+        }개 찾았어요!`}
+      >
+        <div className="flex justify-center gap-[30px] mb-[68px]">
+          <button onClick={() => handleClickArrow(false)}>
+            <ArrowBtn
+              width="24"
+              height="42"
+              style={{ transform: "rotate(180deg)" }}
+            />
+          </button>
+          <div className="relative w-[404px] h-[463px]">
+            {FollowingList &&
+              FollowingList.length > 0 &&
+              FollowingList.map((follow, idx) => {
+                const followModes = follow.user?.profile?.play_mode as string[];
+                const followTimes = follow.user?.profile?.play_time as string[];
+                return (
+                  <div
+                    key={`${follow.user?.id}${follow.score}`}
+                    className={`absolute flex-col w-[404px] h-[463px] items-center bg-white top-0 left-0 pt-[35px] px-6 pb-[22px] border border-black rounded-2xl ${
+                      idx === cardIndex ? "flex" : "hidden"
+                    }`}
+                  >
+                    <ProfileBtn
+                      profileUrl={follow.user?.profile_url || ""}
+                      intent={"card"}
+                      type="non-click"
+                    />
+                    <p className="text-lg font-medium mt-3.5">
+                      {follow.user?.nickname}
+                    </p>
+                    <p className="font-medium text-gray-400 mb-1">
+                      {follow.user?.handle}
+                    </p>
+                    <p className=" w-full h-12 mb-1.5 text-center">
+                      {follow.user?.profile?.bio}
+                    </p>
 
-                  {/* 같은 게임 모드 */}
-                  <p className="text-gray-500">
-                    {nickname !== "" ? nickname : userData?.nickname}님처럼{" "}
-                    <span className="font-bold text-black">
-                      {followModes
-                        .filter((mode) => playStyle.mode?.includes(mode))
-                        .join(",")}
-                    </span>
-                    을 즐기는 유저예요
-                  </p>
-                  {/* 같은 시간대 */}
-                  {followTimes && (
+                    {/* 같은 게임 모드 */}
                     <p className="text-gray-500">
-                      같은{" "}
+                      {nickname !== "" ? nickname : userData?.nickname}님처럼{" "}
                       <span className="font-bold text-black">
-                        {followTimes
-                          .filter((time) => playStyle.time?.includes(time))
+                        {followModes
+                          .filter((mode) => playStyle.mode?.includes(mode))
                           .join(",")}
                       </span>
-                      에 게임을 즐기는 유저예요
+                      을 즐기는 유저예요
                     </p>
-                  )}
-                  {/* 같은 팀 */}
-                  {favoriteTeam !== "없음" &&
-                  favoriteTeam === follow.user?.profile?.favorite_team ? (
-                    <p className="text-gray-500">
-                      같은 팀{" "}
-                      <span className="font-bold text-black">
-                        {favoriteTeam}
-                      </span>
-                      을 좋아해요
-                    </p>
-                  ) : null}
-                  <button
-                    onClick={() => handleFollowClick(idx)}
-                    className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
-                  >
-                    {follow.isFollowing ? "언팔로우" : "팔로우"}
-                  </button>
-                  <div className="absolute bottom-[22px] flex gap-[8px]">
-                    {FollowingList &&
-                      FollowingList.map((card, index) => (
-                        <div
-                          key={card.user?.id}
-                          className={`w-1.5 h-1.5 ${
-                            cardIndex === index ? "bg-mint" : "bg-gray-400"
-                          } rounded-full`}
-                        />
-                      ))}
+                    {/* 같은 시간대 */}
+                    {followTimes && (
+                      <p className="text-gray-500">
+                        같은{" "}
+                        <span className="font-bold text-black">
+                          {followTimes
+                            .filter((time) => playStyle.time?.includes(time))
+                            .join(",")}
+                        </span>
+                        에 게임을 즐기는 유저예요
+                      </p>
+                    )}
+                    {/* 같은 팀 */}
+                    {favoriteTeam !== "없음" &&
+                    favoriteTeam === follow.user?.profile?.favorite_team ? (
+                      <p className="text-gray-500">
+                        같은 팀{" "}
+                        <span className="font-bold text-black">
+                          {favoriteTeam}
+                        </span>
+                        을 좋아해요
+                      </p>
+                    ) : null}
+                    <button
+                      onClick={() => handleFollowClick(idx)}
+                      className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
+                    >
+                      {follow.isFollowing ? "언팔로우" : "팔로우"}
+                    </button>
+                    <div className="absolute bottom-[22px] flex gap-[8px]">
+                      {FollowingList &&
+                        FollowingList.map((card, index) => (
+                          <div
+                            key={card.user?.id}
+                            className={`w-1.5 h-1.5 ${
+                              cardIndex === index ? "bg-mint" : "bg-gray-400"
+                            } rounded-full`}
+                          />
+                        ))}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
+          <button onClick={() => handleClickArrow(true)}>
+            <ArrowBtn width="24" height="42" />
+          </button>
         </div>
-        <button onClick={() => handleClickArrow(true)}>
-          <ArrowBtn width="24" height="42" />
-        </button>
-      </div>
-      <NextStepButton
-        isClickable={true}
-        text="지브롤터 시작하기"
-        onClick={handleSubmit}
-      />
-    </ProfileSettingContainer>
+        <NextStepButton
+          isClickable={true}
+          text="지브롤터 시작하기"
+          onClick={handleSubmit}
+        />
+      </ProfileSettingContainer>
+    </>
   );
 }
 

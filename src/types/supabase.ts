@@ -89,7 +89,7 @@ export type Database = {
           {
             foreignKeyName: "group_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -200,6 +200,7 @@ export type Database = {
           id: string
           participant_status: string
           participant_user_id: string
+          party_position: string
         }
         Insert: {
           created_at?: string
@@ -207,6 +208,7 @@ export type Database = {
           id?: string
           participant_status?: string
           participant_user_id: string
+          party_position?: string
         }
         Update: {
           created_at?: string
@@ -214,6 +216,7 @@ export type Database = {
           id?: string
           participant_status?: string
           participant_user_id?: string
+          party_position?: string
         }
         Relationships: [
           {
@@ -226,7 +229,7 @@ export type Database = {
           {
             foreignKeyName: "participant_group_participant_user_id_fkey"
             columns: ["participant_user_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },

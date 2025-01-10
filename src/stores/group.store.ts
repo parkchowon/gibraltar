@@ -10,11 +10,12 @@ export const useGroupStore = create<GroupStoreProps>((set) => ({
   searchingStatus: "",
   participantPos: "",
   participantUser: [],
-  participantGroup: {
-    group_id: "",
-    participant_status: "",
+  participantGroup: [],
+  group: {
+    id: "",
+    group_status: "",
+    position: [],
   },
-  groupId: "",
   rejectedGroup: [],
   putMode: (value) => set({ mode: value }),
   putPosition: (value, index) =>
@@ -29,10 +30,8 @@ export const useGroupStore = create<GroupStoreProps>((set) => ({
   putMic: (value) => set({ mic: value }),
   putStatus: (value) => set({ searchingStatus: value }),
   putParticipantPos: (value) => set({ participantPos: value }),
-  putParticipantUser: (value) =>
-    set((state) => ({ participantUser: [...state.participantUser, value] })),
+  putParticipantUser: (value) => set((state) => ({ participantUser: value })),
   putParticipantGroup: (value) => set({ participantGroup: value }),
-  putGroupId: (value) => set({ groupId: value }),
-  putRejectedGroup: (value) =>
-    set((state) => ({ rejectedGroup: [...state.rejectedGroup, value] })),
+  putGroup: (value) => set({ group: value }),
+  putRejectedGroup: (value) => set({ rejectedGroup: value }),
 }));

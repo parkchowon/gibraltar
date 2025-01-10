@@ -18,6 +18,7 @@ export const POST = async (
       .eq("group_id", groupId)
       .eq("participant_user_id", userId);
     if (error) throw new Error(error.message);
+
     return NextResponse.json(
       { message: "업데이트 성공", data },
       { status: 200 }

@@ -22,7 +22,7 @@ function GroupPage() {
     putStatus,
     putParticipantUser,
     putParticipantGroup,
-    putGroupId,
+    putGroup,
     putRejectedGroup,
   } = useGroupStore();
 
@@ -53,25 +53,26 @@ function GroupPage() {
     if (data) {
       putStatus(data.status);
       if (data.status === "모집") {
-        (data.data as ParticipantUserType)?.map((parti) => {
-          putGroupId(parti.group_id);
-          if (parti.users) {
-            putParticipantUser({
-              ...parti.users,
-              status: parti.participant_status,
-            });
-          }
+        if (data.group) {
+          putGroup({
+            id: data.group.id,
+            group_status: data.group.group_status,
+            position: data.group.position,
+          });
+        }
+        const users = (data.data as ParticipantUserType).map((parti) => {
+          return {
+            ...parti.users,
+            status: parti.participant_status,
+            position: parti.party_position,
+          };
         });
+        putParticipantUser(users);
       } else if (data.status === "참가") {
-        putParticipantGroup({
-          group_id: (data.data as ParticipantGroupType).group_id,
-          participant_status: (data.data as ParticipantGroupType)
-            .participant_status,
-        });
+        console.log(data);
+        putParticipantGroup(data.data as ParticipantGroupType[]);
       } else if (data.status === "안함") {
-        (data.data as ParticipantGroupType[])?.map((parti) => {
-          putRejectedGroup(parti);
-        });
+        putRejectedGroup(data.data as ParticipantGroupType[]);
       }
     }
   }, [data, isLoading]);

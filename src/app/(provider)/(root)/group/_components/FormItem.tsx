@@ -25,7 +25,7 @@ function FormItem({
 }: {
   label: string;
   type: string;
-  id?: number;
+  id?: string;
 }) {
   const [iconName, setIconName] = useState<string | null>(null);
   const [DynamicIcon, setDynamicIcon] = useState<React.FC<IconProps> | null>(

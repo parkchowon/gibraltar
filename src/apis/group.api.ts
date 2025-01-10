@@ -30,10 +30,13 @@ export const getGroup = async (cursor: number) => {
 
 export const createParticipantGroup = async (
   groupId: string,
-  userId: string
+  userId: string,
+  position: string
 ) => {
   try {
-    await apiClient.post(`api/group/${userId}?group_id=${groupId}`);
+    await apiClient.post(
+      `api/group/${userId}?group_id=${groupId}&position=${position}`
+    );
   } catch (error) {
     console.error(error);
   }
@@ -58,6 +61,14 @@ export const updateParticipantGroup = async (
     await apiClient.post(
       `api/group/${userId}/permission?group_id=${groupId}&status=${status}`
     );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateGroupStatus = async (groupId: string) => {
+  try {
+    await apiClient.post(`api/group/status?group_id=${groupId}`);
   } catch (error) {
     console.error(error);
   }

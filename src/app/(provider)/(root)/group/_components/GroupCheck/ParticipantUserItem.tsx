@@ -1,13 +1,16 @@
-import { updateParticipantGroup } from "@/apis/group.api";
+import { updateGroupStatus, updateParticipantGroup } from "@/apis/group.api";
 import LogoLoading from "@/components/Loading/LogoLoading";
 import ProfileBtn from "@/components/ProfileBtn";
 import { useGroupStore } from "@/stores/group.store";
 import { ParticipantUserType } from "@/types/group.type";
 import { useMutation } from "@tanstack/react-query";
 import Check from "@/assets/icons/check.svg";
+import { PLAY_POSITION } from "@/constants/profile";
+import Image from "next/image";
 
 function ParticipantUserItem({
   user,
+  lastUser,
 }: {
   user: {
     id: string;
@@ -15,9 +18,16 @@ function ParticipantUserItem({
     nickname: string;
     handle: string;
     status: string;
+    position: string;
   };
+  lastUser?: boolean;
 }) {
-  const { groupId } = useGroupStore();
+  const { group } = useGroupStore();
+
+  const positionIcon = PLAY_POSITION.find(
+    (pos) => pos.name === user.position
+  )?.icon;
+
   const updatePartyMutation = useMutation({
     mutationFn: ({
       userId,
@@ -29,28 +39,53 @@ function ParticipantUserItem({
       status: string;
     }) => updateParticipantGroup(userId, groupId, status),
   });
+
+  const updateGroupStatusMutation = useMutation({
+    mutationFn: ({ groupId }: { groupId: string }) =>
+      updateGroupStatus(groupId),
+  });
+
   const handlePermissionClick = (status: string) => {
     updatePartyMutation.mutate({
       userId: user.id,
-      groupId: groupId,
+      groupId: group.id,
       status: status,
     });
+    if (status === "승인" && lastUser) {
+      updateGroupStatusMutation.mutate({ groupId: group.id });
+    }
   };
 
   if (user)
     return (
-      <div className="flex w-full items-center bg-white border border-mainGray rounded-xl px-2 py-1">
+      <div className="flex w-full items-center bg-white border border-mainGray rounded-xl px-2 py-2">
         {updatePartyMutation.isPending && <LogoLoading />}
+
         <ProfileBtn
           profileUrl={user.profile_url}
           handle={user.handle}
           intent={"post"}
         />
         <div className="ml-2">
-          <p className="font-semibold">{user.nickname}</p>
-          <p className="text-sm text-mainGray">{user.handle}</p>
+          <div className="flex gap-1 items-center">
+            <div className="w-fit h-fit rounded-full">
+              {positionIcon ? (
+                <Image
+                  src={positionIcon}
+                  alt={user.position}
+                  width={15}
+                  height={15}
+                  className=""
+                />
+              ) : (
+                <p>{user.position}</p>
+              )}
+            </div>
+            <p className="font-semibold">{user.nickname}</p>
+          </div>
+          <p className="text-xs text-mainGray">{user.handle}</p>
         </div>
-        <div className="flex gap-2 ml-auto">
+        <div className="flex gap-1 ml-auto">
           {user.status === "승인" ? (
             <button className="flex items-center gap-2 bg-carrot rounded-xl px-2 py-2">
               <p className="text-white text-sm">승인됨</p>

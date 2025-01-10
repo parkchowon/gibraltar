@@ -14,16 +14,15 @@ export type GroupStoreProps = {
     nickname: string;
     handle: string;
     status: string;
+    position: string;
   }[];
-  participantGroup: {
-    group_id: string;
-    participant_status: string;
+  participantGroup: GroupItemType[];
+  rejectedGroup: GroupItemType[];
+  group: {
+    id: string;
+    group_status: string;
+    position: Json[];
   };
-  rejectedGroup: {
-    group_id: string;
-    participant_status: string;
-  }[];
-  groupId: string;
   putMode: (value: string) => void;
   putPosition: (value: string, index: number) => void;
   putTier: (value: string, index: number) => void;
@@ -31,22 +30,34 @@ export type GroupStoreProps = {
   putMic: (value: string) => void;
   putStatus: (value: "모집" | "참가" | "안함") => void;
   putParticipantPos: (value: string) => void;
-  putParticipantUser: (value: {
+  putParticipantUser: (
+    value: {
+      id: string;
+      profile_url: string;
+      nickname: string;
+      handle: string;
+      status: string;
+      position: string;
+    }[]
+  ) => void;
+  putParticipantGroup: (value: GroupItemType[]) => void;
+  putGroup: (value: {
     id: string;
-    profile_url: string;
-    nickname: string;
-    handle: string;
-    status: string;
+    group_status: string;
+    position: Json[];
   }) => void;
-  putParticipantGroup: (value: {
-    group_id: string;
-    participant_status: string;
-  }) => void;
-  putGroupId: (value: string) => void;
-  putRejectedGroup: (value: {
-    group_id: string;
-    participant_status: string;
-  }) => void;
+  putRejectedGroup: (value: GroupItemType[]) => void;
+};
+
+export type GroupItemType = {
+  group_id: string;
+  participant_status: string;
+  party_position: string;
+  group: {
+    title: string;
+    mode: string;
+    group_status: string;
+  };
 };
 
 export type GroupCreateType = {
@@ -79,20 +90,32 @@ export type ParticipantUserType = {
   group_id: string;
   participant_user_id: string;
   participant_status: string;
+  party_position: string;
   users: {
     id: string;
     profile_url: string;
     nickname: string;
     handle: string;
-  } | null;
+  };
 }[];
 
 export type ParticipantGroupType = {
   group_id: string;
   participant_status: string;
+  party_position: string;
+  group: {
+    title: string;
+    mode: string;
+    group_status: string;
+  };
 };
 
 export type GroupStatusType = {
-  data?: ParticipantUserType | ParticipantGroupType;
+  data?: ParticipantUserType | ParticipantGroupType[];
+  group?: {
+    id: string;
+    group_status: string;
+    position: Json[];
+  };
   status: "모집" | "참가" | "안함";
 };
