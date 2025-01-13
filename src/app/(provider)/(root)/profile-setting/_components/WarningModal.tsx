@@ -1,5 +1,6 @@
 import { insertProfileSetting } from "@/apis/profile.api";
 import { useAuth } from "@/contexts/auth.context";
+import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
 import { useProfileStore } from "@/stores/profile.store";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
@@ -12,6 +13,7 @@ function WarningModal({
   const { user } = useAuth();
   const router = useRouter();
   const { bio, favoriteTeam, playChamps, playStyle } = useProfileStore();
+  const mutation = useProfileUpdateMutation();
 
   const handleOutClick = async () => {
     if (user) {
@@ -23,13 +25,13 @@ function WarningModal({
         playChamps: playChamps.selectedChamps,
         favoriteTeam: favoriteTeam,
       };
-      await insertProfileSetting(profile);
+      mutation.mutate(profile);
       router.push("/home");
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-10">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
       <div className="flex flex-col w-96 h-fit px-10 py-10 bg-white rounded-2xl gap-2 items-center justify-center">
         <p className="text-2xl font-bold">정말 나가시겠어요?</p>
         <p className="text-base">

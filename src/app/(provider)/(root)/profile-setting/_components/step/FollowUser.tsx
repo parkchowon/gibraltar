@@ -92,7 +92,11 @@ function FollowUser() {
 
   return (
     <>
-      {mutation.isPending && <LogoLoading />}
+      {mutation.isPending && (
+        <div className="fixed inset-0 w-full h-screen">
+          <LogoLoading />
+        </div>
+      )}
       <ProfileSettingContainer
         title={`나와 공통점이 있는 계정을\n${
           FollowingList ? FollowingList.length : 0
