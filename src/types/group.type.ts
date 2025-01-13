@@ -57,6 +57,7 @@ export type GroupItemType = {
     title: string;
     mode: string;
     group_status: string;
+    battle_tag?: string;
   };
 };
 
@@ -85,6 +86,7 @@ export type GroupType = {
   tier: Json[] | null;
   title: string;
   user_id: string;
+  update_at: string;
 }[];
 
 export type ParticipantUserType = {

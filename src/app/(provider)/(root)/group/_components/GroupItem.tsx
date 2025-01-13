@@ -1,25 +1,42 @@
-import { GroupType } from "@/types/group.type";
-import React from "react";
+import { GroupItemType, GroupStatusType, GroupType } from "@/types/group.type";
+import React, { useEffect, useState } from "react";
 import GroupForm from "./GroupForm";
 import FormItem from "./FormItem";
 import { useGroupStore } from "@/stores/group.store";
-import { useParticipantCreateMutation } from "@/hooks/useGroupMutation";
+import {
+  useGroupDeleteMutation,
+  useParticipantCreateMutation,
+} from "@/hooks/useGroupMutation";
+import LogoLoading from "@/components/Loading/LogoLoading";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 function GroupItem({
   group,
   userId,
+  refetch,
 }: {
   group: GroupType[number];
   userId: string;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<GroupStatusType, Error>>;
 }) {
-  const { searchingStatus, participantPos, participantGroup } = useGroupStore();
+  const { searchingStatus, participantPos, participantGroup, participantUser } =
+    useGroupStore();
   const mutation = useParticipantCreateMutation();
+  const deleteMutation = useGroupDeleteMutation();
 
-  const partiGroup = participantGroup.find(
-    (parti) => parti.group_id === group.id
-  );
+  const [partiGroup, setPartiGroup] = useState<GroupItemType>();
+  const formattedUpdateAtString = group.update_at.replace("+00:00", "");
+  const updateTime = new Date(formattedUpdateAtString);
+  const now = new Date();
+  const deletableTime = new Date(now.getTime() - 5 * 60 * 1000);
 
-  console.log(participantGroup, partiGroup);
+  useEffect(() => {
+    setPartiGroup(
+      participantGroup.find((parti) => parti.group_id === group.id)
+    );
+  }, [participantGroup]);
 
   const EmptyState = () => {
     return (
@@ -29,6 +46,25 @@ function GroupItem({
     );
   };
 
+  // 삭제하기 버튼 클릭 시
+  const handleDeleteClick = () => {
+    if (
+      participantUser.filter((user) => user.status !== "거절").length > 0 &&
+      group.group_status === "모집 중"
+    ) {
+      return confirm("참가중인 유저가 있으면 삭제할 수 없습니다.");
+    } else if (
+      group.group_status === "모집 완료" &&
+      updateTime > deletableTime
+    ) {
+      return confirm("1시간은 지나야 삭제할 수 있습니다.");
+    }
+
+    // 삭제
+    return deleteMutation.mutate({ groupId: group.id, userId });
+  };
+
+  // 참가하기 버튼 클릭 시
   const handleParticipantClick = (groupId: string) => {
     if (group.group_status !== "모집 중") {
       return confirm("이미 모집이 끝난 그룹입니다.");
@@ -39,11 +75,17 @@ function GroupItem({
     } else if (searchingStatus === "참가") {
       return confirm("이미 참가 중인 그룹이 있습니다.");
     }
+    refetch();
     return mutation.mutate({ groupId, userId, position: participantPos });
   };
 
   return (
-    <div className="flex flex-col w-full h-fit px-5 py-4 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
+    <div className="relative flex flex-col w-full h-fit px-5 py-4 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl">
+      {(mutation.isPending || deleteMutation.isPending) && (
+        <div className="absolute inset-0 rounded-xl w-full h-full bg-black/35 z-20">
+          <LogoLoading />
+        </div>
+      )}
       <div className="flex items-center">
         <p className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray whitespace-nowrap">
           {group.title}
@@ -110,10 +152,10 @@ function GroupItem({
       <p className="text-sm px-3 py-1">{group.content}</p>
       {userId === group.user_id ? (
         <button
-          disabled={group.group_status !== "모집 중"}
-          className={`rounded-full py-2 px-3 text-white disabled:bg-white disabled:border disabled:border-mainGray disabled:text-mainGray disabled:cursor-not-allowed bg-warning`}
+          onClick={handleDeleteClick}
+          className={`rounded-full py-2 px-3 text-white bg-warning`}
         >
-          {group.group_status === "모집 중" ? "삭제하기" : group.group_status}
+          삭제하기
         </button>
       ) : (
         <button

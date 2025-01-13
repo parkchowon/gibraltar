@@ -72,7 +72,7 @@ export const GET = async (
     } else {
       const { data, error } = await supabase
         .from("participant_group")
-        .select("*, group(title, mode, group_status)")
+        .select("*, group(title, mode, group_status, battle_tag)")
         .eq("participant_user_id", userId)
         .neq("participant_status", "거절");
 
@@ -88,6 +88,29 @@ export const GET = async (
         throw new Error(rejectError.message);
       return NextResponse.json({ data: rejectData, status: "안함" });
     }
+  } catch (error) {
+    return NextResponse.json({ message: "서버로 인한 오류" }, { status: 500 });
+  }
+};
+
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { userId: string } }
+) => {
+  const supabase = createClient();
+  const searchParams = request.nextUrl.searchParams;
+  const userId = params.userId;
+  const groupId = searchParams.get("group_id") as string;
+
+  try {
+    const { data, error } = await supabase
+      .from("group")
+      .delete()
+      .eq("id", groupId)
+      .eq("user_id", userId);
+    if (error) throw new Error(error.message);
+
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ message: "서버로 인한 오류" }, { status: 500 });
   }

@@ -39,10 +39,20 @@ function ParticipantGroupItem({ group }: { group: GroupItemType }) {
           <p className="text-sm">{group.group.mode}</p>
         </div>
         <div className="flex flex-col gap-1 p-2 items-center border border-mainGray rounded-xl">
-          <p className="font-semibold text-sm">참가</p>
+          <p className="font-semibold text-sm">참가 상태</p>
           <p className="text-sm">{group.participant_status}</p>
         </div>
       </div>
+      {group.group.battle_tag && group.participant_status === "승인" && (
+        <div className="flex items-center w-full rounded-full gap-2 border border-carrot bg-carrot pl-3">
+          <p className="text-sm text-left text-white font-semibold">
+            배틀태그{" "}
+          </p>
+          <span className="bg-white px-3 py-1 flex-grow text-sm rounded-full font-bold">
+            {group.group.battle_tag}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

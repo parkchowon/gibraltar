@@ -5,6 +5,7 @@ import { useGroupStore } from "@/stores/group.store";
 import { useGroupCreateMutation } from "@/hooks/useGroupMutation";
 import { useAuth } from "@/contexts/auth.context";
 import LogoLoading from "@/components/Loading/LogoLoading";
+import { invalidCheckBattleTag } from "@/utils/invalidCheck";
 
 function GroupSearchBox() {
   const titleRef = useRef<HTMLInputElement>(null);
@@ -21,6 +22,11 @@ function GroupSearchBox() {
       return confirm("제목을 비워둘 수 없습니다");
     } else if (battleTagRef.current && !battleTagRef.current.value) {
       return confirm("배틀태그를 비워둘 수 없습니다");
+    } else if (
+      battleTagRef.current &&
+      !invalidCheckBattleTag(battleTagRef.current.value)
+    ) {
+      return confirm("배틀태그의 형식이 맞지 않습니다.");
     } else if (contentRef.current && !contentRef.current.value) {
       return confirm("내용을 비워둘 수 없습니다");
     } else if (mode === "") {
@@ -68,9 +74,13 @@ function GroupSearchBox() {
   return (
     <div
       onClick={handleInputClick}
-      className="flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl"
+      className="relative flex flex-col w-full h-fit px-5 py-3 mt-3 gap-4 border border-mainGray bg-subGray rounded-xl"
     >
-      {mutation.isPending && <LogoLoading />}
+      {mutation.isPending && (
+        <div className="absolute inset-0 rounded-xl bg-black/35 w-full h-full z-30">
+          <LogoLoading />
+        </div>
+      )}
       <input
         type="text"
         placeholder="제목을 입력하세요.(필수)"

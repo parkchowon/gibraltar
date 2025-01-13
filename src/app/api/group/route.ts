@@ -29,6 +29,7 @@ export const POST = async (request: NextRequest) => {
         tier,
         style,
         mic,
+        update_at: null,
       })
       .select()
       .single();

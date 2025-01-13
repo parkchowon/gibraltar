@@ -1,5 +1,9 @@
-import { createGroup, createParticipantGroup } from "@/apis/group.api";
-import { GroupCreateType } from "@/types/group.type";
+import {
+  createGroup,
+  createParticipantGroup,
+  deleteGroup,
+} from "@/apis/group.api";
+import { GroupCreateType, GroupStatusType } from "@/types/group.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useGroupCreateMutation = (options?: {
@@ -28,6 +32,30 @@ export const useGroupCreateMutation = (options?: {
   });
 };
 
+export const useGroupDeleteMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      deleteGroup(groupId, userId),
+    onMutate: async (newState) => {
+      const prevGroupList = queryClient.getQueryData(["groupList"]);
+      await queryClient.cancelQueries({ queryKey: ["groupList"] });
+      if (prevGroupList) {
+        queryClient.setQueryData(["groupList"], {
+          ...prevGroupList,
+          ...[newState],
+        });
+      }
+      return () => queryClient.setQueryData(["groupList"], prevGroupList);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["groupList"],
+      });
+    },
+  });
+};
+
 export const useParticipantCreateMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -41,13 +69,15 @@ export const useParticipantCreateMutation = () => {
       position: string;
     }) => createParticipantGroup(groupId, userId, position),
     onMutate: async (newState) => {
-      const prevGroupList = queryClient.getQueryData(["groupStatus"]);
       await queryClient.cancelQueries({ queryKey: ["groupStatus"] });
+      const prevGroupList = queryClient.getQueryData<GroupStatusType>([
+        "groupStatus",
+      ]);
       if (prevGroupList) {
-        queryClient.setQueryData(["groupStatus"], {
-          ...prevGroupList,
-          ...newState,
-        });
+        queryClient.setQueryData(["groupStatus"], (old: GroupStatusType) => ({
+          ...old!,
+          status: "참가",
+        }));
       }
       return () => queryClient.setQueryData(["groupStatus"], prevGroupList);
     },

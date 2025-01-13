@@ -3,7 +3,7 @@ import LogoLoading from "@/components/Loading/LogoLoading";
 import ProfileBtn from "@/components/ProfileBtn";
 import { useGroupStore } from "@/stores/group.store";
 import { ParticipantUserType } from "@/types/group.type";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Check from "@/assets/icons/check.svg";
 import { PLAY_POSITION } from "@/constants/profile";
 import Image from "next/image";
@@ -27,6 +27,8 @@ function ParticipantUserItem({
   const positionIcon = PLAY_POSITION.find(
     (pos) => pos.name === user.position
   )?.icon;
+
+  const queryClient = useQueryClient();
 
   const updatePartyMutation = useMutation({
     mutationFn: ({
@@ -54,13 +56,17 @@ function ParticipantUserItem({
     if (status === "승인" && lastUser) {
       updateGroupStatusMutation.mutate({ groupId: group.id });
     }
+    return queryClient.refetchQueries({ queryKey: ["groupStatus"] });
   };
 
   if (user)
     return (
-      <div className="flex w-full items-center bg-white border border-mainGray rounded-xl px-2 py-2">
-        {updatePartyMutation.isPending && <LogoLoading />}
-
+      <div className="relative flex w-full items-center bg-white border border-mainGray rounded-xl px-2 py-2">
+        {updatePartyMutation.isPending && (
+          <div className="absolute inset-0 bg-black/35 rounded-xl z-20 w-full h-full">
+            <LogoLoading />
+          </div>
+        )}
         <ProfileBtn
           profileUrl={user.profile_url}
           handle={user.handle}

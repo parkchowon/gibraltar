@@ -9,7 +9,12 @@ export const POST = async (request: NextRequest) => {
   try {
     const { data, error } = await supabase
       .from("group")
-      .update({ group_status: "모집 완료" })
+      .update({
+        group_status: "모집 완료",
+        update_at: new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Seoul",
+        }),
+      })
       .eq("id", groupId);
     if (error) throw new Error(error.message);
 

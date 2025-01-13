@@ -43,7 +43,11 @@ function GroupPage() {
     enabled: !!user,
   });
 
-  const { data, isPending: isLoading } = useQuery({
+  const {
+    data,
+    isPending: isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["groupStatus", user?.id],
     queryFn: (): Promise<GroupStatusType> => getUserGroup(user?.id || ""),
     enabled: !!user,
@@ -69,7 +73,6 @@ function GroupPage() {
         });
         putParticipantUser(users);
       } else if (data.status === "참가") {
-        console.log(data);
         putParticipantGroup(data.data as ParticipantGroupType[]);
       } else if (data.status === "안함") {
         putRejectedGroup(data.data as ParticipantGroupType[]);
@@ -110,6 +113,7 @@ function GroupPage() {
               return (
                 <GroupItem
                   key={idx + group.id}
+                  refetch={refetch}
                   group={group}
                   userId={user?.id ?? ""}
                 />

@@ -3,7 +3,7 @@ import apiClient from "./apiClient.api";
 
 export const createGroup = async (group: GroupCreateType) => {
   try {
-    await apiClient.post("/api/group", {
+    await apiClient.post("api/group", {
       userId: group.userId,
       title: group.title,
       battle_tag: group.battleTag,
@@ -14,6 +14,14 @@ export const createGroup = async (group: GroupCreateType) => {
       style: group.style,
       mic: group.mic,
     });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteGroup = async (groupId: string, userId: string) => {
+  try {
+    await apiClient.delete(`api/group/${userId}?group_id=${groupId}`);
   } catch (error) {
     console.error(error);
   }

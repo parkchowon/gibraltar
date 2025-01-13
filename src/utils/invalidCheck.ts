@@ -26,3 +26,10 @@ export const handleSearchInvalidCheck = (handle: string) => {
   const permittedChar = /^[a-zA-Z0-9_]+$/;
   return permittedChar.test(handle);
 };
+
+// 배틀태그 유효성 검사
+export const invalidCheckBattleTag = (battleTag: string) => {
+  const format = /^.{2,}#\d{3,}$/;
+  const result = format.test(battleTag);
+  return result;
+};

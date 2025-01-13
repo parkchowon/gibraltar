@@ -24,7 +24,7 @@ function GroupCheckBox() {
           (user) => user.status !== "거절"
         );
         return (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
               <p className="font-semibold">모집 중</p>
               <div className="flex items-center px-2 bg-carrot rounded-full">
@@ -41,15 +41,25 @@ function GroupCheckBox() {
               {partyUser.length === 0 && (
                 <p className="text-mainGray text-sm">아직 참여자가 없습니다</p>
               )}
-              <div className="flex flex-col w-full h-fit gap-3">
-                {partyUser.map((user) => (
-                  <ParticipantUserItem
-                    key={user.handle}
-                    user={user}
-                    lastUser={partyUser.length === groupCount}
-                  />
-                ))}
-              </div>
+              {partyUser.length > 0 && (
+                <div className="flex flex-col w-full h-fit gap-3">
+                  <div className="bg-white rounded-lg p-1">
+                    <p className="text-sm text-mainGray">
+                      &middot; 승인을 누르면 상대방에게 배틀태그가 보여집니다.
+                    </p>
+                    <p className="text-sm text-mainGray">
+                      &middot; 모집 완료 후, 1시간이 지나야 삭제가 가능합니다.
+                    </p>
+                  </div>
+                  {partyUser.map((user) => (
+                    <ParticipantUserItem
+                      key={user.handle}
+                      user={user}
+                      lastUser={partyUser.length === groupCount}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         );
@@ -68,9 +78,11 @@ function GroupCheckBox() {
         );
       case "안함":
         return (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <p className="font-semibold">그룹 찾기</p>
-            <p>그룹찾기를 통해 같이 게임 할 유저를 찾아보세요!</p>
+            <p className="text-sm text-mainGray">
+              그룹찾기를 통해 같이 게임 할 유저를 찾아보세요!
+            </p>
             {rejectedGroup && rejectedGroup.length > 0 && (
               <div>
                 <p>거절된 그룹</p>
