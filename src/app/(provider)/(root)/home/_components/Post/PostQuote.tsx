@@ -58,7 +58,7 @@ function PostQuote({ postId }: { postId?: string }) {
           <div>
             <p className="mt-[7px] mb-[6px] leading-snug">{quote.content}</p>
             {quote.images && (
-              <div className="flex w-full h-[300px] overflow-hidden bg-[#6C6C6C] rounded-2xl">
+              <div className="flex w-full h-[300px] overflow-hidden bg-subGray rounded-2xl">
                 <PostMedia jsons={quote.images} />
               </div>
             )}

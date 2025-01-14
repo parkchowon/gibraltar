@@ -3,7 +3,7 @@ import PostLoading from "./PostLoading";
 
 function TimeLineLoading() {
   return (
-    <div className="flex flex-col divide-y-[1px] divide-gray-300 bg-gray-200">
+    <div className="flex flex-col divide-y-[1px] divide-mainGray bg-subGray">
       <PostLoading />
       <PostLoading />
       <PostLoading />

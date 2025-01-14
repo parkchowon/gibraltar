@@ -105,7 +105,11 @@ function GroupPage() {
   return (
     <MainLayout>
       <GroupSearchBox />
-      {isPending && isLoading && <PostLoading />}
+      {isPending && isLoading && (
+        <div className="pt-4">
+          <PostLoading />
+        </div>
+      )}
       <div className="flex flex-col gap-3 py-10">
         {groups &&
           groups.pages.map((page) => {

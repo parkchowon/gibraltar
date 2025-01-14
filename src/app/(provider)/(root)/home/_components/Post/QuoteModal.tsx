@@ -197,7 +197,7 @@ function QuoteModal() {
             <button
               disabled={!quoteText.trim()}
               onClick={handleQuoteSubmit}
-              className="px-5 py-3 rounded-full ml-auto bg-gray-300 disabled:brightness-75"
+              className="px-5 py-3 rounded-full ml-auto bg-black text-white disabled:bg-mainGray"
             >
               게시하기
             </button>
