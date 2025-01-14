@@ -16,6 +16,14 @@ export const getNotification = async (
   }
 };
 
+export const updateNotification = async (userId: string) => {
+  try {
+    await apiClient.patch(`api/notification?user_id=${userId}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // export const createNotificationTagUser = async(handles: string[], userId: string)=>{
 //   try{
 //     const userIds = handles.map((handle)=>{

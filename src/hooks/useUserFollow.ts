@@ -15,6 +15,7 @@ export const useFollow = () => {
     onMutate: async (newState) => {
       const prevProfileData = queryClient.getQueryData(["profileData"]);
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      const followCheck = queryClient.getQueryData(["followCheck"]);
       const prevRecommendedUsers = queryClient.getQueryData([
         "recommendedUsers",
       ]);
@@ -23,6 +24,7 @@ export const useFollow = () => {
       await queryClient.cancelQueries({ queryKey: ["profileData"] });
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
       await queryClient.cancelQueries({ queryKey: ["recommendedUsers"] });
+      await queryClient.cancelQueries({ queryKey: ["followCheck"] });
 
       // 미리 UI 적용
       if (prevProfileData) {
@@ -36,6 +38,11 @@ export const useFollow = () => {
           ...prevTimeline,
         });
       }
+      if (followCheck) {
+        queryClient.setQueryData(["followCheck"], {
+          ...followCheck,
+        });
+      }
       if (prevRecommendedUsers) {
         queryClient.setQueryData(["recommendedUsers"], {
           ...prevRecommendedUsers,
@@ -43,7 +50,12 @@ export const useFollow = () => {
         });
       }
       // 에러나면 이전 것을..
-      return { prevProfileData, prevTimeline, prevRecommendedUsers };
+      return {
+        prevProfileData,
+        prevTimeline,
+        followCheck,
+        prevRecommendedUsers,
+      };
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -51,6 +63,9 @@ export const useFollow = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["timelineData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["followCheck"],
       });
       queryClient.invalidateQueries({
         queryKey: ["recommendedUsers"],
@@ -64,6 +79,7 @@ export const useFollow = () => {
     onMutate: async (newState) => {
       const prevProfileData = queryClient.getQueryData(["profileData"]);
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      const followCheck = queryClient.getQueryData(["followCheck"]);
       const prevRecommendedUsers = queryClient.getQueryData([
         "recommendedUsers",
       ]);
@@ -72,6 +88,7 @@ export const useFollow = () => {
       await queryClient.cancelQueries({ queryKey: ["profileData"] });
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
       await queryClient.cancelQueries({ queryKey: ["recommendedUsers"] });
+      await queryClient.cancelQueries({ queryKey: ["followCheck"] });
 
       // 미리 UI 적용
       if (prevProfileData) {
@@ -85,6 +102,11 @@ export const useFollow = () => {
           ...prevTimeline,
         });
       }
+      if (followCheck) {
+        queryClient.setQueryData(["followCheck"], {
+          ...followCheck,
+        });
+      }
       if (prevRecommendedUsers) {
         queryClient.setQueryData(["recommendedUsers"], {
           ...prevRecommendedUsers,
@@ -93,7 +115,7 @@ export const useFollow = () => {
       }
 
       // 에러나면 이전 것을..
-      return { prevProfileData, prevTimeline };
+      return { prevProfileData, prevTimeline, followCheck };
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -101,6 +123,9 @@ export const useFollow = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["timelineData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["followCheck"],
       });
       queryClient.invalidateQueries({
         queryKey: ["recommendedUsers"],

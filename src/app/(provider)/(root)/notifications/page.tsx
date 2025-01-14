@@ -3,7 +3,7 @@ import MainLayout from "@/components/Layout/MainLayout";
 import RepostItem from "./_components/RepostItem";
 import FollowItem from "./_components/FollowItem";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getNotification } from "@/apis/notification.api";
+import { getNotification, updateNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
 import { NotificationType } from "@/types/notification.type";
@@ -57,6 +57,13 @@ function NotificationPage() {
     groupByType["like"],
     "related_post_id"
   ) as Record<string, NotificationType[]>;
+
+  // 알림 페이지에 들어왔을때 현재 불러온 알림들을 읽음 처리하는 로직직
+  useEffect(() => {
+    if (userData) {
+      updateNotification(userData.id);
+    }
+  }, []);
 
   // observer로 스크롤 감지
   useEffect(() => {

@@ -10,18 +10,21 @@ export const POST = async (request: NextRequest) => {
     await request.json();
 
   try {
-    const { data, error } = await supabase.from("notifications").insert({
-      reacted_user_id,
-      user_id,
-      type,
-      is_read: false,
-      mentioned_post_id,
-      related_post_id,
-    });
+    if (user_id !== reacted_user_id) {
+      const { data, error } = await supabase.from("notifications").insert({
+        reacted_user_id,
+        user_id,
+        type,
+        is_read: false,
+        mentioned_post_id,
+        related_post_id,
+      });
 
-    if (error) throw new Error(error.message);
+      if (error) throw new Error(error.message);
 
-    return NextResponse.json({ message: "알림 저장 성공" }, { status: 200 });
+      return NextResponse.json({ message: "알림 저장 성공" }, { status: 200 });
+    }
+    return NextResponse.json({ message: "자신의 포스트에는 알림 x" });
   } catch (error) {
     return NextResponse.json(
       { message: "알림 저장 중 서버오류로 실패", error },
@@ -43,6 +46,7 @@ export const GET = async (request: NextRequest) => {
         "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle), related_post:posts!notifications_related_post_id_fkey(content)"
       )
       .eq("user_id", userId)
+      .neq("reacted_user_id", userId)
       .order("created_at", { ascending: false })
       .limit(NOTIFICATION_SIZE);
     if (cursor) {
@@ -111,6 +115,31 @@ export const GET = async (request: NextRequest) => {
     });
 
     return NextResponse.json(combinedNoti);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "서버로 인한 오류", error },
+      { status: 500 }
+    );
+  }
+};
+
+export const PATCH = async (request: NextRequest) => {
+  const supabase = createClient();
+  const searchParams = request.nextUrl.searchParams;
+  const userId = searchParams.get("user_id") as string;
+
+  try {
+    const { data, error } = await supabase
+      .from("notifications")
+      .update({ is_read: true })
+      .eq("user_id", userId);
+
+    if (error) throw new Error(error.message);
+
+    return NextResponse.json(
+      { message: "알림 읽음 업데이트 성공", data },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       { message: "서버로 인한 오류", error },

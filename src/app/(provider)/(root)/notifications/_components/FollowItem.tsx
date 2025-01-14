@@ -4,27 +4,49 @@ import ProfileBtn from "../../../../../components/ProfileBtn";
 import { NotificationType } from "@/types/notification.type";
 import { useEffect, useState } from "react";
 import Check from "@/assets/icons/check.svg";
+import FollowItemLoading from "@/components/Loading/FollowItemLoading";
+import { useFollow } from "@/hooks/useUserFollow";
+import { useAuth } from "@/contexts/auth.context";
 
 function FollowItem({ notification }: { notification: NotificationType }) {
-  const { data, isPending } = useQuery({
+  const { user } = useAuth();
+  const { data, isPending, refetch } = useQuery({
     queryKey: ["followCheck", notification.id],
     queryFn: () =>
       checkFollow(notification.user_id, notification.reacted_user_id),
   });
 
+  const { followMutation, unFollowMutation } = useFollow();
+
   const [buttonText, setButtonText] = useState<string>("팔로우");
   useEffect(() => {
     setButtonText(data ? "팔로잉 중" : "팔로우");
   }, [data]);
-  if (isPending)
-    return (
-      <div className="flex items-center w-full px-[25px] py-[15px] gap-6"></div>
-    );
 
+  const handleFollowClick = () => {
+    if (user && notification.reacted_user) {
+      if (data) {
+        unFollowMutation.mutate({
+          userId: user.id,
+          followingId: notification.reacted_user?.handle,
+        });
+      } else {
+        followMutation.mutate({
+          userId: user.id,
+          followingId: notification.reacted_user?.handle,
+        });
+      }
+      refetch();
+    }
+  };
+
+  if (isPending) return <FollowItemLoading />;
   return (
     <div
       key={notification.id}
-      className="flex items-center w-full px-[25px] py-[15px] gap-6"
+      className={`flex items-center w-full px-[25px] py-[15px] gap-6 ${
+        notification.is_read ? "bg-white" : "bg-subGray"
+      }`}
     >
       <ProfileBtn
         handle={notification.reacted_user?.handle}
@@ -40,6 +62,7 @@ function FollowItem({ notification }: { notification: NotificationType }) {
       <button
         onMouseOver={() => setButtonText(data ? "언팔로우" : "팔로우")}
         onMouseLeave={() => setButtonText(data ? "팔로잉 중" : "팔로우")}
+        onClick={handleFollowClick}
         className={`flex items-center gap-2 text-center text-sm font-semibold px-4 py-2.5 ml-auto bg-subGray rounded-[10px] ${
           data ? "text-carrot" : "text-black"
         } ${

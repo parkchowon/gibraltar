@@ -7,10 +7,19 @@ export const POST = async (
 ) => {
   const supabase = createClient();
   const userId = params.userId;
-  const followingId = request.nextUrl.searchParams.get(
-    "following-id"
-  ) as string;
+  const IdORHandle = request.nextUrl.searchParams.get("following-id") as string;
   try {
+    const { data: followingIdData, error: handleError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("handle", IdORHandle)
+      .single();
+
+    if (handleError && handleError.code !== "PGRST116") {
+      throw new Error(handleError.message);
+    }
+    const followingId = followingIdData ? followingIdData.id : IdORHandle;
+
     const { data, error } = await supabase
       .from("followers")
       .insert({ follower_id: userId, following_id: followingId });
@@ -42,11 +51,20 @@ export const DELETE = async (
 ) => {
   const supabase = createClient();
   const userId = params.userId;
-  const followingId = request.nextUrl.searchParams.get(
-    "following-id"
-  ) as string;
+  const IdORHandle = request.nextUrl.searchParams.get("following-id") as string;
 
   try {
+    const { data: followingIdData, error: handleError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("handle", IdORHandle)
+      .single();
+
+    if (handleError && handleError.code !== "PGRST116") {
+      throw new Error(handleError.message);
+    }
+    const followingId = followingIdData ? followingIdData.id : IdORHandle;
+
     const { data, error } = await supabase
       .from("followers")
       .delete()

@@ -35,7 +35,9 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
     <div
       key={notification.id}
       onClick={handleNotiClick}
-      className="flex w-full px-[25px] py-[15px] gap-6 text-left cursor-pointer"
+      className={`flex w-full px-[25px] py-[15px] gap-6 text-left cursor-pointer ${
+        notification.is_read ? "bg-white" : "bg-subGray"
+      }`}
     >
       {reactionCount ? (
         <NotificationProfile
