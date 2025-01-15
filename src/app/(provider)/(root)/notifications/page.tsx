@@ -25,6 +25,7 @@ function NotificationPage() {
     isPending: isLoading,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
     fetchNextPage,
   } = useInfiniteQuery({
     queryKey: ["notificationList", userData?.id],
@@ -72,8 +73,9 @@ function NotificationPage() {
     const fetchNotification = async () => {
       if (notiCount) {
         try {
-          const result = await fetchNextPage();
+          const result = await refetch();
           console.log("패치 결과: ", result);
+          return result;
         } catch (error) {
           console.error(error);
         }
@@ -81,7 +83,7 @@ function NotificationPage() {
     };
 
     fetchNotification();
-  }, [notiCount, fetchNextPage, hasNextPage]);
+  }, [notiCount, refetch, hasNextPage]);
 
   // observer로 스크롤 감지
   useEffect(() => {

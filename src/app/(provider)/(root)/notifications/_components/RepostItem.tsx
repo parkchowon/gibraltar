@@ -4,6 +4,9 @@ import ProfileBtn from "@/components/ProfileBtn";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth.context";
 import NotificationProfile from "./NotificationProfile";
+import Repost from "@/assets/icons/post_repeat.svg";
+import Like from "@/assets/icons/post_heart.svg";
+
 type RepostItemProps = {
   notification: NotificationType;
   reactedUser?: {
@@ -54,14 +57,27 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
         />
       )}
       <div className="flex flex-col flex-grow gap-2.5">
-        <p className="text-base">
-          <span className="font-bold">
-            {nicknames ? nicknames : notification.reacted_user?.nickname}
-          </span>{" "}
-          님이 회원님의 포스트를
-          {notification.type === "repost" ? " 재게시 했습" : " 마음에 들어 합"}
-          니다.
-        </p>
+        <div className="flex items-center gap-2">
+          {notification.type === "repost" ? (
+            <Repost width={15} height={15} style={{ color: "#FC7B3D" }} />
+          ) : (
+            <Like
+              width={15}
+              height={15}
+              style={{ color: "#3E97B2", fill: "#3E97B2" }}
+            />
+          )}
+          <p className="text-base">
+            <span className="font-bold">
+              {nicknames ? nicknames : notification.reacted_user?.nickname}
+            </span>{" "}
+            님이 회원님의 포스트를
+            {notification.type === "repost"
+              ? " 재게시 했습"
+              : " 마음에 들어 합"}
+            니다.
+          </p>
+        </div>
         <p className=" line-clamp-2 text-gray-400">
           {notification.related_post?.content}
         </p>
