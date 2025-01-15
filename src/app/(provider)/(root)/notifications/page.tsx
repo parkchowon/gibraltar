@@ -13,9 +13,11 @@ import { groupBy } from "lodash";
 import { userDataReducer } from "@/utils/formatChange";
 import { NOTIFICATION_SIZE } from "@/constants/post";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
+import { useNotificationStore } from "@/stores/notification.store";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
+  const { notiCount, putNotiCount } = useNotificationStore();
   const loadMoreRef = useRef(null);
 
   const {
@@ -60,10 +62,26 @@ function NotificationPage() {
 
   // 알림 페이지에 들어왔을때 현재 불러온 알림들을 읽음 처리하는 로직직
   useEffect(() => {
+    putNotiCount(false);
     if (userData) {
       updateNotification(userData.id);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchNotification = async () => {
+      if (notiCount) {
+        try {
+          const result = await fetchNextPage();
+          console.log("패치 결과: ", result);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchNotification();
+  }, [notiCount, fetchNextPage, hasNextPage]);
 
   // observer로 스크롤 감지
   useEffect(() => {

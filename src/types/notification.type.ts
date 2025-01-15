@@ -20,3 +20,8 @@ export type NotificationType = {
   comment: PostType | null;
   quote: PostType | null;
 };
+
+export type NotiStoreProps = {
+  notiCount: boolean;
+  putNotiCount: (value: boolean) => void;
+};

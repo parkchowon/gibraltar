@@ -1,6 +1,7 @@
 "use client";
 import { SIDE_BAR } from "@/constants/sidebar";
 import { useAuth } from "@/contexts/auth.context";
+import { useNotificationStore } from "@/stores/notification.store";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -8,6 +9,7 @@ function SideBar() {
   const router = useRouter();
   const path = usePathname();
   const { userData } = useAuth();
+  const { notiCount } = useNotificationStore();
 
   const handleClick = (path: string) => {
     if (path === "/mypage") {
@@ -23,20 +25,24 @@ function SideBar() {
           <button
             key={item.id}
             onClick={() => handleClick(item.path)}
-            className="flex justify-left items-center w-full h-[58px] hover:bg-subGray hover:rounded-full"
+            className="relative flex justify-left items-center w-full h-[58px] hover:bg-subGray hover:rounded-full"
           >
-            <Image
-              width={24}
-              height={24}
-              alt="icon"
-              src={
-                path === item.path ||
-                (item.path === "/mypage" && path === `/${userData?.handle}`)
-                  ? item.icon.fill
-                  : item.icon.line
-              }
-              className="ml-5 mr-10"
-            />
+            <div className="relative w-6 h-6 ml-5 mr-10">
+              {item.name === "알림" && notiCount && (
+                <div className="absolute w-2 h-2 rounded-full bg-carrot right-0 z-10 border border-white"></div>
+              )}
+              <Image
+                fill
+                alt="icon"
+                src={
+                  path === item.path ||
+                  (item.path === "/mypage" && path === `/${userData?.handle}`)
+                    ? item.icon.fill
+                    : item.icon.line
+                }
+                className="absolute"
+              />
+            </div>
             <p
               className={`${path === item.path ? "font-extrabold" : ""} ${
                 item.path === "/mypage" && path === `/${userData?.handle}`
