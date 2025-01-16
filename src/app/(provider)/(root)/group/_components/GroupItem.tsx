@@ -27,7 +27,7 @@ function GroupItem({
   const deleteMutation = useGroupDeleteMutation();
 
   const [partiGroup, setPartiGroup] = useState<GroupItemType>();
-  const formattedUpdateAtString = group.update_at.replace("+00:00", "");
+  const formattedUpdateAtString = group.update_at?.replace("+00:00", "") || "";
   const updateTime = new Date(formattedUpdateAtString);
   const now = new Date();
   const deletableTime = new Date(now.getTime() - 5 * 60 * 1000);
@@ -76,7 +76,13 @@ function GroupItem({
       return confirm("이미 참가 중인 그룹이 있습니다.");
     }
     refetch();
-    return mutation.mutate({ groupId, userId, position: participantPos });
+
+    return mutation.mutate({
+      groupId,
+      userId,
+      groupOwnerId: group.user_id,
+      position: participantPos,
+    });
   };
 
   return (

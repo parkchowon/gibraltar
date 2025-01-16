@@ -19,7 +19,6 @@ export const useNotifications = () => {
             filter: `user_id=eq.${user.id}`,
           },
           (payload) => {
-            // TODO: 새 알림이 저장될 때, 바로 업데이트 하는 로직 작성하기
             putNotiCount(true);
             console.log(`${user.id}에게 반응함 : `, payload.new);
           }

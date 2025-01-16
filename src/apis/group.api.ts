@@ -40,12 +40,21 @@ export const getGroup = async (cursor: number) => {
 export const createParticipantGroup = async (
   groupId: string,
   userId: string,
+  groupOwnerId: string,
   position: string
 ) => {
   try {
     await apiClient.post(
       `api/group/${userId}?group_id=${groupId}&position=${position}`
     );
+
+    await apiClient.post("api/notification", {
+      reacted_user_id: userId,
+      type: "groupJoin",
+      user_id: groupOwnerId,
+      mentioned_post_id: null,
+      group_post_id: groupId,
+    });
   } catch (error) {
     console.error(error);
   }
@@ -64,12 +73,21 @@ export const getUserGroup = async (userId: string) => {
 export const updateParticipantGroup = async (
   userId: string,
   groupId: string,
+  groupOwnerId: string,
   status: string
 ) => {
   try {
     await apiClient.post(
       `api/group/${userId}/permission?group_id=${groupId}&status=${status}`
     );
+
+    await apiClient.post("api/notification", {
+      reacted_user_id: groupOwnerId,
+      type: "groupPermission",
+      user_id: userId,
+      mentioned_post_id: null,
+      group_post_id: groupId,
+    });
   } catch (error) {
     console.error(error);
   }

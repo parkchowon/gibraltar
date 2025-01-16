@@ -6,8 +6,14 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
 
-  const { reacted_user_id, type, user_id, mentioned_post_id, related_post_id } =
-    await request.json();
+  const {
+    reacted_user_id,
+    type,
+    user_id,
+    mentioned_post_id,
+    related_post_id,
+    group_post_id,
+  } = await request.json();
 
   try {
     if (user_id !== reacted_user_id) {
@@ -18,6 +24,7 @@ export const POST = async (request: NextRequest) => {
         is_read: false,
         mentioned_post_id,
         related_post_id,
+        group_post_id,
       });
 
       if (error) throw new Error(error.message);
@@ -43,7 +50,7 @@ export const GET = async (request: NextRequest) => {
     let notificationQuery = supabase
       .from("notifications")
       .select(
-        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle), related_post:posts!notifications_related_post_id_fkey(content)"
+        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle), related_post:posts!notifications_related_post_id_fkey(content), group(id, title, mode)"
       )
       .eq("user_id", userId)
       .neq("reacted_user_id", userId)

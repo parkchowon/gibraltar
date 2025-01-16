@@ -19,6 +19,11 @@ export type NotificationType = {
   } | null;
   comment: PostType | null;
   quote: PostType | null;
+  group: {
+    id: string;
+    title: string;
+    mode: string;
+  } | null;
 };
 
 export type NotiStoreProps = {

@@ -2,22 +2,28 @@
 import MainLayout from "@/components/Layout/MainLayout";
 import RepostItem from "./_components/RepostItem";
 import FollowItem from "./_components/FollowItem";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { getNotification, updateNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
 import { NotificationType } from "@/types/notification.type";
 import Post from "../home/_components/Post/Post";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { groupBy } from "lodash";
 import { userDataReducer } from "@/utils/formatChange";
 import { NOTIFICATION_SIZE } from "@/constants/post";
 import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 import { useNotificationStore } from "@/stores/notification.store";
+import GroupParticipantItem from "./_components/GroupParticipantItem";
+import GroupPermissionItem from "./_components/GroupPermissionItem";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
   const { notiCount, putNotiCount } = useNotificationStore();
+  // const [allNoti, setAllNoti] = useState<NotificationType[]>([]);
+  const [currentTime, setCurrentTime] = useState<string>(
+    new Date().toISOString()
+  );
   const loadMoreRef = useRef(null);
 
   const {
@@ -30,19 +36,31 @@ function NotificationPage() {
   } = useInfiniteQuery({
     queryKey: ["notificationList", userData?.id],
     queryFn: ({ pageParam }: { pageParam: string }) =>
-      getNotification(userData?.id, pageParam),
-    getNextPageParam: (lastPage) => {
+      getNotification(userData?.id, notiCount ? currentTime : pageParam),
+    getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.length < NOTIFICATION_SIZE) {
         return undefined;
       }
       return lastPage[lastPage.length - 1].created_at;
     },
-    initialPageParam: new Date().toISOString(),
+    initialPageParam: currentTime,
     enabled: !!userData,
   });
-  // 모든 알림 배열
-  const allNoti = data?.pages.flat() || [];
 
+  // 새로고침 누르면 리패치
+  const queryClient = useQueryClient();
+  const handleRefetch = async () => {
+    setCurrentTime(new Date().toISOString());
+    await queryClient.invalidateQueries({
+      queryKey: ["notificationList", userData?.id],
+      refetchType: "all",
+    });
+    await refetch();
+    putNotiCount(false);
+  };
+
+  // 모든 페이지의 알람 배열
+  const allNoti = data?.pages.flat() || [];
   // 타입별로 나눈 배열
   const groupByType = groupBy(allNoti, "type") as Record<
     string,
@@ -61,29 +79,12 @@ function NotificationPage() {
     "related_post_id"
   ) as Record<string, NotificationType[]>;
 
-  // 알림 페이지에 들어왔을때 현재 불러온 알림들을 읽음 처리하는 로직직
+  // 알림 페이지에 들어왔을때 현재 불러온 알림들을 읽음 처리하는 로직
   useEffect(() => {
-    putNotiCount(false);
     if (userData) {
       updateNotification(userData.id);
     }
   }, []);
-
-  useEffect(() => {
-    const fetchNotification = async () => {
-      if (notiCount) {
-        try {
-          const result = await refetch();
-          console.log("패치 결과: ", result);
-          return result;
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
-    fetchNotification();
-  }, [notiCount, refetch, hasNextPage]);
 
   // observer로 스크롤 감지
   useEffect(() => {
@@ -112,7 +113,7 @@ function NotificationPage() {
       case "repost":
         if (!noti.related_post_id) return;
         const postReposts = groupedReposts[noti.related_post_id];
-        if (postReposts.length > 1) {
+        if (postReposts && postReposts.length > 1) {
           if (
             postReposts[0].reacted_user?.nickname ===
             noti.reacted_user?.nickname
@@ -125,7 +126,7 @@ function NotificationPage() {
         return <RepostItem notification={noti} />;
       case "like":
         const postLikes = groupedLikes[noti.related_post_id || ""];
-        if (postLikes.length > 1) {
+        if (postLikes && postLikes.length > 1) {
           if (
             postLikes[0]?.reacted_user?.nickname === noti.reacted_user?.nickname
           ) {
@@ -145,7 +146,22 @@ function NotificationPage() {
         if (noti.quote && !noti.quote.is_deleted)
           return <Post post={noti.quote} />;
         else return;
-
+      case "groupJoin":
+        return (
+          <GroupParticipantItem
+            group={noti.group}
+            user={noti.reacted_user}
+            isRead={noti.is_read}
+          />
+        );
+      case "groupPermission":
+        return (
+          <GroupPermissionItem
+            group={noti.group}
+            user={noti.reacted_user}
+            isRead={noti.is_read}
+          />
+        );
       default:
         return <RepostItem notification={noti} />;
     }
@@ -160,6 +176,14 @@ function NotificationPage() {
 
   return (
     <MainLayout>
+      {notiCount && (
+        <button
+          onClick={handleRefetch}
+          className="w-full border-b h-12 border-mainGray bg-white z-20 hover:bg-subGray"
+        >
+          새로운 알림
+        </button>
+      )}
       <div className="w-full divide-y-[1px] divide-gray-300">
         {data &&
           data.pages &&

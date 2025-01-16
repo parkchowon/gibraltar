@@ -58,7 +58,6 @@ function FollowItem({ notification }: { notification: NotificationType }) {
         </span>{" "}
         님이 회원님을 팔로우하기 시작했습니다.
       </p>
-      {/* TODO: 팔로우 hook 가지고 와서 버튼 누르면 팔로우랑 언팔로우 되게 */}
       <button
         onMouseOver={() => setButtonText(data ? "언팔로우" : "팔로우")}
         onMouseLeave={() => setButtonText(data ? "팔로잉 중" : "팔로우")}

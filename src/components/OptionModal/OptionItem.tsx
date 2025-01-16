@@ -8,8 +8,6 @@ type ItemProps = {
 };
 
 function OptionItem({ text, post }: ItemProps) {
-  // TODO: 트윗 삭제, 유저 팔,언팔 하는 로직 넣기
-
   const mutation = usePostDeleteMutation();
 
   const handleOptionClick = (text: string) => {

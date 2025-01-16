@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Check from "@/assets/icons/check.svg";
 import { PLAY_POSITION } from "@/constants/profile";
 import Image from "next/image";
+import { useAuth } from "@/contexts/auth.context";
 
 function ParticipantUserItem({
   user,
@@ -23,7 +24,7 @@ function ParticipantUserItem({
   lastUser?: boolean;
 }) {
   const { group } = useGroupStore();
-
+  const { user: groupUser } = useAuth();
   const positionIcon = PLAY_POSITION.find(
     (pos) => pos.name === user.position
   )?.icon;
@@ -34,12 +35,14 @@ function ParticipantUserItem({
     mutationFn: ({
       userId,
       groupId,
+      groupOwnerId,
       status,
     }: {
       userId: string;
       groupId: string;
+      groupOwnerId: string;
       status: string;
-    }) => updateParticipantGroup(userId, groupId, status),
+    }) => updateParticipantGroup(userId, groupId, groupOwnerId, status),
   });
 
   const updateGroupStatusMutation = useMutation({
@@ -51,6 +54,7 @@ function ParticipantUserItem({
     updatePartyMutation.mutate({
       userId: user.id,
       groupId: group.id,
+      groupOwnerId: groupUser?.id ?? "",
       status: status,
     });
     if (status === "승인" && lastUser) {

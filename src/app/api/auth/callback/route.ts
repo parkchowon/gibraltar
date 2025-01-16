@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const LOGIN_KEY = "sb-zdumabzfaygdbxnucjib-auth-token";
 
-// TODO: 트위터로 로그인하고 돌아오면 auth/error 화면으로 돌아감..
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const supabase = createClient();

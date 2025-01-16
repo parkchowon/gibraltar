@@ -13,7 +13,6 @@ function ProfileSettingContainer({
   sub,
   children,
 }: PropsWithChildren<ProfileSettingProps>) {
-  // TODO: css %로 바꿔서 크기 맞추기
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const handleXClick = () => {
     setIsModalOpen(true);

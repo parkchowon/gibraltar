@@ -62,12 +62,14 @@ export const useParticipantCreateMutation = () => {
     mutationFn: ({
       groupId,
       userId,
+      groupOwnerId,
       position,
     }: {
       groupId: string;
       userId: string;
+      groupOwnerId: string;
       position: string;
-    }) => createParticipantGroup(groupId, userId, position),
+    }) => createParticipantGroup(groupId, userId, groupOwnerId, position),
     onMutate: async (newState) => {
       await queryClient.cancelQueries({ queryKey: ["groupStatus"] });
       const prevGroupList = queryClient.getQueryData<GroupStatusType>([
