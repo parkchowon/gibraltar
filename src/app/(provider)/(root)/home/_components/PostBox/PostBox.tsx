@@ -134,9 +134,11 @@ function PostBox() {
       }
     }
 
+    const lastWord = e.currentTarget.value.trim().split(" ").pop();
     const lastChar = e.currentTarget.value.slice(-1);
+
     // text의 맨 끝에 @이가 오면
-    if (lastChar === "@") {
+    if (lastChar === "@" || (lastWord?.charAt(0) === "@" && lastChar !== " ")) {
       // 1.userTag리스트를 보여주는 tag의 top 위치를 정함
       if (postBoxRef.current && tagBoxRef.current) {
         const postBox = postBoxRef.current.getBoundingClientRect();
@@ -150,13 +152,14 @@ function PostBox() {
     // userTag를 검색할 때
     if (isActiveUserTag) {
       if (handleSearchInvalidCheck(lastChar)) {
-        setUserTag(userTag + lastChar);
+        setUserTag(lastWord?.substring(1) || "");
       } else {
-        setUserTag("");
         setIsActiveUserTag(false);
+        setUserTag("");
         setSelectedUser(0);
       }
     }
+
     setText(e.target.value);
   };
 
