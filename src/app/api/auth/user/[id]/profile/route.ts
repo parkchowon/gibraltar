@@ -62,15 +62,6 @@ export const POST = async (request: NextRequest) => {
       if (timeResult.error) throw new Error(timeResult.error.message);
     }
 
-    // session에 cookie 저장
-    const expires = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000); // 100일 후
-    cookies().set("hasProfileSetting", "true", {
-      expires,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
-
     return NextResponse.json({ message: "프로필 저장 성공" }, { status: 200 });
   } catch (error) {
     return NextResponse.json(

@@ -69,6 +69,7 @@ export const POST = async (request: NextRequest) => {
     if (timeError) throw new Error(timeError.message);
     if (followError) throw new Error(followError.message);
 
+    console.log(followResult, sameModePlayer);
     // 추천 유저 알고리즘
     const calculateScore = (userId: string) => {
       let score = 0;
@@ -102,11 +103,9 @@ export const POST = async (request: NextRequest) => {
     const scoredUsers = sameModePlayer.map((userId) => ({
       user: userResult?.find((user) => user.id === userId) ?? null,
       isFollowing:
-        followResult?.length !== 0
-          ? !!followResult?.find((follow) => {
-              follow.follower_id === userId;
-            })?.id
-          : false,
+        followResult &&
+        followResult.length > 0 &&
+        followResult.some((follow) => follow.following_id == userId),
       score: calculateScore(userId),
     }));
 

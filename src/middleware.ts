@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateSession } from "./supabase/middleware";
 
+// env.로
 const LOGIN_KEY = "sb-zdumabzfaygdbxnucjib-auth-token";
 
 export async function middleware(request: NextRequest) {
@@ -15,12 +16,6 @@ export async function middleware(request: NextRequest) {
       url.pathname = "/login";
       return NextResponse.redirect(url);
     } else {
-      if (!request.cookies.get("hasProfileSetting")) {
-        return NextResponse.redirect(
-          new URL("/profile-setting?step=1", request.url)
-        );
-      }
-
       url.pathname = "/home";
       return NextResponse.redirect(url);
     }

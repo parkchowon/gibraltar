@@ -1,4 +1,6 @@
 import { addFollow, deleteFollow } from "@/apis/follow.api";
+import { PostsType } from "@/types/home.type";
+import { FollowType, RecommendedUserType } from "@/types/profile.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type followMutateType = {
@@ -13,42 +15,53 @@ export const useFollow = () => {
     mutationFn: ({ userId, followingId }: followMutateType) =>
       addFollow(userId, followingId),
     onMutate: async (newState) => {
-      const prevProfileData = queryClient.getQueryData(["profileData"]);
-      const prevTimeline = queryClient.getQueryData(["timelineData"]);
-      const followCheck = queryClient.getQueryData(["followCheck"]);
-      const prevRecommendedUsers = queryClient.getQueryData([
-        "recommendedUsers",
-      ]);
-
       // overwrite 방지를 위해 취소시킴
       await queryClient.cancelQueries({ queryKey: ["profileData"] });
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
       await queryClient.cancelQueries({ queryKey: ["recommendedUsers"] });
       await queryClient.cancelQueries({ queryKey: ["followCheck"] });
 
-      // 미리 UI 적용
-      if (prevProfileData) {
-        queryClient.setQueryData(["profileData"], {
-          ...prevProfileData,
-          followerList: newState,
-        });
-      }
-      if (prevTimeline) {
-        queryClient.setQueryData(["timelineData"], {
-          ...prevTimeline,
-        });
-      }
-      if (followCheck) {
-        queryClient.setQueryData(["followCheck"], {
-          ...followCheck,
-        });
-      }
-      if (prevRecommendedUsers) {
-        queryClient.setQueryData(["recommendedUsers"], {
-          ...prevRecommendedUsers,
-          isFollowing: true,
-        });
-      }
+      // 이전 데이터를 저장장
+      const prevProfileData = queryClient.getQueryData(["profileData"]);
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      const followCheck = queryClient.getQueryData(["followCheck"]);
+      const prevRecommendedUsers = queryClient.getQueryData<
+        RecommendedUserType | undefined
+      >(["recommendedUsers"]);
+
+      //       // 미리 UI 적용
+      //       queryClient.setQueryData<{
+      //     followerList: FollowType;
+      //     profileUser: any;
+      //     postCount: any;
+      // } | undefined>(["profileData"], (old) => old ? ({
+      //         ...old,
+      //         followerList:{
+      //           ...old,
+
+      //         },
+      //       }): undefined);
+
+      queryClient.setQueryData<PostsType | undefined>(["timelineData"], (old) =>
+        old
+          ? {
+              ...old,
+              ...newState,
+            }
+          : undefined
+      );
+      queryClient.setQueryData<boolean>(["followCheck"], () => true);
+      queryClient.setQueryData<RecommendedUserType | undefined>(
+        ["recommendedUsers"],
+        (old) =>
+          old
+            ? old.map((user) =>
+                user.user.id === newState.followingId
+                  ? { ...user, isFollowing: true }
+                  : user
+              )
+            : undefined
+      );
       // 에러나면 이전 것을..
       return {
         prevProfileData,
@@ -77,42 +90,53 @@ export const useFollow = () => {
     mutationFn: ({ userId, followingId }: followMutateType) =>
       deleteFollow(userId, followingId),
     onMutate: async (newState) => {
-      const prevProfileData = queryClient.getQueryData(["profileData"]);
-      const prevTimeline = queryClient.getQueryData(["timelineData"]);
-      const followCheck = queryClient.getQueryData(["followCheck"]);
-      const prevRecommendedUsers = queryClient.getQueryData([
-        "recommendedUsers",
-      ]);
-
       // overwrite 방지를 위해 취소시킴
       await queryClient.cancelQueries({ queryKey: ["profileData"] });
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
       await queryClient.cancelQueries({ queryKey: ["recommendedUsers"] });
       await queryClient.cancelQueries({ queryKey: ["followCheck"] });
 
-      // 미리 UI 적용
-      if (prevProfileData) {
-        queryClient.setQueryData(["profileData"], {
-          ...prevProfileData,
-          followerList: newState,
-        });
-      }
-      if (prevTimeline) {
-        queryClient.setQueryData(["timelineData"], {
-          ...prevTimeline,
-        });
-      }
-      if (followCheck) {
-        queryClient.setQueryData(["followCheck"], {
-          ...followCheck,
-        });
-      }
-      if (prevRecommendedUsers) {
-        queryClient.setQueryData(["recommendedUsers"], {
-          ...prevRecommendedUsers,
-          isFollowing: false,
-        });
-      }
+      // 이전 데이터를 저장장
+      const prevProfileData = queryClient.getQueryData(["profileData"]);
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+      const followCheck = queryClient.getQueryData(["followCheck"]);
+      const prevRecommendedUsers = queryClient.getQueryData<
+        RecommendedUserType | undefined
+      >(["recommendedUsers"]);
+
+      //       // 미리 UI 적용
+      //       queryClient.setQueryData<{
+      //     followerList: FollowType;
+      //     profileUser: any;
+      //     postCount: any;
+      // } | undefined>(["profileData"], (old) => old ? ({
+      //         ...old,
+      //         followerList:{
+      //           ...old,
+
+      //         },
+      //       }): undefined);
+
+      queryClient.setQueryData<PostsType | undefined>(["timelineData"], (old) =>
+        old
+          ? {
+              ...old,
+              ...newState,
+            }
+          : undefined
+      );
+      queryClient.setQueryData<boolean>(["followCheck"], () => true);
+      queryClient.setQueryData<RecommendedUserType | undefined>(
+        ["recommendedUsers"],
+        (old) =>
+          old
+            ? old.map((user) =>
+                user.user.id === newState.followingId
+                  ? { ...user, isFollowing: false }
+                  : user
+              )
+            : undefined
+      );
 
       // 에러나면 이전 것을..
       return { prevProfileData, prevTimeline, followCheck };

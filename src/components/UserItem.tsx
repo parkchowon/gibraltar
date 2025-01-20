@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { checkFollow } from "@/apis/follow.api";
 import { useAuth } from "@/contexts/auth.context";
 import { useUserTagStore } from "@/stores/userTag.store";
+import { useFollow } from "@/hooks/useUserFollow";
 
 function UserItem({
   user,
@@ -20,6 +21,7 @@ function UserItem({
   const { userData } = useAuth();
   const [btnText, setBtnText] = useState<string>("팔로우");
 
+  const { followMutation, unFollowMutation } = useFollow();
   const { setSelectedHandle, selectedUser, setSelectedUser } =
     useUserTagStore();
   const { data, isPending } = useQuery({
@@ -41,6 +43,23 @@ function UserItem({
       setSelectedHandle(user.handle);
     } else {
       router.push(`/${user.handle}`);
+    }
+  };
+
+  // 팔로우/언팔로우 로직
+  const handleFollowClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (data) {
+      unFollowMutation.mutate({
+        userId: userData?.id || "",
+        followingId: user.id,
+      });
+    } else {
+      followMutation.mutate({
+        userId: userData?.id || "",
+        followingId: user.id,
+      });
     }
   };
 
@@ -73,6 +92,7 @@ function UserItem({
       <button
         onMouseOver={() => setBtnText(data ? "언팔로우" : "팔로우")}
         onMouseLeave={() => setBtnText(data ? "팔로잉" : "팔로우")}
+        onClick={handleFollowClick}
         className={`${
           tag && "hidden"
         } px-6 py-2.5 text-sm ml-auto rounded-full flex-shrink-0 ${
@@ -81,7 +101,7 @@ function UserItem({
             : "bg-gray-300 hover:brightness-95"
         } `}
       >
-        {btnText}
+        {isPending ? "로딩 중" : btnText}
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ import ArrowBtn from "@/assets/icons/arrow_head.svg";
 import { useAuth } from "@/contexts/auth.context";
 import { useProfileStore } from "@/stores/profile.store";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NextStepButton from "../NextStepButton";
 import ProfileSettingContainer from "../ProfileSettingContainer";
 import SearchingPage from "../SearchingPage";
@@ -37,8 +37,12 @@ function FollowUser() {
 
   const { followMutation, unFollowMutation } = useFollow();
 
-  const { isPending, data: FollowingList } = useQuery({
-    queryKey: ["recommendedUsers"],
+  const {
+    isPending,
+    data: FollowingList,
+    refetch,
+  } = useQuery({
+    queryKey: ["recommendedUsers", userData?.id],
     queryFn: () => {
       if (userData) {
         return getRecommendedUsers(profile);
@@ -56,24 +60,33 @@ function FollowUser() {
     }
   };
 
+  useEffect(() => {
+    console.log(FollowingList);
+  }, [FollowingList]);
+
   // 팔로우, 언팔로우 버튼
-  const handleFollowClick = (idx: number) => {
+  const handleFollowClick = async (
+    idx: number,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     if (FollowingList && userData && FollowingList[idx].user) {
       if (FollowingList[idx].isFollowing) {
-        return unFollowMutation.mutate({
+        await unFollowMutation.mutateAsync({
           userId: userData.id,
           followingId: FollowingList[idx].user.id,
         });
       } else {
-        return followMutation.mutate({
+        await followMutation.mutateAsync({
           userId: userData.id,
           followingId: FollowingList[idx].user.id,
         });
       }
+      refetch();
     }
   };
 
-  if (isPending && !FollowingList) {
+  if (isPending || !FollowingList) {
     return <SearchingPage />;
   }
 
@@ -172,7 +185,7 @@ function FollowUser() {
                       </p>
                     ) : null}
                     <button
-                      onClick={() => handleFollowClick(idx)}
+                      onClick={(e) => handleFollowClick(idx, e)}
                       className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
                     >
                       {follow.isFollowing ? "언팔로우" : "팔로우"}
