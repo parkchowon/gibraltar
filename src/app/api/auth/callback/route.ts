@@ -4,8 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 const LOGIN_KEY = "sb-zdumabzfaygdbxnucjib-auth-token";
 
 export async function GET(request: NextRequest) {
-  const url = new URL(request.url);
   const supabase = createClient();
+
+  const url = new URL(request.url);
   const searchParams = url.searchParams;
   const origin = url.origin;
   const code = searchParams.get("code");
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
           console.error(profileError);
           return NextResponse.redirect(`${origin}/auth/error`);
         }
-        const redirectUrl = data !== null ? "/home" : "/profile-setting?step=1";
+        const redirectUrl = data ? "/home" : "/profile-setting?step=1";
         return NextResponse.redirect(`${origin}${redirectUrl}`);
       }
     } catch (e) {

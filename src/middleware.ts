@@ -8,37 +8,25 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/") {
-    if (
-      !request.cookies.get(`${LOGIN_KEY}.1`) &&
-      !request.cookies.get(`${LOGIN_KEY}.0`)
-    ) {
+  const isLoggedIn =
+    request.cookies.get(`${LOGIN_KEY}.1`) ||
+    request.cookies.get(`${LOGIN_KEY}.0`);
+
+  if (!isLoggedIn) {
+    if (pathname !== "/login") {
       url.pathname = "/login";
       return NextResponse.redirect(url);
-    } else {
+    }
+    return NextResponse.next();
+  } else {
+    if (pathname === "/") {
       url.pathname = "/home";
       return NextResponse.redirect(url);
     }
-  }
-
-  if (pathname === "/login") {
-    if (
-      request.cookies.get(`${LOGIN_KEY}.1`) &&
-      request.cookies.get(`${LOGIN_KEY}.0`)
-    ) {
-      url.pathname = "/";
+    if (pathname === "/login") {
+      url.pathname = "/home";
       return NextResponse.redirect(url);
     }
-    return;
-  }
-
-  if (
-    pathname === "/home" &&
-    !request.cookies.get(`${LOGIN_KEY}.1`) &&
-    !request.cookies.get(`${LOGIN_KEY}.0`)
-  ) {
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
   }
 
   return await updateSession(request);

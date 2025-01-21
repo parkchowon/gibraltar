@@ -45,6 +45,8 @@ function BackArrowBtn({
           return setTitle("오버워치 정보");
         case "/group":
           return setTitle("그룹찾기");
+        case "/setting":
+          return setTitle("설정");
         default:
           return setTitle("뒤로가기");
       }

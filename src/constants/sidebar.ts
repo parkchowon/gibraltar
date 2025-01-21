@@ -53,4 +53,13 @@ export const SIDE_BAR = [
       fill: "/icons/mypage_fill.svg",
     },
   },
+  {
+    id: 7,
+    name: "더보기",
+    path: "/setting",
+    icon: {
+      line: "/icons/more_option_dot.svg",
+      fill: "/icons/more_option_dot.svg",
+    },
+  },
 ];

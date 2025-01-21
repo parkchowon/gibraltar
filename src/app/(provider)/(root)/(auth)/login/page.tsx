@@ -3,9 +3,12 @@ import supabase from "@/supabase/client";
 import { Provider } from "@supabase/supabase-js";
 import Logo from "@/assets/logo/gibraltar_logo.svg";
 import LetterLogo from "@/assets/logo/gibraltar_letter.svg";
+import { useEffect } from "react";
+import { useAuth } from "@/contexts/auth.context";
 
 function LoginPage() {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+  const { user } = useAuth();
 
   const handleSocialLogin = async (provider: Provider) => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -19,6 +22,12 @@ function LoginPage() {
       console.error("소셜로그인 에러 : ", error);
     }
   };
+
+  // useEffect(() => {
+  //   if (user?.id) {
+  //     window.location.reload();
+  //   }
+  // }, [user]);
 
   return (
     <main className="flex h-screen w-full justify-center items-center">

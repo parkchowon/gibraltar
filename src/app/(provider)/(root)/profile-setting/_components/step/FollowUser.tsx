@@ -16,7 +16,6 @@ import LogoLoading from "@/components/Loading/LogoLoading";
 function FollowUser() {
   const [cardIndex, setCardIndex] = useState<number>(0);
 
-  // TODO : 팔로우 버튼 누를때 오류나는거 고쳐야됨
   const { userData } = useAuth();
   const { bio, favoriteTeam, playChamps, playStyle, nickname } =
     useProfileStore();

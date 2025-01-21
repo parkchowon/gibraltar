@@ -27,7 +27,12 @@ function SideBar() {
             onClick={() => handleClick(item.path)}
             className="relative flex justify-left items-center w-full h-[58px] hover:bg-subGray hover:rounded-full"
           >
-            <div className="relative w-6 h-6 ml-5 mr-10">
+            <div
+              className={`relative w-6 h-6 ml-5 mr-10 ${
+                item.name === "더보기" &&
+                "border-2 border-black rounded-full rotate-90"
+              }`}
+            >
               {item.name === "알림" && notiCount && (
                 <div className="absolute w-2 h-2 rounded-full bg-carrot right-0 z-10 border border-white"></div>
               )}
@@ -40,7 +45,7 @@ function SideBar() {
                     ? item.icon.fill
                     : item.icon.line
                 }
-                className="absolute"
+                className={`absolute ${item.name === "더보기" && "p-[2px]"}`}
               />
             </div>
             <p
