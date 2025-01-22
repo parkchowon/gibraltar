@@ -74,3 +74,12 @@ export const userStatusUpdate = async (userId: string, status: string) => {
     console.error(error);
   }
 };
+
+// 회원탈퇴
+export const deleteUser = async () => {
+  try {
+    const response = await apiClient.delete(`api/auth/user/delete`);
+  } catch (error) {
+    console.error(error);
+  }
+};

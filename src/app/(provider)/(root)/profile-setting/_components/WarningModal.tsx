@@ -1,4 +1,3 @@
-import { insertProfileSetting } from "@/apis/profile.api";
 import { useAuth } from "@/contexts/auth.context";
 import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
 import { useProfileStore } from "@/stores/profile.store";

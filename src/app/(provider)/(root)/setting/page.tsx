@@ -1,9 +1,12 @@
 "use client";
 import MainLayout from "@/components/Layout/MainLayout";
 import supabase from "@/supabase/client";
-import React from "react";
+import React, { useState } from "react";
+import DeleteModal from "./_components/DeleteModal";
 
 function SettingPage() {
+  const [isModalClick, setIsModalClick] = useState<boolean>(false);
+
   const handleReportClick = () => {};
 
   const handleLogoutClick = async () => {
@@ -15,20 +18,23 @@ function SettingPage() {
     }
   };
 
-  const handleDeleteAccountClick = () => {};
+  const handleDeleteAccountClick = () => {
+    setIsModalClick(true);
+  };
 
   return (
     <MainLayout>
+      {isModalClick && <DeleteModal setState={setIsModalClick} />}
       <div className="flex flex-col items-center justify-center w-full divide-y-[1px]">
         <button
           onClick={handleReportClick}
-          className="w-full text-center py-4 font-bold hover:bg-subGray"
+          className="w-full text-center py-4 hover:bg-subGray"
         >
           불편사항 신고
         </button>
         <button
           onClick={handleLogoutClick}
-          className="w-full text-center py-4 font-bold hover:bg-subGray"
+          className="w-full text-center py-4 hover:bg-subGray"
         >
           로그아웃
         </button>
