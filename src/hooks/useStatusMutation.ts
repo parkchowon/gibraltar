@@ -1,4 +1,5 @@
 import { userStatusUpdate } from "@/apis/auth.api";
+import { SideProfileType } from "@/types/status.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useStatusMutation = (userId: string) => {
@@ -6,18 +7,22 @@ export const useStatusMutation = (userId: string) => {
 
   return useMutation({
     mutationFn: (status: string) => userStatusUpdate(userId, status),
-    onMutate: async (newStatus: string) => {
-      const prevSideUserData = queryClient.getQueryData(["sideProfileData"]);
-      const prevProfileData = queryClient.getQueryData(["profileData"]);
-
+    onMutate: async (newStatus) => {
       await queryClient.cancelQueries({ queryKey: ["sideProfileData"] });
       await queryClient.cancelQueries({ queryKey: ["profileData"] });
 
+      const prevSideUserData = queryClient.getQueryData(["sideProfileData"]);
+      const prevProfileData = queryClient.getQueryData(["profileData"]);
+
       if (prevSideUserData) {
-        queryClient.setQueryData(["sideProfileData"], {
-          ...prevSideUserData,
-          status: newStatus,
-        });
+        queryClient.setQueryData<SideProfileType>(["sideProfileData"], (old) =>
+          old
+            ? {
+                ...old,
+                status: newStatus,
+              }
+            : undefined
+        );
       }
 
       if (prevProfileData) {

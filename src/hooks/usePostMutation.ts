@@ -15,6 +15,7 @@ import {
   RepostFnType,
 } from "@/types/home.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 // post 리포스트 mutation
 export const useRepostMutation = () => {
@@ -94,6 +95,12 @@ export const useCommentMutation = () => {
         queryKey: ["timelineData"],
       });
     },
+    onSuccess: () => {
+      toast.success("댓글이 등록되었습니다.");
+    },
+    onError: () => {
+      toast.error("댓글 등록 중 에러 발생. 다시 시도해주세요.");
+    },
   });
 };
 
@@ -132,6 +139,12 @@ export const useQuoteMutation = () => {
         queryKey: ["timelineData"],
       });
     },
+    onSuccess: () => {
+      toast.success("인용이 등록되었습니다.");
+    },
+    onError: () => {
+      toast.error("인용 등록 중 에러 발생. 다시 시도해주세요.");
+    },
   });
 };
 
@@ -163,6 +176,12 @@ export const usePostCreateMutation = () => {
         queryKey: ["timelineData"],
       });
     },
+    onSuccess: () => {
+      toast.success("게시글이 등록되었습니다.");
+    },
+    onError: () => {
+      toast.error("게시글 등록 중 에러 발생. 다시 시도해주세요.");
+    },
   });
 };
 
@@ -186,6 +205,12 @@ export const usePostDeleteMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["timelineData"],
       });
+    },
+    onSuccess: () => {
+      toast.success("게시글이 삭제되었습니다.");
+    },
+    onError: () => {
+      toast.error("게시글 삭제 도중 에러가 발생하였습니다. 다시 시도해주세요.");
     },
   });
 };

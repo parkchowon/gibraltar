@@ -54,16 +54,18 @@ function SettingTeam() {
                   <li
                     key={team.id}
                     className={`flex px-[18px] py-5 hover:bg-mint bg-white ${
-                      idx === OWCSTeam.length - 1 ? "rounded-b-2xl" : ""
+                      idx === OWCSTeam.length - 1 ? "rounded-b-xl" : ""
                     }`}
                     onClick={() => handleClickTeam(team)}
                   >
-                    <div className={`relative w-[25px] h-[25px] mr-3`}>
+                    <div
+                      className={`relative w-[25px] h-[25px] aspect-square mr-3`}
+                    >
                       <Image
                         src={team.logo}
                         fill
                         alt="logo"
-                        className="absolute rounded-3xl"
+                        className="absolute rounded-3xl object-contain"
                       />
                     </div>
                     {team.name}
@@ -75,14 +77,14 @@ function SettingTeam() {
         </div>
         <div className="flex flex-col w-full items-center justify-center mt-[67px]">
           <div
-            className={`relative w-[190px] h-[190px] rounded-full -z-10 ${
+            className={`relative w-[190px] h-[190px] rounded-full aspect-square -z-10 ${
               team ? "" : "border border-black"
             }`}
           >
             <Image
               src={team ? `${team.logo}` : ""}
               fill
-              className="absolute aspect-square rounded-full -z-10"
+              className="absolute object-contain rounded-full -z-10"
               alt="logo"
             />
           </div>

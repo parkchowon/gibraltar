@@ -17,7 +17,7 @@ export const OWCSTeam = [
   {
     id: 3,
     name: "NEW ERA",
-    logo: "/icons/overwatch_2_icon.png",
+    logo: "/team/new_era_logo.webp",
   },
   {
     id: 4,
@@ -26,21 +26,26 @@ export const OWCSTeam = [
   },
   {
     id: 5,
+    name: "T1",
+    logo: "/team/T1_logo.svg",
+  },
+  {
+    id: 6,
     name: "Team Falcons",
     logo: "/team/TEAMFALCONS_logo.png",
   },
   {
-    id: 6,
+    id: 7,
     name: "Team WAY",
     logo: "/team/team_WAY_logo.webp",
   },
   {
-    id: 7,
+    id: 8,
     name: "VEC",
     logo: "/team/vec_logo.png",
   },
   {
-    id: 8,
+    id: 9,
     name: "ZETA DIVISION",
     logo: "/team/ZETADIVISION_logo.jpg",
   },

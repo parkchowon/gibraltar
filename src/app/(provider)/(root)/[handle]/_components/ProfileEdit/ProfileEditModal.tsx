@@ -26,6 +26,7 @@ import { useProfileStore } from "@/stores/profile.store";
 import { useRouter } from "next/navigation";
 import { useProfileUpdateMutation } from "@/hooks/userProfileMutation";
 import LogoLoading from "@/components/Loading/LogoLoading";
+import { toast } from "react-toastify";
 
 function ProfileEditModal({
   profileUser,
@@ -50,6 +51,7 @@ function ProfileEditModal({
       if (handle !== profileUser.handle) {
         router.push(`/@${handle}`);
       }
+      toast.success("프로필이 업데이트 되었습니다.");
     },
   });
 

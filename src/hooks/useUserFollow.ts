@@ -104,19 +104,6 @@ export const useFollow = () => {
         RecommendedUserType | undefined
       >(["recommendedUsers"]);
 
-      //       // 미리 UI 적용
-      //       queryClient.setQueryData<{
-      //     followerList: FollowType;
-      //     profileUser: any;
-      //     postCount: any;
-      // } | undefined>(["profileData"], (old) => old ? ({
-      //         ...old,
-      //         followerList:{
-      //           ...old,
-
-      //         },
-      //       }): undefined);
-
       queryClient.setQueryData<PostsType | undefined>(["timelineData"], (old) =>
         old
           ? {

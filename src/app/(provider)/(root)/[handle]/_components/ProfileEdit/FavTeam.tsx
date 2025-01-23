@@ -26,7 +26,7 @@ function FavTeam({ team }: { team: string | null }) {
             <button
               key={team.id}
               onClick={() => handleTeamClick(team.name)}
-              className={`relative w-14 h-14 rounded-full border-[1px] ${
+              className={`relative w-14 h-14 aspect-square rounded-full border-[1px] ${
                 favTeam === team.name && "border-mint border-2"
               }`}
             >
@@ -37,7 +37,7 @@ function FavTeam({ team }: { team: string | null }) {
                   alt="team logo"
                   src={team.logo}
                   fill
-                  className="absolute object-cover rounded-full"
+                  className="absolute object-contain rounded-full"
                 />
               )}
             </button>

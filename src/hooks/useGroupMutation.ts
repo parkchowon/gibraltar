@@ -5,6 +5,7 @@ import {
 } from "@/apis/group.api";
 import { GroupCreateType, GroupStatusType } from "@/types/group.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export const useGroupCreateMutation = (options?: {
   onSuccess?: () => void;
@@ -53,6 +54,12 @@ export const useGroupDeleteMutation = () => {
         queryKey: ["groupList"],
       });
     },
+    onSuccess: () => {
+      toast.success("그룹이 삭제되었습니다.");
+    },
+    onError: () => {
+      toast.error("그룹 삭제 중 에러 발생. 다시 시도해주세요.");
+    },
   });
 };
 
@@ -87,6 +94,12 @@ export const useParticipantCreateMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["groupStatus"],
       });
+    },
+    onSuccess: () => {
+      toast.success("그룹에 참가신청을 완료했습니다다.");
+    },
+    onError: () => {
+      toast.error("그룹 참가 중 에러 발생. 다시 시도해주세요.");
     },
   });
 };

@@ -296,3 +296,18 @@ export const fetchQuotePost = async (postId: string) => {
     console.error(error);
   }
 };
+
+export const reportPost = async (
+  postId: string,
+  userId: string,
+  reason: string
+) => {
+  try {
+    const response = await apiClient.post(
+      `api/post/user/${userId}/report?post_id=${postId}&reason=${reason}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

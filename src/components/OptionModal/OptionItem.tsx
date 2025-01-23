@@ -1,16 +1,21 @@
 import { usePostDeleteMutation } from "@/hooks/usePostMutation";
 import { deletePostType } from "@/types/home.type";
-import React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 type ItemProps = {
   text: string;
   post: deletePostType;
+  onClick?: () => void;
 };
 
-function OptionItem({ text, post }: ItemProps) {
+function OptionItem({ text, post, onClick }: ItemProps) {
   const mutation = usePostDeleteMutation();
 
-  const handleOptionClick = (text: string) => {
+  const handleOptionClick = (
+    text: string,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
     switch (text) {
       case "삭제하기":
         return mutation.mutate({
@@ -18,12 +23,13 @@ function OptionItem({ text, post }: ItemProps) {
           userId: post.userId,
         });
     }
+    if (onClick) onClick();
   };
 
   return (
     <button
-      onClick={() => handleOptionClick(text)}
-      className={`w-full text-center py-3 text-xs font-semibold ${
+      onClick={(e) => handleOptionClick(text, e)}
+      className={`w-full text-center py-3 text-xs font-semibold hover:bg-subGray ${
         text === "삭제하기" && "text-warning"
       }`}
     >

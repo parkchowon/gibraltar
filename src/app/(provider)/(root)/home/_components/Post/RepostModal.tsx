@@ -59,7 +59,7 @@ function RepostModal() {
     }
   };
 
-  return ReactDOM.createPortal(
+  return (
     <div
       onClick={() => setIsModalOpen("closed")}
       className={`fixed inset-0 w-screen h-full z-30`}
@@ -82,8 +82,7 @@ function RepostModal() {
           );
         })}
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
 

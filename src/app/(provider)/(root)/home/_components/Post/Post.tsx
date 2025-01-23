@@ -60,7 +60,8 @@ function Post({ post }: PostProps) {
   };
 
   // 포스트 클릭 시
-  const handlePostClick = () => {
+  const handlePostClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     router.push(`/${post.user?.handle}/post/${post.id}`);
   };
 
