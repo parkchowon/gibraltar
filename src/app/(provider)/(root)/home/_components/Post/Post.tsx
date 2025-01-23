@@ -122,8 +122,12 @@ function Post({ post }: PostProps) {
           />
           <div className="ml-6 w-full">
             <div className="flex items-center">
-              <p className="font-semibold">{post.user.nickname}</p>
-              <p className="ml-1.5 text-sm text-mainGray">{post.user.handle}</p>
+              <p className="font-semibold w-fit text-overflow whitespace-nowrap line-clamp-1">
+                {post.user.nickname}
+              </p>
+              <p className="ml-1.5 text-sm text-mainGray truncate">
+                {post.user.handle}
+              </p>
               <p className="text-sm text-mainGray ml-1.5">{postTime}</p>
               {optionClick && (
                 <OptionModal

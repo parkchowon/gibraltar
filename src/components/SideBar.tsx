@@ -19,22 +19,22 @@ function SideBar() {
   };
 
   return (
-    <aside className="flex flex-col w-full h-fit items-start">
+    <aside className="flex flex-col w-full h-fit items-center">
       {SIDE_BAR.map((item) => {
         return (
           <button
             key={item.id}
             onClick={() => handleClick(item.path)}
-            className="relative flex justify-left items-center w-full h-[58px] hover:bg-subGray hover:rounded-full"
+            className="relative flex justify-center lg:justify-start items-center w-[58px] lg:w-full h-[58px] hover:bg-subGray hover:rounded-full"
           >
             <div
-              className={`relative w-6 h-6 ml-5 mr-10 ${
+              className={`relative w-6 h-6 lg:ml-5 lg:mr-10 ${
                 item.name === "더보기" &&
                 "border-2 border-black rounded-full rotate-90"
               }`}
             >
               {item.name === "알림" && notiCount && (
-                <div className="absolute w-2 h-2 rounded-full bg-carrot right-0 z-10 border border-white"></div>
+                <div className="absolute w-2 h-2 rounded-full aspect-square bg-carrot right-0 z-10 border border-white"></div>
               )}
               <Image
                 fill
@@ -53,7 +53,7 @@ function SideBar() {
                 item.path === "/mypage" && path === `/${userData?.handle}`
                   ? "font-extrabold"
                   : ""
-              } text-sm text-left`}
+              } text-sm text-left hidden lg:block`}
             >
               {item.name}
             </p>
