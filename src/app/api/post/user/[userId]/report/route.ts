@@ -15,7 +15,11 @@ export const POST = async (
     console.log(userId, postId, reason);
     const { data, error } = await supabase
       .from("reports")
-      .insert({ user_id: userId, post_id: postId, reason: reason });
+      .insert({
+        user_id: userId,
+        post_id: postId === "" ? null : postId,
+        reason: reason,
+      });
     if (error) throw new Error(error.message);
     return NextResponse.json(
       { message: "신고 저장 완료", data },

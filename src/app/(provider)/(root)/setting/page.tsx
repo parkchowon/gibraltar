@@ -3,11 +3,11 @@ import MainLayout from "@/components/Layout/MainLayout";
 import supabase from "@/supabase/client";
 import React, { useState } from "react";
 import DeleteModal from "./_components/DeleteModal";
+import ReportBugModal from "./_components/ReportBugModal";
 
 function SettingPage() {
-  const [isModalClick, setIsModalClick] = useState<boolean>(false);
-
-  const handleReportClick = () => {};
+  const [isDeleteModalClick, setIsDeleteModalClick] = useState<boolean>(false);
+  const [isReportModalClick, setIsReportModalClick] = useState<boolean>(false);
 
   const handleLogoutClick = async () => {
     const { error } = await supabase.auth.signOut();
@@ -18,16 +18,15 @@ function SettingPage() {
     }
   };
 
-  const handleDeleteAccountClick = () => {
-    setIsModalClick(true);
-  };
-
   return (
     <MainLayout>
-      {isModalClick && <DeleteModal setState={setIsModalClick} />}
+      {isDeleteModalClick && <DeleteModal setState={setIsDeleteModalClick} />}
+      {isReportModalClick && (
+        <ReportBugModal onClick={() => setIsReportModalClick(false)} />
+      )}
       <div className="flex flex-col items-center justify-center w-full divide-y-[1px]">
         <button
-          onClick={handleReportClick}
+          onClick={() => setIsReportModalClick(true)}
           className="w-full text-center py-4 hover:bg-subGray"
         >
           불편사항 신고
@@ -39,7 +38,7 @@ function SettingPage() {
           로그아웃
         </button>
         <button
-          onClick={handleDeleteAccountClick}
+          onClick={() => setIsDeleteModalClick(true)}
           className="w-full text-center py-4 font-bold hover:bg-subGray text-warning"
         >
           회원탈퇴
