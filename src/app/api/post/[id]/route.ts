@@ -85,8 +85,9 @@ export const DELETE = async (
         (path) => path.split("/posts/")[1]
       );
       const results = await Promise.all(
-        paths.map((path) => {
-          supabase.storage.from("posts").remove([`${path}`]);
+        paths.map(async (path) => {
+          const { error } = await supabase.storage.from("posts").remove([path]);
+          if (error) throw new Error("스토리지에 사진 삭제 중 오류");
         })
       );
     }

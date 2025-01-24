@@ -45,7 +45,8 @@ export const POST = async (request: NextRequest) => {
 
     const { data, error } = await supabase
       .from("user_profiles")
-      .update({
+      .upsert({
+        user_id: userId,
         bio: bio,
         favorite_team: favoriteTeam,
         play_mode: playStyle?.mode,

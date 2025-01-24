@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateSession } from "./supabase/middleware";
 
-// env.로
-const LOGIN_KEY = "sb-zdumabzfaygdbxnucjib-auth-token";
-
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const { pathname } = request.nextUrl;
-
-  const isLoggedIn =
-    request.cookies.get(`${LOGIN_KEY}.1`) ||
-    request.cookies.get(`${LOGIN_KEY}.0`);
+  const cookies = request.cookies.getAll();
+  const isLoggedIn = cookies.some((cookie) => {
+    console.log(cookie.name);
+    return cookie.name.includes(`${process.env.NEXT_LOGIN_KEY}`);
+  });
 
   if (!isLoggedIn) {
     if (pathname !== "/login") {
@@ -27,6 +25,7 @@ export async function middleware(request: NextRequest) {
       url.pathname = "/home";
       return NextResponse.redirect(url);
     }
+    return NextResponse.next();
   }
 
   return await updateSession(request);

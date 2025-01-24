@@ -22,7 +22,7 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                   className="absolute object-cover"
                 />
               </div>
-              {tier.length === 0 ? (
+              {tier && tier.length === 0 ? (
                 <p className="text-sm">설정 안함</p>
               ) : (
                 <>

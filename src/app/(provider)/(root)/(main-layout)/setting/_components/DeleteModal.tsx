@@ -1,5 +1,7 @@
 import { deleteUser } from "@/apis/auth.api";
+import supabase from "@/supabase/client";
 import React, { Dispatch, SetStateAction } from "react";
+import { toast } from "react-toastify";
 
 function DeleteModal({
   setState,
@@ -8,6 +10,12 @@ function DeleteModal({
 }) {
   const handleDeleteUserClick = async () => {
     await deleteUser();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("로그아웃 실패. 다시 시도해주세요.");
+      throw new Error("로그아웃 실패");
+    }
+    window.location.reload();
   };
 
   return (

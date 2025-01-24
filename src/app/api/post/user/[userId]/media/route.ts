@@ -25,7 +25,7 @@ export const GET = async (
     const { data, error } = await supabase
       .from("posts")
       .select(
-        "*, user:users (id, nickname, profile_url, handle), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
+        "*, user:users (id, nickname, profile_url, handle, account_type), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (post_id, user_id)"
       )
       .eq("user_id", userId)
       .not("images", "is", null)

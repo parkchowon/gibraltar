@@ -7,35 +7,35 @@ function TimeBox({ time }: { time: string[] }) {
       <div className="flex justify-center">
         <div
           className={`w-[30px] h-[30px] rounded-full ${
-            time.includes("오전")
+            time && time.includes("오전")
               ? "bg-[#F2BB16]"
               : "shadow-inner shadow-gray-200"
           }`}
         />
         <div
           className={`w-[30px] h-[30px] rounded-full ${
-            time.includes("오후")
+            time && time.includes("오후")
               ? "bg-[#F39D36]"
               : "shadow-inner shadow-gray-200"
           }`}
         />
         <div
           className={`w-[30px] h-[30px] rounded-full ${
-            time.includes("저녁")
+            time && time.includes("저녁")
               ? "bg-[#F3732A]"
               : "shadow-inner shadow-gray-200"
           }`}
         />
         <div
           className={`w-[30px] h-[30px] rounded-full ${
-            time.includes("새벽")
+            time && time.includes("새벽")
               ? "bg-[#D95525]"
               : "shadow-inner shadow-gray-200"
           }`}
         />
       </div>
       <p className="font-bold text-sm">
-        {time.length ? time.join(" ") : "없음"}
+        {time && time.length ? time.join(" ") : "없음"}
       </p>
     </div>
   );

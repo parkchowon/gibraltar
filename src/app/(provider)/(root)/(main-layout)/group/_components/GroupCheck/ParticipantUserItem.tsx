@@ -99,7 +99,7 @@ function ParticipantUserItem({
           {user.status === "승인" ? (
             <button className="flex items-center gap-2 bg-carrot rounded-xl px-2 py-2">
               <p className="text-white text-sm">승인됨</p>
-              <Check color="#ffffff" />
+              <Check width={15} color="#ffffff" />
             </button>
           ) : (
             <>

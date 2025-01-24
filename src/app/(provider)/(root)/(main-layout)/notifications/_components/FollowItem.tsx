@@ -71,7 +71,7 @@ function FollowItem({ notification }: { notification: NotificationType }) {
         }`}
       >
         {buttonText}
-        {buttonText === "팔로잉 중" && data && <Check />}
+        {buttonText === "팔로잉 중" && data && <Check width={15} />}
       </button>
     </div>
   );

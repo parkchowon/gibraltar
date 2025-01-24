@@ -14,6 +14,7 @@ import PostQuote from "./PostQuote";
 import OptionDot from "@/assets/icons/more_option_dot.svg";
 import OptionModal from "../../../../../../../components/OptionModal/OptionModal";
 import PostTextHighlighted from "./PostTextHighlighted";
+import CheckIcon from "@/assets/icons/check.svg";
 
 type PostProps = {
   post: PostType;
@@ -125,6 +126,11 @@ function Post({ post }: PostProps) {
               <p className="font-semibold text-sm lg:text-base w-fit text-overflow whitespace-nowrap line-clamp-1">
                 {post.user.nickname}
               </p>
+              {post.user.account_type === "official" && (
+                <div className="flex items-center justify-center w-4 h-4 min-w-4 min-h-4 bg-mint rounded-full ml-1">
+                  <CheckIcon width={10} style={{ color: "white" }} />
+                </div>
+              )}
               <p className="ml-1.5 text-[12px] lg:text-sm text-mainGray truncate">
                 {post.user.handle}
               </p>

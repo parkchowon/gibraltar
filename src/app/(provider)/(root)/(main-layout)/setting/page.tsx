@@ -4,6 +4,7 @@ import supabase from "@/supabase/client";
 import React, { useState } from "react";
 import DeleteModal from "./_components/DeleteModal";
 import ReportBugModal from "./_components/ReportBugModal";
+import { toast } from "react-toastify";
 
 function SettingPage() {
   const [isDeleteModalClick, setIsDeleteModalClick] = useState<boolean>(false);
@@ -12,6 +13,7 @@ function SettingPage() {
   const handleLogoutClick = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
+      toast.error("로그아웃 실패. 다시 시도해주세요.");
       throw new Error("로그아웃 실패");
     } else {
       window.location.reload();

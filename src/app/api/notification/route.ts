@@ -1,6 +1,6 @@
-import { fetchPostDetail } from "@/apis/post.api";
 import { NOTIFICATION_SIZE } from "@/constants/post";
 import { createClient } from "@/supabase/server";
+import { PostType } from "@/types/database";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -50,7 +50,7 @@ export const GET = async (request: NextRequest) => {
     let notificationQuery = supabase
       .from("notifications")
       .select(
-        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle), related_post:posts!notifications_related_post_id_fkey(content), group(id, title, mode)"
+        "*,reacted_user:users!notifications_reacted_user_id_fkey(nickname, profile_url, handle, account_type), related_post:posts!notifications_related_post_id_fkey(content), group(id, title, mode)"
       )
       .eq("user_id", userId)
       .neq("reacted_user_id", userId)
@@ -85,7 +85,7 @@ export const GET = async (request: NextRequest) => {
       .filter((item) => item !== null);
 
     const commentResult = await Promise.all(
-      typeCommentIds.map(fetchPostDetail)
+      typeCommentIds.map((id) => fetchPostDetail(id))
     );
 
     const typeQuoteIds = noti
@@ -93,7 +93,9 @@ export const GET = async (request: NextRequest) => {
       .map((quote) => quote.mentioned_post_id)
       .filter((item) => item !== null);
 
-    const quoteResult = await Promise.all(typeQuoteIds.map(fetchPostDetail));
+    const quoteResult = await Promise.all(
+      typeQuoteIds.map((id) => fetchPostDetail(id))
+    );
 
     const combinedNoti = noti.map((noti) => {
       let comment = null;
@@ -199,5 +201,43 @@ export const DELETE = async (request: NextRequest) => {
       { message: "notification 테이블 삭제 중 서버 오류", error },
       { status: 500 }
     );
+  }
+};
+
+const fetchPostDetail = async (postId: string) => {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*, user:users (id, nickname, profile_url, handle, account_type), post_tags (tag: tags (tag_name)), reposts (reposted_by, is_quoted), likes (user_id)"
+      )
+      .eq("id", postId)
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    const { data: commentData, error: commentError } = await supabase
+      .from("posts")
+      .select("*")
+      .eq("parent_post_id", postId);
+
+    if (commentError) throw new Error(commentError.message);
+
+    const result = {
+      ...data,
+      isReposted: false,
+      reposted_by: "",
+      timeline_at: data ? data.created_at : "",
+      comments: commentData || [],
+    };
+
+    if (result) {
+      return result;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
   }
 };

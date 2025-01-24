@@ -24,7 +24,8 @@ function WarningModal({
         playChamps: playChamps.selectedChamps,
         favoriteTeam: favoriteTeam,
       };
-      mutation.mutate(profile);
+      console.log(profile);
+      await mutation.mutateAsync(profile);
       router.push("/home");
     }
   };
