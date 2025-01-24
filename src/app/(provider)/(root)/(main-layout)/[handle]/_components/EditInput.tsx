@@ -27,12 +27,12 @@ function EditInput({ label, value, onChange }: EditInputProps) {
 
   return (
     <label className="flex w-full px-4 py-3 border gap-8 border-mainGray rounded-2xl bg-subGray">
-      <p className="text-mainGray">{label}</p>
+      <p className="text-mainGray lg:text-base text-sm">{label}</p>
       <textarea
         maxLength={maxLength}
         value={value}
         onChange={onChange}
-        className={`text-black flex-grow resize-none outline-none bg-subGray ${
+        className={`text-black flex-grow resize-none outline-none bg-subGray lg:text-base text-sm ${
           label !== "바이오" ? "h-6" : "h-14"
         }`}
       />

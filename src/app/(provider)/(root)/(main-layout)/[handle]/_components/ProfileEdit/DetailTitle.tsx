@@ -15,7 +15,7 @@ function DetailTitle({
       onClick={() => onClick(type)}
       className="flex justify-between items-center w-full bg-subGray border border-mainGray rounded-full px-6 py-3"
     >
-      <p>{title}</p>
+      <p className="lg:text-base text-sm">{title}</p>
       <div className="w-fit h-fit rotate-90">
         <ArrowHead width={15} height={10} />
       </div>

@@ -94,7 +94,7 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onClick={handleEditClick}
-          className="ml-auto h-[35px] w-max-[150px] px-[15px] text-sm rounded-full bg-white border border-mainGray hover:brightness-95"
+          className="ml-auto h-[35px] w-max-[150px] px-3 lg:px-[15px] text-xs lg:text-sm truncate rounded-full bg-white border border-mainGray hover:brightness-95"
         >
           프로필 편집
         </button>
@@ -120,19 +120,19 @@ function ProfileBox({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex pt-[50px] pb-[5.5%] px-[70px] gap-14">
+    <div className="flex pt-10 px-1 gap-5 lg:pt-[50px] pb-[5.5%] lg:px-[70px] lg:gap-14">
       {editClick && profileUser && (
         <ProfileEditModal
           profileUser={profileUser}
           setEditClick={setEditClick}
         />
       )}
-      <div className="relative w-[120px] h-[120px] aspect-square">
+      <div className="relative w-14 h-14 lg:w-[120px] lg:h-[120px]">
         <Image
           alt="profile"
           fill
           src={profileUser ? profileUser.profile_url : ""}
-          className="absolute rounded-full object-cover"
+          className="absolute rounded-full object-contain aspect-square"
         />
       </div>
       <div className="flex flex-col flex-grow gap-5 justify-between">
@@ -147,7 +147,7 @@ function ProfileBox({ userId }: { userId: string }) {
           </div>
           {buttonRender()}
         </div>
-        <div className="flex gap-14 text-xs font-bold">
+        <div className="flex gap-5 lg:gap-14 text-xs font-bold">
           <p>포스트 {postCount}</p>
           <p>팔로워 {followings}</p>
           <p>팔로우 {followers.length}</p>

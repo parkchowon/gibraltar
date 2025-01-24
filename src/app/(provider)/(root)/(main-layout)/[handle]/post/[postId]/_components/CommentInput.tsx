@@ -153,18 +153,18 @@ function CommentInput({
 
   return (
     <form onSubmit={(e) => handleCommentSubmit(e)}>
-      <div className="relative flex w-full gap-[25px] px-6 py-[14px]">
+      <div className="relative flex w-full lg:gap-[25px] gap-4 px-2 lg:px-6 py-[14px]">
         {commentLoading && (
           <div className="absolute flex z-20 top-0 left-0 w-full h-full items-center justify-center bg-black/30">
             <LogoLoading />
           </div>
         )}
-        <div className="relative h-[46px] w-[46px]">
+        <div className="relative min-h-10 min-w-10 w-10 h-10 lg:h-[46px] lg:w-[46px]">
           <Image
             src={userData ? userData.profile_url : ""}
             alt="profile"
             fill
-            className="absolute rounded-full object-cover"
+            className="absolute rounded-full object-cover aspect-square"
           />
         </div>
         <div className="flex flex-col flex-grow">
@@ -172,7 +172,7 @@ function CommentInput({
             ref={textRef}
             value={comment}
             maxLength={MAX_POST_TEXT_LENGTH}
-            className="w-full h-auto overflow-hidden resize-none bg-transparent outline-none placeholder:text-mainGray"
+            className="w-full h-auto overflow-hidden lg:text-base text-sm resize-none bg-transparent outline-none placeholder:text-mainGray"
             placeholder="댓글을 입력해주세요."
             onInput={handleInputChange}
           ></textarea>
@@ -200,7 +200,7 @@ function CommentInput({
         </div>
         <button
           disabled={!comment.trim()}
-          className={`h-fit mt-auto px-6 py-2.5 bg-black text-white rounded-full disabled:bg-mainGray`}
+          className={`h-fit mt-auto px-3 py-1 lg:px-6 lg:py-2.5 text-xs truncate lg:text-base bg-black text-white rounded-full disabled:bg-mainGray`}
         >
           게시하기
         </button>

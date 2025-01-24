@@ -44,7 +44,7 @@ function FollowItem({ notification }: { notification: NotificationType }) {
   return (
     <div
       key={notification.id}
-      className={`flex items-center w-full px-[25px] py-[15px] gap-6 ${
+      className={`flex items-center w-full px-2 py-3 lg:px-[25px] lg:py-[15px] gap-6 ${
         notification.is_read ? "bg-white" : "bg-subGray"
       }`}
     >
@@ -52,7 +52,7 @@ function FollowItem({ notification }: { notification: NotificationType }) {
         handle={notification.reacted_user?.handle}
         profileUrl={notification.reacted_user?.profile_url || ""}
       />
-      <p>
+      <p className="text-sm lg:text-base">
         <span className="font-bold">
           {notification.reacted_user?.nickname || "undefined"}
         </span>{" "}
@@ -62,7 +62,7 @@ function FollowItem({ notification }: { notification: NotificationType }) {
         onMouseOver={() => setButtonText(data ? "언팔로우" : "팔로우")}
         onMouseLeave={() => setButtonText(data ? "팔로잉 중" : "팔로우")}
         onClick={handleFollowClick}
-        className={`flex items-center gap-2 text-center text-sm font-semibold px-4 py-2.5 ml-auto bg-subGray rounded-[10px] ${
+        className={`flex items-center gap-2 text-center text-xs lg:text-sm font-semibold px-3 lg:px-4 py-2.5 ml-auto truncate bg-subGray rounded-[10px] ${
           data ? "text-carrot" : "text-black"
         } ${
           !isPending && data

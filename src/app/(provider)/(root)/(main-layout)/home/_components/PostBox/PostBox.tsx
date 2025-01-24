@@ -236,7 +236,7 @@ function PostBox() {
     <form onSubmit={handleSubmit} className="flex flex-col w-full h-fit">
       <div
         ref={postBoxRef}
-        className="relative flex flex-col px-8 bg-subGray rounded-[30px] py-9 border border-mainGray"
+        className="relative flex flex-col px-8 bg-subGray lg:border lg:rounded-[30px] py-9 border-b border-mainGray"
       >
         {mutation.isPending && (
           <div className="absolute top-0 left-0 flex w-full h-full justify-center items-center rounded-[30px] bg-black/20">

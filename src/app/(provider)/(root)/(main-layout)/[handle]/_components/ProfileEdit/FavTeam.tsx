@@ -18,7 +18,7 @@ function FavTeam({ team }: { team: string | null }) {
   return (
     <div className="w-full flex flex-col">
       <div className="flex w-full rounded-full px-6 py-2 justify-center bg-mint text-white font-bold">
-        <p>{favTeam}</p>
+        <p className="lg:text-base text-xs">{favTeam}</p>
       </div>
       <div className="flex w-full justify-center gap-2 py-4">
         {OWCSTeam.map((team) => {

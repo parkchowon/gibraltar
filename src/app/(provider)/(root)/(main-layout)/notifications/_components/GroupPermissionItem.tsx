@@ -22,7 +22,7 @@ function GroupPermissionItem({
   return (
     <Link href="/group">
       <div
-        className={`flex items-center w-full px-[25px] py-[15px] gap-6 ${
+        className={`flex items-center w-full px-2 py-3 lg:px-[25px] lg:py-[15px] gap-6 ${
           isRead ? "bg-white" : "bg-subGray"
         }`}
       >
@@ -31,7 +31,7 @@ function GroupPermissionItem({
           handle={user?.handle}
           intent={"post"}
         />
-        <p>
+        <p className="text-sm lg:text-base">
           <span className="font-bold">{user?.nickname}</span>님이{" "}
           <span className="font-semibold">{group?.title}</span>에 참가를
           확인하였습니다.

@@ -55,7 +55,7 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
 
   return (
     <div className="flex flex-col w-full justify-center items-center gap-3">
-      <div className="grid grid-cols-3 w-full h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
+      <div className="grid grid-cols-3 w-full h-10 lg:h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
         {PLAY_POSITION.map((pos, idx) => {
           return (
             <button
@@ -63,7 +63,9 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
               onClick={() => handlePositionClick(idx)}
               className={`${
                 position === idx ? "bg-mint text-white" : "text-black"
-              } ${idx === 0 && "rounded-l-xl"} ${idx === 2 && "rounded-r-xl"}`}
+              } ${idx === 0 && "rounded-l-xl"} ${
+                idx === 2 && "rounded-r-xl"
+              } lg:text-base text-xs`}
             >
               {pos.name}
             </button>
@@ -71,7 +73,7 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
         })}
       </div>
       <div className="flex w-full h-fit justify-center items-center py-2 bg-mint text-white rounded-full">
-        <p className="font-semibold">
+        <p className="font-semibold text-xs lg:text-base">
           {userTier[position] ? userTier[position] : "설정 안함"}{" "}
           {tierGrade[position] && 6 - tierGrade[position]}
         </p>
@@ -82,7 +84,7 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
             <button
               onClick={() => handleTierClick(tier.tier)}
               key={tier.id}
-              className={`relative w-14 h-14 border rounded-full ${
+              className={`relative w-7 h-7 min-w-7 min-h-7 lg:w-14 lg:h-14 border rounded-full ${
                 userTier[position] === tier.tier ? "border-mint border-2" : ""
               }`}
             >
@@ -99,7 +101,9 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
       <div className="w-[80%] px-8 py-4 bg-gray-50 rounded-lg">
         <div className="flex w-full justify-between">
           {[...Array(5)].map((_, idx) => (
-            <p key={idx}>{5 - idx}</p>
+            <p key={idx} className="lg:text-base text-xs">
+              {5 - idx}
+            </p>
           ))}
         </div>
         <input

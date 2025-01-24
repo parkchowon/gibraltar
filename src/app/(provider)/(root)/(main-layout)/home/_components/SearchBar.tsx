@@ -19,10 +19,13 @@ function SearchBar({
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (searchText === "") {
+      return;
+    }
     if (tab) {
       return router.push(`/search?word=${searchText}&tab=${tab}`);
     }
-    router.push(`/search?word=${searchText}&tab=popular`);
+    router.push(`/search?word=${searchText}&tab=recent`);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +36,7 @@ function SearchBar({
   return (
     <form
       onSubmit={handleSearchSubmit}
-      className="flex w-full h-[58px] px-8 py-[15px] gap-3 rounded-full bg-subGray border border-mainGray"
+      className="flex w-full items-center h-12 lg:h-[58px] px-5 lg:px-8 py-2 lg:py-[15px] text-sm lg:text-base gap-3 rounded-full bg-subGray border border-mainGray"
     >
       <input
         value={searchText}
@@ -41,7 +44,10 @@ function SearchBar({
         className="flex-grow min-w-0 bg-inherit outline-none placeholder:text-mainGray"
         placeholder="검색어를 입력하세요"
       />
-      <button>
+      <button
+        type="submit"
+        className="w-7 h-7 flex items-center justify-center"
+      >
         <SearchIcon width="28" height="28" />
       </button>
     </form>

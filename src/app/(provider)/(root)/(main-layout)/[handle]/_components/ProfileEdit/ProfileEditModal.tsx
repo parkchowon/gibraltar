@@ -264,7 +264,7 @@ function ProfileEditModal({
         className="absolute w-full h-full inset-0 bg-black opacity-30"
       />
       <div
-        className={`relative w-[38.3%] h-[90%] max-h-[90%] pb-[30px] bg-white rounded-2xl`}
+        className={`relative w-[90%] lg:w-[38.3%] h-[90%] max-h-[90%] pb-[30px] bg-white rounded-2xl`}
       >
         {/* 홈으로 */}
         <BackArrowBtn
@@ -277,7 +277,7 @@ function ProfileEditModal({
           id="modal"
           className={`flex flex-col px-6 pl-[9.7%] mt-[73px] pr-[71px] h-[650px] ${styles.customModalScrollbar} overflow-y-auto`}
         >
-          <div className="flex justify-center items-center w-full py-10 gap-[46px]">
+          <div className="flex lg:flex-row flex-col justify-center items-center w-full py-10 gap-[46px]">
             {/* 프로필 사진 부분 */}
             <div className="relative w-fit h-fit flex items-center justify-center">
               <button
@@ -303,8 +303,8 @@ function ProfileEditModal({
             </div>
             {/* 닉네임, 아이디 수정 input 부분 */}
             <div className="flex flex-col flex-grow gap-3">
-              {/* 비공개 계정 설정 토글 버튼튼 */}
-              <div className="flex items-center justify-end px-2">
+              {/* 비공개 계정 설정 토글 버튼(비공개 기능 없음으로 hidden 처리) */}
+              <div className="hidden items-center justify-end px-2">
                 <p className="text-sm text-mainGray mr-2">계정 잠금</p>
                 <button
                   onClick={handlePrivateClick}

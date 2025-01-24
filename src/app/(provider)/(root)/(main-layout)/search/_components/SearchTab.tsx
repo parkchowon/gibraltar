@@ -14,7 +14,7 @@ import EmptyState from "@/components/EmptyState";
 import Post from "../../home/_components/Post/Post";
 
 const TAB = [
-  { name: "인기순", path: "popular" },
+  // { name: "인기순", path: "popular" },
   { name: "최신순", path: "recent" },
   { name: "사용자", path: "user" },
 ];
@@ -115,8 +115,25 @@ function SearchTab() {
       <div
         className={`flex flex-col h-fit divide-y-[1px] divide-mainGray bg-white`}
       >
-        {isPending && <PostLoading />}
-        {data && data.pages.flatMap((page) => page.length).length === 1 && (
+        {isPending ? (
+          <PostLoading />
+        ) : data && data.pages.flatMap((page) => page.length).length === 1 ? (
+          <EmptyState type="검색 결과" />
+        ) : (
+          data &&
+          (tabName === "user"
+            ? data.pages.map((page) => {
+                return (page as SearchUserType).map((user) => {
+                  return <UserItem key={user.id} user={user} />;
+                });
+              })
+            : data.pages.map((page) => {
+                return (page as SearchPostType).map((post) => {
+                  return <Post key={post.id} post={post} />;
+                });
+              }))
+        )}
+        {/* {data && data.pages.flatMap((page) => page.length).length === 1 && (
           <EmptyState type="검색 결과" />
         )}
         {data &&
@@ -130,7 +147,7 @@ function SearchTab() {
                 return (page as SearchPostType).map((post) => {
                   return <Post key={post.id} post={post} />;
                 });
-              }))}
+              }))} */}
         <div ref={loadMoreRef} style={{ height: "20px" }} />
         {isFetchingNextPage && <PostLoading />}
       </div>

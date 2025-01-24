@@ -29,7 +29,7 @@ function GameMode({ mode }: { mode: Json }) {
   }, [gameMode]);
 
   return (
-    <div className="grid grid-cols-4 h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
+    <div className="grid grid-cols-4 h-10 lg:h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
       {PLAY_MODE.map((mode, idx) => {
         return (
           <button
@@ -37,7 +37,9 @@ function GameMode({ mode }: { mode: Json }) {
             onClick={() => handleModeClick(mode.name)}
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
-            } ${gameMode.includes(mode.name) && "bg-mint text-white"}`}
+            } ${
+              gameMode.includes(mode.name) && "bg-mint text-white"
+            } lg:text-base text-xs`}
           >
             {mode.name}
           </button>

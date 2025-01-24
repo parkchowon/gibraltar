@@ -61,7 +61,7 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
 
   return (
     <div>
-      <div className="grid grid-cols-3 w-full h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
+      <div className="grid grid-cols-3 w-full h-10 lg:h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
         {PLAY_POSITION.map((pos, idx) => {
           return (
             <button
@@ -69,7 +69,9 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
               onClick={() => handlePositionClick(pos.id)}
               className={`${
                 position === pos.id ? "bg-mint text-white" : "text-black"
-              } ${idx === 0 && "rounded-l-xl"} ${idx === 2 && "rounded-r-xl"}`}
+              } ${idx === 0 && "rounded-l-xl"} ${
+                idx === 2 && "rounded-r-xl"
+              } lg:text-base text-xs`}
             >
               {pos.name}
             </button>

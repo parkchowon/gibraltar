@@ -38,7 +38,7 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
     <div
       key={notification.id}
       onClick={handleNotiClick}
-      className={`flex w-full px-[25px] py-[15px] gap-6 text-left cursor-pointer ${
+      className={`flex w-full px-2 lg:px-[25px] py-3 lg:py-[15px] gap-6 text-left cursor-pointer ${
         notification.is_read ? "bg-white" : "bg-subGray"
       }`}
     >
@@ -58,16 +58,18 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
       )}
       <div className="flex flex-col flex-grow gap-2.5">
         <div className="flex items-center gap-2">
-          {notification.type === "repost" ? (
-            <Repost width={15} height={15} style={{ color: "#FC7B3D" }} />
-          ) : (
-            <Like
-              width={15}
-              height={15}
-              style={{ color: "#3E97B2", fill: "#3E97B2" }}
-            />
-          )}
-          <p className="text-base">
+          <div className={`w-[15px] h-[15px] min-[15px]:`}>
+            {notification.type === "repost" ? (
+              <Repost width={15} height={15} style={{ color: "#FC7B3D" }} />
+            ) : (
+              <Like
+                width={15}
+                height={15}
+                style={{ color: "#3E97B2", fill: "#3E97B2" }}
+              />
+            )}
+          </div>
+          <p className="text-sm lg:text-base">
             <span className="font-bold">
               {nicknames ? nicknames : notification.reacted_user?.nickname}
             </span>{" "}
@@ -78,7 +80,7 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
             니다.
           </p>
         </div>
-        <p className=" line-clamp-2 text-gray-400">
+        <p className="text-sm lg:text-base line-clamp-2 text-gray-400">
           {notification.related_post?.content}
         </p>
       </div>

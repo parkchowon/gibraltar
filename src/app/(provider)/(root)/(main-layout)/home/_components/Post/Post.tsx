@@ -120,15 +120,15 @@ function Post({ post }: PostProps) {
             profileUrl={post.user.profile_url}
             handle={post.user.handle}
           />
-          <div className="lg:ml-6 ml-2 w-full">
+          <div className="lg:ml-6 ml-4 w-full">
             <div className="flex items-center">
-              <p className="font-semibold w-fit text-overflow whitespace-nowrap line-clamp-1">
+              <p className="font-semibold text-sm lg:text-base w-fit text-overflow whitespace-nowrap line-clamp-1">
                 {post.user.nickname}
               </p>
-              <p className="ml-1.5 text-sm text-mainGray truncate">
+              <p className="ml-1.5 text-[12px] lg:text-sm text-mainGray truncate">
                 {post.user.handle}
               </p>
-              <p className="text-sm text-mainGray ml-1.5 line-clamp-1">
+              <p className="text-[12px] lg:text-sm text-mainGray ml-1.5 line-clamp-1">
                 {postTime}
               </p>
               {optionClick && (

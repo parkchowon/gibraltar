@@ -1,7 +1,6 @@
 import { fetchCommentInPost } from "@/apis/post.api";
 import Post from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/Post";
 import PostLoading from "@/components/Loading/PostLoading";
-import { PostsType } from "@/types/home.type";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 

@@ -22,7 +22,7 @@ function GameStyle({ style }: { style: string | null }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
+      <div className="grid grid-cols-2 h-10 lg:h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
         {PLAY_STYLE.map((style, idx) => {
           return (
             <button
@@ -30,7 +30,7 @@ function GameStyle({ style }: { style: string | null }) {
               key={style.id}
               className={`${idx === 0 ? "rounded-l-xl" : "rounded-r-xl"} ${
                 gameStyle === style.name && "bg-mint text-white"
-              }`}
+              } lg:text-base text-xs`}
             >
               {style.name}
             </button>

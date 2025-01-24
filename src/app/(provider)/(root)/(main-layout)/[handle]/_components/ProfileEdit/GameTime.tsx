@@ -29,7 +29,7 @@ function GameTime({ time }: { time: Json }) {
   }, [gameTime]);
 
   return (
-    <div className="grid grid-cols-4 h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
+    <div className="grid grid-cols-4 h-10 lg:h-[52px] font-medium divide-x-2 divide-mint border-mint border-2 rounded-2xl">
       {PLAY_TIME.map((time, idx) => {
         return (
           <button
@@ -37,7 +37,9 @@ function GameTime({ time }: { time: Json }) {
             key={time.id}
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
-            } ${gameTime.includes(time.name) && "bg-mint text-white"}`}
+            } ${
+              gameTime.includes(time.name) && "bg-mint text-white"
+            } lg:text-base text-xs`}
           >
             {time.name}
           </button>
