@@ -38,7 +38,7 @@ export type PostType = {
     nickname: string;
     profile_url: string;
     handle: string;
-    account_type: string;
+    account_type?: string;
   } | null;
   post_tags: {
     tag: {
