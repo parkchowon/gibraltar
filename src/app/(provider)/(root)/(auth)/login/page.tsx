@@ -23,12 +23,6 @@ function LoginPage() {
     }
   };
 
-  // useEffect(() => {
-  //   if (user?.id) {
-  //     window.location.reload();
-  //   }
-  // }, [user]);
-
   return (
     <main className="flex h-screen w-full justify-center items-center">
       <div className="w-52 h-52 rounded-full mr-[187px]">
