@@ -285,7 +285,7 @@ function PostBox() {
             onClick={handleTagAddClick}
             className={`flex w-fit px-1 ${
               tagOpen ? "pt-7" : "py-3.5"
-            } text-left font-semibold`}
+            } text-left font-semibold whitespace-nowrap truncate`}
           >
             {tagOpen ? "태그 목록" : "태그 추가하기"}
             <Image

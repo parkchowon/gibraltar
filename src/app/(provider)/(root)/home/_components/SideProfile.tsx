@@ -50,10 +50,12 @@ function SideProfile() {
           className="object-cover rounded-full"
         />
       </div>
-      <div>
+      <div className="flex-1 min-w-0">
         <div className="flex">
-          <p className="font-bold text-base">{user.nickname}</p>
-          <p className="text-sm ml-1.5 text-gray-400">{user.handle}</p>
+          <p className="font-bold text-base whitespace-nowrap">
+            {user.nickname}
+          </p>
+          <p className="text-sm ml-1.5 text-gray-400 truncate">{user.handle}</p>
         </div>
         <div className="relative">
           {statusClick && (
@@ -69,13 +71,14 @@ function SideProfile() {
       </div>
       <button
         onClick={handleProfileClick}
-        className="grid place-items-center ml-auto rounded-full border-2 border-black w-[30px] h-[30px] w-max-[30px] h-max-[30px]"
+        className="grid place-items-center ml-auto min-h-[30px] min-w-[30px] rounded-full border-2 border-black w-[30px] h-[30px] w-max-[30px] h-max-[30px]"
       >
         <Image
           width={25}
           height={25}
           alt="icon"
           src={"/icons/mypage_line.svg"}
+          className="aspect-square"
         />
       </button>
     </div>

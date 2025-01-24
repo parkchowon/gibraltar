@@ -28,7 +28,7 @@ function SideBar() {
             className="relative flex justify-center lg:justify-start items-center w-[58px] lg:w-full h-[58px] hover:bg-subGray hover:rounded-full"
           >
             <div
-              className={`relative w-6 h-6 lg:ml-5 lg:mr-10 ${
+              className={`relative w-6 h-6 min-w-6 min-h-6 lg:ml-5 lg:mr-10 ${
                 item.name === "더보기" &&
                 "border-2 border-black rounded-full rotate-90"
               }`}
@@ -53,7 +53,7 @@ function SideBar() {
                 item.path === "/mypage" && path === `/${userData?.handle}`
                   ? "font-extrabold"
                   : ""
-              } text-sm text-left hidden lg:block`}
+              } text-sm text-left hidden lg:block line-clamp-1 truncate`}
             >
               {item.name}
             </p>

@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
 const statusVariants = cva(
-  "flex items-center text-[12px] py-1 text-[#737373]",
+  "flex items-center text-[12px] py-1 text-[#737373] whitespace-nowrap truncate",
   {
     variants: {
       intent: {
