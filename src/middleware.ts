@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cookies = request.cookies.getAll();
   const isLoggedIn = cookies.some((cookie) => {
-    return cookie.name.includes(`${process.env.NEXT_LOGIN_KEY}`);
+    return cookie.name.includes(`${process.env.NEXT_PUBLIC_LOGIN_KEY}`);
   });
 
   if (!isLoggedIn) {
