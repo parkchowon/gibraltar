@@ -1,5 +1,4 @@
 "use client";
-import MainLayout from "@/components/Layout/MainLayout";
 import RepostItem from "./_components/RepostItem";
 import FollowItem from "./_components/FollowItem";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -7,7 +6,6 @@ import { getNotification, updateNotification } from "@/apis/notification.api";
 import { useAuth } from "@/contexts/auth.context";
 import PostLoading from "@/components/Loading/PostLoading";
 import { NotificationType } from "@/types/notification.type";
-import Post from "../home/_components/Post/Post";
 import { useEffect, useRef, useState } from "react";
 import { groupBy } from "lodash";
 import { userDataReducer } from "@/utils/formatChange";
@@ -16,6 +14,7 @@ import TimeLineLoading from "@/components/Loading/TimeLineLoading";
 import { useNotificationStore } from "@/stores/notification.store";
 import GroupParticipantItem from "./_components/GroupParticipantItem";
 import GroupPermissionItem from "./_components/GroupPermissionItem";
+import Post from "../home/_components/Post/Post";
 
 function NotificationPage() {
   const { userData, isPending } = useAuth();
@@ -169,13 +168,13 @@ function NotificationPage() {
 
   if (isPending || isLoading)
     return (
-      <MainLayout>
+      <>
         <TimeLineLoading />
-      </MainLayout>
+      </>
     );
 
   return (
-    <MainLayout>
+    <>
       {notiCount && (
         <button
           onClick={handleRefetch}
@@ -195,7 +194,7 @@ function NotificationPage() {
       </div>
       <div ref={loadMoreRef} className="h-5" />
       {isFetchingNextPage && <PostLoading />}
-    </MainLayout>
+    </>
   );
 }
 

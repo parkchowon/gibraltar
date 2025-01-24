@@ -1,17 +1,17 @@
 "use client";
-import PostBox from "@/app/(provider)/(root)/home/_components/PostBox/PostBox";
-import SideProfile from "@/app/(provider)/(root)/home/_components/SideProfile";
-import SearchBar from "@/app/(provider)/(root)/home/_components/SearchBar";
+import PostBox from "@/app/(provider)/(root)/(main-layout)/home/_components/PostBox/PostBox";
+import SideProfile from "@/app/(provider)/(root)/(main-layout)/home/_components/SideProfile";
+import SearchBar from "@/app/(provider)/(root)/(main-layout)/home/_components/SearchBar";
 import { PropsWithChildren, useEffect, useState } from "react";
 import SideBar from "../SideBar";
-import RepostModal from "@/app/(provider)/(root)/home/_components/Post/RepostModal";
-import QuoteModal from "@/app/(provider)/(root)/home/_components/Post/QuoteModal";
+import RepostModal from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/RepostModal";
+import QuoteModal from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/QuoteModal";
 import { usePostStore } from "@/stores/post.store";
 import { usePathname, useRouter } from "next/navigation";
 import BackArrowBtn from "../BackArrowBtn";
 import GibraltarLetter from "@/assets/logo/gibraltar_letter.svg";
 import GibraltarLogo from "@/assets/logo/gibraltar_logo.svg";
-import GroupCheckBox from "@/app/(provider)/(root)/group/_components/GroupCheck/GroupCheckBox";
+import GroupCheckBox from "@/app/(provider)/(root)/(main-layout)/group/_components/GroupCheck/GroupCheckBox";
 import ChatIcon from "@/assets/icons/post_chat.svg";
 
 function MainLayout({ children }: PropsWithChildren) {

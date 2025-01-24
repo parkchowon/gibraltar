@@ -1,5 +1,5 @@
 import { fetchParentsPost } from "@/apis/post.api";
-import Post from "@/app/(provider)/(root)/home/_components/Post/Post";
+import Post from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/Post";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";

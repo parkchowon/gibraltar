@@ -7,11 +7,11 @@ import PostLoading from "@/components/Loading/PostLoading";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef } from "react";
-import Post from "../../home/_components/Post/Post";
 import { useAuth } from "@/contexts/auth.context";
 import UserItem from "@/components/UserItem";
 import { SearchPostType, SearchUserType } from "@/types/search.type";
 import EmptyState from "@/components/EmptyState";
+import Post from "../../home/_components/Post/Post";
 
 const TAB = [
   { name: "인기순", path: "popular" },

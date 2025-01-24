@@ -23,7 +23,7 @@ function ProfilePage({ params }: { params: { handle: string } }) {
 
   if (isPending)
     return (
-      <MainLayout>
+      <>
         <div className="px-6">
           <ProfileLoading />
           <div className={`flex py-3 border-t justify-center border-mainGray`}>
@@ -35,10 +35,10 @@ function ProfilePage({ params }: { params: { handle: string } }) {
           <TabContainer />
           <TimeLineLoading />
         </div>
-      </MainLayout>
+      </>
     );
   return (
-    <MainLayout>
+    <>
       <div className="px-6">
         {/* 프로필 부분 */}
         <ProfileBox userId={userId} />
@@ -53,7 +53,7 @@ function ProfilePage({ params }: { params: { handle: string } }) {
           )}
         </TabContainer>
       </div>
-    </MainLayout>
+    </>
   );
 }
 

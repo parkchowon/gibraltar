@@ -16,7 +16,7 @@ import {
   useState,
 } from "react";
 import Photo from "@/assets/icons/photo.svg";
-import SelectMedia from "@/app/(provider)/(root)/home/_components/PostBox/SelectMedia";
+import SelectMedia from "@/app/(provider)/(root)/(main-layout)/home/_components/PostBox/SelectMedia";
 
 function CommentInput({
   postId,

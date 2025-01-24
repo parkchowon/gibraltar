@@ -1,12 +1,12 @@
 import { checkFollow } from "@/apis/follow.api";
 import { useQuery } from "@tanstack/react-query";
-import ProfileBtn from "../../../../../components/ProfileBtn";
 import { NotificationType } from "@/types/notification.type";
 import { useEffect, useState } from "react";
 import Check from "@/assets/icons/check.svg";
 import FollowItemLoading from "@/components/Loading/FollowItemLoading";
 import { useFollow } from "@/hooks/useUserFollow";
 import { useAuth } from "@/contexts/auth.context";
+import ProfileBtn from "@/components/ProfileBtn";
 
 function FollowItem({ notification }: { notification: NotificationType }) {
   const { user } = useAuth();

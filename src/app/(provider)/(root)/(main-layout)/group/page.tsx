@@ -103,7 +103,7 @@ function GroupPage() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
-    <MainLayout>
+    <>
       <GroupSearchBox />
       {isPending && isLoading && (
         <div className="pt-4">
@@ -127,7 +127,7 @@ function GroupPage() {
       </div>
       <div ref={loadMoreRef} style={{ height: "20px" }} />
       {isFetchingNextPage && <PostLoading />}
-    </MainLayout>
+    </>
   );
 }
 

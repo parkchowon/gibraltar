@@ -23,14 +23,14 @@ function DetailPostPage({ params }: { params: { postId: string } }) {
 
   if (isPending || !post) {
     return (
-      <MainLayout>
+      <>
         <PostLoading />
-      </MainLayout>
+      </>
     );
   }
 
   return (
-    <MainLayout>
+    <>
       <div className="h-screen">
         {post.parent_post_id && (
           <div className="">
@@ -47,7 +47,7 @@ function DetailPostPage({ params }: { params: { postId: string } }) {
         </div>
       </div>
       <div className="w-full h-screen"></div>
-    </MainLayout>
+    </>
   );
 }
 

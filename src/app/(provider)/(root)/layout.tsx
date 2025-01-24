@@ -1,14 +1,10 @@
-'use client'
-import { useNotifications } from '@/hooks/useNotifiactions'
-import React, { PropsWithChildren } from 'react'
+"use client";
+import { useNotifications } from "@/hooks/useNotifiactions";
+import React, { PropsWithChildren } from "react";
 
 function RootLayout({ children }: PropsWithChildren) {
-    useNotifications()
-  return (
-    <>
-    {children}
-    </>
-  )
+  useNotifications();
+  return <>{children}</>;
 }
 
-export default RootLayout
+export default RootLayout;

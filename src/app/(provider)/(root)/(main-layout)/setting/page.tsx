@@ -19,7 +19,7 @@ function SettingPage() {
   };
 
   return (
-    <MainLayout>
+    <>
       {isDeleteModalClick && <DeleteModal setState={setIsDeleteModalClick} />}
       {isReportModalClick && (
         <ReportBugModal onClick={() => setIsReportModalClick(false)} />
@@ -44,7 +44,7 @@ function SettingPage() {
           회원탈퇴
         </button>
       </div>
-    </MainLayout>
+    </>
   );
 }
 

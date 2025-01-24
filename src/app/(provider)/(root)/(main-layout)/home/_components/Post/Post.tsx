@@ -12,7 +12,7 @@ import ProfileBtn from "@/components/ProfileBtn";
 import { formatToPostDate } from "@/utils/formatChange";
 import PostQuote from "./PostQuote";
 import OptionDot from "@/assets/icons/more_option_dot.svg";
-import OptionModal from "../../../../../../components/OptionModal/OptionModal";
+import OptionModal from "../../../../../../../components/OptionModal/OptionModal";
 import PostTextHighlighted from "./PostTextHighlighted";
 
 type PostProps = {
