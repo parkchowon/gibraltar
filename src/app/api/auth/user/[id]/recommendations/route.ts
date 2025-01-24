@@ -69,7 +69,6 @@ export const POST = async (request: NextRequest) => {
     if (timeError) throw new Error(timeError.message);
     if (followError) throw new Error(followError.message);
 
-    console.log(followResult, sameModePlayer);
     // 추천 유저 알고리즘
     const calculateScore = (userId: string) => {
       let score = 0;

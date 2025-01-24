@@ -3,6 +3,19 @@ import { ProfileType } from "@/types/profile.type";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+interface UserProfile {
+  user_id: string;
+  bio?: string | null;
+  favorite_team?: string | null;
+  play_mode?: string[] | null;
+  play_style?: string | null;
+  play_time?: string[] | null;
+  main_champs?: any; // Json 타입일 경우 any 사용
+  play_champs?: any;
+  tier?: string[] | null;
+  tier_grade?: number[] | null;
+}
+
 export const POST = async (request: NextRequest) => {
   const supabase = createClient();
   const {
@@ -43,21 +56,24 @@ export const POST = async (request: NextRequest) => {
       }
     }
 
+    const updatedData: UserProfile = {
+      user_id: userId, // `onConflict`로 필요한 필드
+    };
+
+    // 조건에 따라 필드 추가
+    if (bio) updatedData.bio = bio;
+    if (favoriteTeam) updatedData.favorite_team = favoriteTeam;
+    if (playStyle?.mode) updatedData.play_mode = playStyle.mode;
+    if (playStyle?.style) updatedData.play_style = playStyle.style;
+    if (playStyle?.time) updatedData.play_time = playStyle.time;
+    if (mainChamps) updatedData.main_champs = mainChamps;
+    if (playChamps) updatedData.play_champs = playChamps;
+    if (tier) updatedData.tier = tier;
+    if (grade) updatedData.tier_grade = grade;
+
     const { data, error } = await supabase
       .from("user_profiles")
-      .upsert({
-        user_id: userId,
-        bio: bio,
-        favorite_team: favoriteTeam,
-        play_mode: playStyle?.mode,
-        play_style: playStyle?.style,
-        play_time: playStyle?.time,
-        main_champs: mainChamps,
-        play_champs: playChamps,
-        tier: tier,
-        tier_grade: grade,
-      })
-      .eq("user_id", userId);
+      .upsert(updatedData, { onConflict: "user_id" });
 
     if (error) throw new Error(error.message);
 

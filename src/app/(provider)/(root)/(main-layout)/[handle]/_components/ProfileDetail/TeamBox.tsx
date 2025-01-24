@@ -14,7 +14,7 @@ function TeamBox({ team }: { team?: string }) {
           className="absolute object-contain rounded-full border border-mainGray"
         />
       </div>
-      <p className="font-bold text-sm">{team}</p>
+      <p className="font-bold text-sm">{team ? team : "없음"}</p>
     </div>
   );
 }

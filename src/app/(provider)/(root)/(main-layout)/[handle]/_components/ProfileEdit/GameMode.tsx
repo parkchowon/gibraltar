@@ -13,10 +13,14 @@ function GameMode({ mode }: { mode: Json }) {
   );
 
   const handleModeClick = (mode: string) => {
-    if (gameMode.includes(mode)) {
+    if (gameMode && gameMode.includes(mode)) {
       setGameMode(gameMode.filter((item) => item !== mode));
     } else {
-      setGameMode([...gameMode, mode]);
+      if (gameMode) {
+        setGameMode([...gameMode, mode]);
+      } else {
+        setGameMode([mode]);
+      }
     }
   };
 
@@ -38,7 +42,7 @@ function GameMode({ mode }: { mode: Json }) {
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
             } ${
-              gameMode.includes(mode.name) && "bg-mint text-white"
+              gameMode && gameMode.includes(mode.name) && "bg-mint text-white"
             } lg:text-base text-xs`}
           >
             {mode.name}

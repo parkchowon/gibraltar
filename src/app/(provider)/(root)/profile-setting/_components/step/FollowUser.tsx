@@ -59,10 +59,6 @@ function FollowUser() {
     }
   };
 
-  useEffect(() => {
-    console.log(FollowingList);
-  }, [FollowingList]);
-
   // 팔로우, 언팔로우 버튼
   const handleFollowClick = async (
     idx: number,

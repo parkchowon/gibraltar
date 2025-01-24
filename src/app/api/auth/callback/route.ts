@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
   const origin = url.origin;
   const code = searchParams.get("code");
 
-  console.log("Code: ", code);
   if (code) {
     try {
       const { error: authError } = await supabase.auth.exchangeCodeForSession(

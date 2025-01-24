@@ -12,11 +12,15 @@ function GameTime({ time }: { time: Json }) {
       : selectedTime
   );
 
-  const handleTimeClick = (mode: string) => {
-    if (gameTime.includes(mode)) {
-      setGameTime(gameTime.filter((item) => item !== mode));
+  const handleTimeClick = (time: string) => {
+    if (gameTime && gameTime.includes(time)) {
+      setGameTime(gameTime.filter((item) => item !== time));
     } else {
-      setGameTime([...gameTime, mode]);
+      if (gameTime) {
+        setGameTime([...gameTime, time]);
+      } else {
+        setGameTime([time]);
+      }
     }
   };
 
@@ -38,7 +42,7 @@ function GameTime({ time }: { time: Json }) {
             className={`${idx === 0 && "rounded-l-xl"} ${
               idx === 3 && "rounded-r-xl"
             } ${
-              gameTime.includes(time.name) && "bg-mint text-white"
+              gameTime && gameTime.includes(time.name) && "bg-mint text-white"
             } lg:text-base text-xs`}
           >
             {time.name}

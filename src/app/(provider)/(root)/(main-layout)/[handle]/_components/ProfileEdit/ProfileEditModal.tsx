@@ -233,7 +233,8 @@ function ProfileEditModal({
       grade: profile?.tier_grade !== grade ? grade : undefined,
     };
 
-    mutation.mutate(updateDetail);
+    await mutation.mutateAsync(updateDetail);
+    window.location.reload();
   };
 
   const handleCloseModal = () => {
