@@ -10,8 +10,12 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
   const selectedGrade = grade as number[];
 
   const [position, setPosition] = useState<number>(0);
-  const [tierGrade, setTierGrade] = useState<number[]>(selectedGrade);
-  const [userTier, setUserTier] = useState<string[]>(selectedTier);
+  const [tierGrade, setTierGrade] = useState<number[]>(
+    selectedGrade.length === 3 ? selectedGrade : Array(3).fill(0)
+  );
+  const [userTier, setUserTier] = useState<string[]>(
+    selectedTier.length === 3 ? selectedTier : Array(3).fill("")
+  );
 
   const {
     tier: storeTier,
@@ -38,19 +42,11 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
   };
 
   useEffect(() => {
-    putTier(
-      userTier.map((item, index) =>
-        index === position ? userTier[position] : item
-      )
-    );
+    putTier(userTier);
   }, [userTier]);
 
   useEffect(() => {
-    putGrade(
-      tierGrade.map((item, index) =>
-        index === position ? tierGrade[position] : item
-      )
-    );
+    putGrade(tierGrade);
   }, [tierGrade]);
 
   return (
