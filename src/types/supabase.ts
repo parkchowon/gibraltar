@@ -446,6 +446,7 @@ export type Database = {
           post_id: string
           reposted_at: string
           reposted_by: string
+          reposted_post_id: string | null
         }
         Insert: {
           id?: number
@@ -453,6 +454,7 @@ export type Database = {
           post_id: string
           reposted_at?: string
           reposted_by: string
+          reposted_post_id?: string | null
         }
         Update: {
           id?: number
@@ -460,6 +462,7 @@ export type Database = {
           post_id?: string
           reposted_at?: string
           reposted_by?: string
+          reposted_post_id?: string | null
         }
         Relationships: [
           {
@@ -474,6 +477,13 @@ export type Database = {
             columns: ["reposted_by"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reposts_reposted_post_id_fkey"
+            columns: ["reposted_post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
             referencedColumns: ["id"]
           },
         ]
@@ -551,7 +561,7 @@ export type Database = {
           account_type: string | null
           created_at: string
           email: string
-          handle: string
+          handle: string | null
           id: string
           nickname: string
           profile_url: string
@@ -561,7 +571,7 @@ export type Database = {
           account_type?: string | null
           created_at?: string
           email: string
-          handle?: string
+          handle?: string | null
           id?: string
           nickname: string
           profile_url: string
@@ -571,7 +581,7 @@ export type Database = {
           account_type?: string | null
           created_at?: string
           email?: string
-          handle?: string
+          handle?: string | null
           id?: string
           nickname?: string
           profile_url?: string

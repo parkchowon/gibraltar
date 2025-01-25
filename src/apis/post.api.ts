@@ -48,6 +48,14 @@ export const createPost = async (
       tags: tags || [],
     });
 
+    if (post.quoted_post_id) {
+      const response = await apiClient.post(
+        `api/post/${post.quoted_post_id}/repost?user_id=${
+          post.user_id
+        }&is_quoted=${true}&repost_id=${data.data.postId}`
+      );
+    }
+
     /** 다른 사람의 게시물에 인용, 멘션을 달았을 경우 알림 저장 */
     if (!!post.parent_user_id && post.user_id !== post.parent_user_id) {
       const type = post.quoted_post_id ? "quote" : "comment";
@@ -185,6 +193,7 @@ export const insertRepost = async (
   postId: string | null,
   userId: string | undefined,
   postUserId: string,
+  repostId?: string,
   is_quoted?: boolean
 ) => {
   try {

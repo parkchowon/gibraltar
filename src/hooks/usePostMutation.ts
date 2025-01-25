@@ -108,12 +108,6 @@ export const useQuoteMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ quote }: { quote: CreateQuoteType }) => {
-      insertRepost(
-        quote.quoted_post_id,
-        quote.user_id,
-        quote.post_user_id,
-        true
-      );
       return createPost({
         content: quote.content,
         images: quote.images,

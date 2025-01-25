@@ -9,6 +9,7 @@ export const POST = async (
   const searchParams = request.nextUrl.searchParams;
   const postId = params.id;
   const userId = searchParams.get("user_id") as string;
+  const repostId = searchParams.get("repost_id") as string;
   const stringIsQuoted = searchParams.get("is_quoted");
   const isQuoted = stringIsQuoted === "true" ? true : false;
 
@@ -23,6 +24,7 @@ export const POST = async (
     const { data, error } = await supabase.from("reposts").insert({
       post_id: postId,
       reposted_by: userId,
+      reposted_post_id: repostId || null,
       is_quoted: isQuoted,
     });
 

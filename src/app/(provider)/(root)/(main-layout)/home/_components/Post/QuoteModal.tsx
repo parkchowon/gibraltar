@@ -155,7 +155,7 @@ function QuoteModal() {
           <div className="flex px-4 py-6 gap-3 mt-[73px]">
             <ProfileBtn
               profileUrl={userData.profile_url}
-              handle={userData.handle}
+              handle={userData.handle ?? undefined}
               intent={"quote"}
               type="non-click"
             />

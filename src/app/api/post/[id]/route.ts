@@ -98,6 +98,19 @@ export const DELETE = async (
       .eq("id", postId)
       .eq("user_id", userId);
 
+    const { error: quoteError } = await supabase
+      .from("reposts")
+      .delete()
+      .eq("reposted_by", userId)
+      .eq("reposted_post_id", postId)
+      .eq("is_quoted", true);
+
+    if (quoteError) {
+      return NextResponse.json(
+        { message: "삭제 업데이트 중 서버 오류", quoteError },
+        { status: 500 }
+      );
+    }
     if (error && error.code === "23503") {
       console.log(postId, "인 포스터를 소프트 삭제");
       const { data, error: updateError } = await supabase
