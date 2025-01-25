@@ -1,5 +1,6 @@
 import { useSearchParams } from "next/navigation";
 import React from "react";
+import Logo from "@/assets/logo/gibraltar_logo.svg";
 import SearchTab from "./SearchTab";
 import SearchBar from "../../home/_components/SearchBar";
 
@@ -16,9 +17,12 @@ function Search() {
       {searchText ? (
         <SearchTab />
       ) : (
-        <p className="w-full py-40 text-center lg:text-base text-sm">
-          원하는 정보나 유저를 찾아보세요!
-        </p>
+        <div className="flex flex-col items-center w-full py-40 opacity-35 gap-2">
+          <Logo width={40} height={40} />
+          <p className="w-full text-center lg:text-base text-sm">
+            원하는 정보나 유저를 찾아보세요!
+          </p>
+        </div>
       )}
     </>
   );
