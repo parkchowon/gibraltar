@@ -7,7 +7,7 @@ const profileVariants = cva("relative aspect-square flex-shrink-0", {
   variants: {
     intent: {
       post: "w-10 h-10 lg:w-[46px] lg:h-[46px]",
-      card: "w-[106px] h-[106px]",
+      card: "lg:w-[106px] lg:h-[106px] w-16 h-16",
       two: "w-7 h-7",
       three: "w-[23px] h-[23px]",
       edit: "absolute w-[155px] h-[155px] cursor-default",

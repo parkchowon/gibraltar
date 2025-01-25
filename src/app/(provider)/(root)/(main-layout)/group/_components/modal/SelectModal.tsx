@@ -18,7 +18,7 @@ function SelectModal({
   };
 
   return (
-    <div className="absolute top-10 flex flex-col text-center px-1 py-1 w-fit h-fit border border-mainGray rounded-lg bg-white z-10">
+    <div className="absolute top-10 flex flex-col text-center px-1 py-1 w-fit h-fit border border-mainGray rounded-lg bg-white z-20">
       {selections.map((selection, idx) => {
         return (
           <div

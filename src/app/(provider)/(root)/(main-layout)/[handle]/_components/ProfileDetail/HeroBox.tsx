@@ -30,24 +30,24 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
   }, [position]);
 
   return (
-    <div className="relative flex flex-col w-[50%] max-h-[270px] flex-grow px-5 py-4 items-center border border-mainGray rounded-md bg-subGray">
+    <div className="relative flex flex-col w-[50%] max-h-[270px] flex-grow lg:px-5 px-3 lg:py-4 py-2 items-center border border-mainGray rounded-md bg-subGray">
       <button
         onClick={() => setPosClick(!posClick)}
         className="flex flex-shrink-0 items-center mr-auto gap-2 h-6"
       >
         <Image src={position.icon} alt={position.name} width={10} height={10} />
-        <p className="font-bold text-sm">{position.name}</p>
+        <p className="font-bold text-xs lg:text-sm">{position.name}</p>
         <div className="relative rotate-90 w-4 h-4 p-1">
           <ArrowHead />
         </div>
       </button>
       {posClick && (
-        <div className="absolute flex flex-col border left-4 top-10 border-mainGray bg-white rounded-lg z-10">
+        <div className="absolute flex flex-col border lg:left-4 lg:top-10 top-8 left-2 border-mainGray bg-white rounded-lg z-10">
           {PLAY_POSITION.filter((pos) => pos.name !== position.name).map(
             (filteredPos, idx) => (
               <button
                 key={filteredPos.id}
-                className={`flex w-full text-center items-center gap-2 text-sm px-3 py-1 ${
+                className={`flex w-full text-center items-center gap-2 text-xs lg:text-sm lg:px-3 py-1 px-2 ${
                   idx === 0 ? "rounded-t-lg" : "rounded-b-lg"
                 } hover:bg-subGray`}
                 onClick={() => handleClickPosition(filteredPos)}
@@ -66,8 +66,12 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
       )}
       {mainByRole.length + playByRole.length === 0 ? (
         <div className="flex flex-col flex-grow w-full h-full items-center justify-center gap-2 opacity-35 z-0">
-          <Logo width={50} height={50} />
-          <p className="text-xs">없음</p>
+          <Logo
+            width={50}
+            height={50}
+            className="lg:w-[50px] lg:h-[50px] w-10 h-10"
+          />
+          <p className="text-[10px] lg:text-xs">없음</p>
         </div>
       ) : (
         <div

@@ -32,11 +32,11 @@ function NextStepButton({
     <button
       onClick={handleClickNext}
       disabled={!isClickable}
-      className={`w-[352px] ${
+      className={`px-14 lg:w-[352px] ${
         isClickable
           ? "bg-mint text-white font-extrabold text-lg"
           : "bg-[#E5E5E5] cursor-not-allowed"
-      } rounded-full py-[19px] font-extrabold text-lg text-[#6A6A6A]`}
+      } rounded-full py-3 lg:py-[19px] font-extrabold text-sm lg:text-lg text-[#6A6A6A]`}
     >
       {step === "6" ? "지브롤터 시작하기" : "다음 단계로"}
     </button>

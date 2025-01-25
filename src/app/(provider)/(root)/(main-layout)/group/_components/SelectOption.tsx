@@ -76,7 +76,7 @@ function SelectOption({ type, index }: { type: string; index?: number }) {
         onClick={handleOptionClick}
       >
         {label && IconComponent && type !== "tier" && (
-          <IconComponent width={40} />
+          <IconComponent width={40} className="h-fit max-h-16" />
         )}
         {iconName && type === "tier" && (
           <Image alt={label as string} src={iconName} width={40} height={40} />

@@ -120,7 +120,7 @@ function ProfileBox({ userId }: { userId: string }) {
   };
 
   return (
-    <div className="flex pt-10 px-1 gap-5 lg:pt-[50px] pb-[5.5%] lg:px-[70px] lg:gap-14">
+    <div className="flex pt-10 px-3 gap-5 lg:pt-[50px] pb-[5.5%] lg:px-[70px] lg:gap-14">
       {editClick && profileUser && (
         <ProfileEditModal
           profileUser={profileUser}

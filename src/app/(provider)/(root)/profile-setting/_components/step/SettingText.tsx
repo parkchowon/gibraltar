@@ -35,7 +35,7 @@ function SettingText() {
       <textarea
         autoFocus
         onChange={(e) => setText(e.currentTarget.value)}
-        className="w-[404px] resize-none border-[1px] border-black rounded-[15px] h-[367px] px-6 py-5 my-[84px] outline-none"
+        className="lg:w-[404px] w-[280px] resize-none border-[1px] border-black rounded-[15px] lg:h-[367px] h-60 px-6 py-5 lg:my-[84px] my-12 text-sm lg:text-base outline-none"
         placeholder="저는 오버워치를 하는 트레이서라고 해요"
         maxLength={MAX_BIO_LENGTH}
       ></textarea>

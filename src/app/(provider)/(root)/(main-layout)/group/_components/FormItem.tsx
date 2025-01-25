@@ -6,9 +6,8 @@ import {
 } from "@/constants/profile";
 import { OWTier } from "@/constants/tier";
 import { useGroupStore } from "@/stores/group.store";
-import dynamic from "next/dynamic";
 import Image from "next/image";
-import React, { SVGProps, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface IconProps {
   iconName?: string;
@@ -96,7 +95,13 @@ function FormItem({
           </div>
         )}
         {iconName && type === "tier" && (
-          <Image alt={label as string} src={iconName} width={40} height={40} />
+          <Image
+            alt={label as string}
+            src={iconName}
+            width={40}
+            height={40}
+            className="h-fit max-h-16"
+          />
         )}
       </div>
       <p className="text-sm z-0">{label}</p>

@@ -39,8 +39,8 @@ function SettingChamp() {
       title="주로 사용하는 영웅이 있나요?"
       sub="플레이 하는 캐릭터를 한 번, 자신 있는 영웅은 두번 클릭하세요."
     >
-      <div className="flex my-10">
-        <div className="flex flex-col -space-y-7 -mr-[1.1px]">
+      <div className="flex lg:my-10 my-5 justify-center">
+        <div className="flex flex-col lg:-space-y-7 -space-y-9 -mr-[1.1px]">
           {PLAY_POSITION.map((item, idx) => {
             return (
               <button
@@ -50,14 +50,23 @@ function SettingChamp() {
                 }`}
                 onClick={() => handleClickRole(item.id, item.color)}
               >
-                <div className="flex flex-col absolute top-14 left-1/2 transform -translate-x-1/2 items-center justify-center gap-2">
-                  <p className="text-sm font-semibold">{item.name}</p>
-                  <Image src={item.icon} alt="icon" width={15} height={15} />
+                <div className="flex flex-col absolute lg:top-14 top-8 left-1/2 transform -translate-x-1/2 items-center justify-center lg:gap-2 gap-1">
+                  <p className="lg:text-sm text-xs font-semibold">
+                    {item.name}
+                  </p>
+                  <Image
+                    src={item.icon}
+                    alt="icon"
+                    width={15}
+                    height={15}
+                    className="lg:w-[15px] lg:h-[15px] w-3 h-3"
+                  />
                 </div>
                 <LeftButton
-                  width="66"
-                  hight="178"
+                  width={66}
+                  hight={178}
                   style={{ color: `${item.color}` }}
+                  className="lg:w-[66px] lg:h-[178px] w-10 h-32"
                 />
               </button>
             );
@@ -65,7 +74,7 @@ function SettingChamp() {
         </div>
         <div
           style={{ backgroundColor: bgColor }}
-          className={`w-[784px] h-[465px] py-7 px-[60px] rounded-r-2xl`}
+          className={`lg:w-[784px] lg:h-[465px] h-[290px] lg:py-7 lg:px-[60px] py-4 px-5 my-auto rounded-r-2xl`}
         >
           {isPending ? (
             <div className="w-full h-full">

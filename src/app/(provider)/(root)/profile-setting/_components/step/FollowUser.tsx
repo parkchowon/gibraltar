@@ -110,15 +110,16 @@ function FollowUser() {
           FollowingList ? FollowingList.length : 0
         }개 찾았어요!`}
       >
-        <div className="flex justify-center gap-[30px] mb-[68px]">
+        <div className="flex justify-center lg:gap-[30px] gap-4 lg:mb-[68px] mb-10">
           <button onClick={() => handleClickArrow(false)}>
             <ArrowBtn
               width="24"
               height="42"
               style={{ transform: "rotate(180deg)" }}
+              className="lg:w-6 lg:h-[42px] w-4 h-6"
             />
           </button>
-          <div className="relative w-[404px] h-[463px]">
+          <div className="relative lg:w-[404px] w-[280px] lg:h-[463px] h-72">
             {FollowingList &&
               FollowingList.length > 0 &&
               FollowingList.map((follow, idx) => {
@@ -127,7 +128,7 @@ function FollowUser() {
                 return (
                   <div
                     key={`${follow.user?.id}${follow.score}`}
-                    className={`absolute flex-col w-[404px] h-[463px] items-center bg-white top-0 left-0 pt-[35px] px-6 pb-[22px] border border-black rounded-2xl ${
+                    className={`absolute flex-col lg:w-[404px] w-[280px] lg:h-[463px] h-72 items-center bg-white top-0 left-0 lg:pt-[35px] pt-4 px-6 lg:pb-[22px] pb-3 border border-black rounded-2xl ${
                       idx === cardIndex ? "flex" : "hidden"
                     }`}
                   >
@@ -136,19 +137,20 @@ function FollowUser() {
                       intent={"card"}
                       type="non-click"
                     />
-                    <p className="text-lg font-medium mt-3.5">
+                    <p className="lg:text-lg text-base lg:mt-3.5 mt-1 font-bold">
                       {follow.user?.nickname}
                     </p>
-                    <p className="font-medium text-gray-400 mb-1">
+                    <p className="text-gray-400 text-xs lg:text-base lg:mb-1">
                       {follow.user?.handle}
                     </p>
-                    <p className=" w-full h-12 mb-1.5 text-center">
+                    <p className=" w-full lg:h-12 mb-1.5 text-xs lg:text-base text-center line-clamp-1 lg:line-clamp-2">
                       {follow.user?.profile?.bio}
                     </p>
 
                     {/* 같은 게임 모드 */}
-                    <p className="text-gray-500">
-                      {nickname !== "" ? nickname : userData?.nickname}님처럼{" "}
+                    <p className="text-gray-500 w-full text-sm lg:text-base">
+                      &middot; {nickname !== "" ? nickname : userData?.nickname}
+                      님처럼{" "}
                       <span className="font-bold text-black">
                         {followModes
                           .filter((mode) => playStyle.mode?.includes(mode))
@@ -158,8 +160,8 @@ function FollowUser() {
                     </p>
                     {/* 같은 시간대 */}
                     {followTimes && (
-                      <p className="text-gray-500">
-                        같은{" "}
+                      <p className="text-gray-500 w-full text-sm lg:text-base">
+                        &middot; 같은{" "}
                         <span className="font-bold text-black">
                           {followTimes
                             .filter((time) => playStyle.time?.includes(time))
@@ -171,8 +173,8 @@ function FollowUser() {
                     {/* 같은 팀 */}
                     {favoriteTeam !== "없음" &&
                     favoriteTeam === follow.user?.profile?.favorite_team ? (
-                      <p className="text-gray-500">
-                        같은 팀{" "}
+                      <p className="text-gray-500 w-full text-sm lg:text-base">
+                        &middot; 같은 팀{" "}
                         <span className="font-bold text-black">
                           {favoriteTeam}
                         </span>
@@ -181,11 +183,11 @@ function FollowUser() {
                     ) : null}
                     <button
                       onClick={(e) => handleFollowClick(idx, e)}
-                      className="absolute py-2.5 px-9 bottom-[60px] rounded-full font-bold text-white bg-mint"
+                      className="absolute lg:py-2.5 py-1 lg:px-9 px-3 lg:bottom-[60px] bottom-5 rounded-full font-bold text-white bg-mint text-sm lg:text-base"
                     >
                       {follow.isFollowing ? "언팔로우" : "팔로우"}
                     </button>
-                    <div className="absolute bottom-[22px] flex gap-[8px]">
+                    <div className="absolute lg:bottom-[22px] bottom-2 flex gap-[8px]">
                       {FollowingList &&
                         FollowingList.map((card, index) => (
                           <div
@@ -201,7 +203,11 @@ function FollowUser() {
               })}
           </div>
           <button onClick={() => handleClickArrow(true)}>
-            <ArrowBtn width="24" height="42" />
+            <ArrowBtn
+              width="24"
+              height="42"
+              className="lg:w-6 lg:h-[42px] w-4 h-6"
+            />
           </button>
         </div>
         <NextStepButton

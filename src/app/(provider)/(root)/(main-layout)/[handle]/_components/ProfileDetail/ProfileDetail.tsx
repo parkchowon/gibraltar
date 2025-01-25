@@ -39,7 +39,7 @@ function ProfileDetail({ userId }: { userId: string }) {
       {isPending && <></>}
       {isDetailOpen && (
         <div className="flex flex-col w-full h-fit py-5 gap-3">
-          <div className="flex w-full px-3 gap-4">
+          <div className="flex w-full px-3 lg:gap-4 gap-2">
             {/* 티어 */}
             <TierBox
               tier={profile?.tier as string[]}
@@ -51,7 +51,7 @@ function ProfileDetail({ userId }: { userId: string }) {
               play={profile?.play_champs as HeroType[]}
             />
           </div>
-          <div className="flex w-full h-[272px] max-h-72 grid-cols-4 px-3 gap-4">
+          <div className="flex w-full lg:h-[272px] h-[170px] max-h-72 grid-cols-4 px-3 lg:gap-4 gap-2">
             <ModeBox mode={profile?.play_mode as string[]} />
             <TimeBox time={profile?.play_time as string[]} />
             <StyleBox style={profile?.play_style ?? undefined} />

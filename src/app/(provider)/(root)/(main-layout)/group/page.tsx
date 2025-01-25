@@ -1,5 +1,5 @@
 "use client";
-import MainLayout from "@/components/Layout/MainLayout";
+import Logo from "@/assets/logo/gibraltar_logo.svg";
 import GroupSearchBox from "./_components/GroupSearchBox";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getGroup, getUserGroup } from "@/apis/group.api";
@@ -105,26 +105,33 @@ function GroupPage() {
   return (
     <>
       <GroupSearchBox />
-      {isPending && isLoading && (
+      {isPending && isLoading ? (
         <div className="pt-4">
           <PostLoading />
         </div>
+      ) : groups?.pages?.length === 0 ||
+        groups?.pages.every((page) => page.length === 0) ? (
+        <div className="lg:flex flex-col hidden items-center justify-items-center w-full py-20 opacity-30 border border-mainGray rounded-xl mt-10">
+          <Logo width={40} height={40} />
+          <p className="w-full text-center">아직 만들어진 그룹이 없습니다.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3 py-10">
+          {groups &&
+            groups.pages.map((page) => {
+              return page.map((group, idx) => {
+                return (
+                  <GroupItem
+                    key={idx + group.id}
+                    refetch={refetch}
+                    group={group}
+                    userId={user?.id ?? ""}
+                  />
+                );
+              });
+            })}
+        </div>
       )}
-      <div className="flex flex-col gap-3 py-10">
-        {groups &&
-          groups.pages.map((page) => {
-            return page.map((group, idx) => {
-              return (
-                <GroupItem
-                  key={idx + group.id}
-                  refetch={refetch}
-                  group={group}
-                  userId={user?.id ?? ""}
-                />
-              );
-            });
-          })}
-      </div>
       <div ref={loadMoreRef} style={{ height: "20px" }} />
       {isFetchingNextPage && <PostLoading />}
     </>

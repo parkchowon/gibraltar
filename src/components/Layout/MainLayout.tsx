@@ -2,7 +2,7 @@
 import PostBox from "@/app/(provider)/(root)/(main-layout)/home/_components/PostBox/PostBox";
 import SideProfile from "@/app/(provider)/(root)/(main-layout)/home/_components/SideProfile";
 import SearchBar from "@/app/(provider)/(root)/(main-layout)/home/_components/SearchBar";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren } from "react";
 import SideBar from "../SideBar";
 import RepostModal from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/RepostModal";
 import QuoteModal from "@/app/(provider)/(root)/(main-layout)/home/_components/Post/QuoteModal";
@@ -16,7 +16,6 @@ import ChatIcon from "@/assets/icons/post_chat.svg";
 
 function MainLayout({ children }: PropsWithChildren) {
   const { isModalOpen } = usePostStore();
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const path = usePathname();
   const router = useRouter();
 
@@ -33,15 +32,6 @@ function MainLayout({ children }: PropsWithChildren) {
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 1024);
-    };
-    handleResize(); // 초기 크기 체크
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <>
       {modalRendering()}
@@ -52,11 +42,8 @@ function MainLayout({ children }: PropsWithChildren) {
             onClick={() => router.push("/home")}
             className="flex flex-col items-center w-full pb-10 gap-1 outline-none"
           >
-            {isSmallScreen ? (
-              <GibraltarLogo width={24} height={24} />
-            ) : (
-              <GibraltarLetter width="90%" />
-            )}
+            <GibraltarLogo width={24} height={24} className="lg:hidden block" />
+            <GibraltarLetter width="90%" className="lg:block hidden" />
           </button>
           <SideBar />
           {/* 모바일 환경에서 글쓰기 */}

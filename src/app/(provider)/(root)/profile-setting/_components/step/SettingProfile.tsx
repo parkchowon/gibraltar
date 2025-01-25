@@ -112,8 +112,8 @@ function SettingProfile() {
       title="프로필을 만들어볼까요?"
       sub="나를 표현하는 프로필을 만들어보세요."
     >
-      <div className="flex flex-col w-full pt-[82px] pb-[23px] items-center">
-        <div className="relative w-[200px] h-[200px] mb-[84px]">
+      <div className="flex flex-col w-full lg:pt-[82px] pt-12 pb-[23px] items-center">
+        <div className="relative lg:w-[200px] lg:h-[200px] w-24 h-24 mb-[84px]">
           <Image
             src={profileImg ? profileImg : userData.profile_url}
             alt="profile"
@@ -131,23 +131,24 @@ function SettingProfile() {
           {/** 실제 사진을 고르기 위해 클릭하는 버튼 */}
           <button
             onClick={handleProfileClick}
-            className="flex justify-center items-center absolute bottom-0 right-0 w-12 h-12 rounded-full bg-black opacity-25"
+            className="flex justify-center items-center absolute bottom-0 right-0 lg:w-12 lg:h-12 w-8 h-8 rounded-full bg-black opacity-25"
           >
             <Image
               alt="camera"
               width={25}
               height={25}
               src={"/icons/camera.svg"}
+              className="lg:w-6 lg:h-6 w-4 h-4"
             />
           </button>
         </div>
         {/* input 받는 곳 */}
         <label className="relative">
-          <p className="text-sm pl-2">닉네임</p>
+          <p className="text-xs lg:text-sm pl-2">닉네임</p>
           <input
             type="text"
             ref={nickRef}
-            className="w-[356px] py-3 px-[18px] border-b-[1px] font-medium outline-none"
+            className="lg:w-[356px] w-52 lg:py-3 py-1 lg:px-[18px] px-3 border-b-[1px] text-sm lg:text-base outline-none"
             defaultValue={userData.nickname}
             maxLength={MAX_NICKNAME_LENGTH}
             onChange={handleNickChange}
@@ -158,11 +159,11 @@ function SettingProfile() {
             width={24}
             height={24}
             src={"/icons/edit.svg"}
-            className="absolute bottom-3 right-6"
+            className="absolute lg:bottom-3 lg:right-6 lg:w-6 lg:h-6 w-4 h-4 right-3 bottom-1"
           />
         </label>
         <label className=" mt-3">
-          <p className="text-sm pl-2">아이디</p>
+          <p className="text-xs lg:text-sm pl-2">아이디</p>
           <div className="relative">
             <input
               ref={idRef}
@@ -172,7 +173,7 @@ function SettingProfile() {
               autoFocus
               defaultValue={id}
               placeholder="아이디를 입력해주세요"
-              className="w-[356px] py-3 px-[18px] border-b-[1px] font-medium outline-none"
+              className="lg:w-[356px] w-52 lg:py-3 py-1 lg:px-[18px] px-3 border-b-[1px] text-sm lg:text-base outline-none"
             />
             <button onClick={handleIdDelete}>
               <Image
@@ -180,7 +181,7 @@ function SettingProfile() {
                 width={15}
                 height={15}
                 src={"/icons/circle_x.svg"}
-                className="absolute bottom-[18px] right-6"
+                className="absolute lg:bottom-[18px] lg:right-6 right-3 bottom-2 w-3 h-3"
               />
             </button>
           </div>
@@ -189,7 +190,7 @@ function SettingProfile() {
               isInvalid === "사용가능한 아이디예요."
                 ? "text-mint"
                 : "text-warning"
-            } text-sm pt-1.5 pl-4`}
+            } lg:text-sm text-xs pt-1.5 pl-4`}
           >
             {isInvalid}
           </p>

@@ -5,16 +5,16 @@ import React from "react";
 
 function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
   return (
-    <div className="flex flex-col w-[50%] px-2 py-4 items-center text-center border border-mainGray rounded-md bg-subGray">
-      <p className="font-bold text-sm mb-7">티어</p>
+    <div className="flex flex-col w-[50%] px-2 lg:py-4 py-2 items-center text-center border border-mainGray rounded-md bg-subGray">
+      <p className="font-bold text-xs lg:text-sm lg:mb-7 mb-3">티어</p>
       <div className="flex w-full justify-evenly mb-3">
         {PLAY_POSITION.map((pos, idx) => {
           return (
             <div
               key={pos.id}
-              className="flex flex-col h-fit items-center rounded-xl text-center gap-3"
+              className="flex flex-col h-fit items-center rounded-xl text-center lg:gap-3 gap-1"
             >
-              <div className="relative w-5 h-5 mb-3">
+              <div className="relative lg:w-5 lg:h-5 w-3 h-3 lg:mb-3 mb-1">
                 <Image
                   src={pos.icon}
                   alt="icon"
@@ -23,7 +23,7 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                 />
               </div>
               {tier && tier.length === 0 ? (
-                <p className="text-sm">설정 안함</p>
+                <p className="text-xs lg:text-sm">설정 안함</p>
               ) : (
                 <>
                   <Image
@@ -33,8 +33,9 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                     alt="tier"
                     height={60}
                     width={60}
+                    className="lg:w-[60px] lg:h-[60px] w-8 h-8"
                   />
-                  <p className="font-bold text-xs text-[#6a6a6a]">
+                  <p className="font-bold text-[10px] lg:text-xs text-[#6a6a6a]">
                     {tier[idx]}
                     {grade[idx]}
                   </p>

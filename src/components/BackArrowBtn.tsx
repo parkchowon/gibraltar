@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cva, VariantProps } from "class-variance-authority";
 import { usePostStore } from "@/stores/post.store";
 
-const arrowBtnVariants = cva("flex gap-8 py-6 z-30", {
+const arrowBtnVariants = cva("flex gap-8 py-3 lg:py-6 z-30", {
   variants: {
     intent: {
       page: "sticky top-0 z-20 w-full px-[25px] border-mainGray border-b-[1px] bg-white bg-opacity-60 backdrop-blur-md",
@@ -71,7 +71,11 @@ function BackArrowBtn({
           <ArrowBtn width="15" height="14" />
         </button>
       ) : null}
-      <p className={`${title !== "뒤로가기" && "font-semibold px-5"}`}>
+      <p
+        className={`${
+          title !== "뒤로가기" && "font-semibold px-3 lg:px-5"
+        } text-sm lg:text-base`}
+      >
         {title}
       </p>
     </div>

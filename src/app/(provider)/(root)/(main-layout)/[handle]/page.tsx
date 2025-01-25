@@ -39,7 +39,7 @@ function ProfilePage({ params }: { params: { handle: string } }) {
     );
   return (
     <>
-      <div className="px-6">
+      <div className="lg:px-6">
         {/* 프로필 부분 */}
         <ProfileBox userId={userId} />
         {/* 세부프로필 부분 */}
