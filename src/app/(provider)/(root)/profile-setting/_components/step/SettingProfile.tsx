@@ -13,7 +13,7 @@ import { MAX_HANDLE_LENGTH, MAX_NICKNAME_LENGTH } from "@/constants/textLength";
 import LogoLoading from "@/components/Loading/LogoLoading";
 
 function SettingProfile() {
-  const { userData, isPending } = useAuth();
+  const { userData, isPending, refetch: userRefetch } = useAuth();
   const { putNickname } = useProfileStore();
 
   const [isInvalid, setIsInvalid] = useState<string>("");
@@ -94,6 +94,7 @@ function SettingProfile() {
       };
       putNickname(nickRef.current?.value ?? "");
       const isFailed = await profileUpdate(updateData);
+      userRefetch();
       return isFailed;
     }
   };

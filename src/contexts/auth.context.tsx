@@ -4,7 +4,11 @@ import { getUser } from "@/apis/auth.api";
 import supabase from "@/supabase/client";
 import { UserRow } from "@/types/database";
 import { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import {
   createContext,
   PropsWithChildren,
@@ -21,6 +25,9 @@ interface AuthContextValue extends UserDataProps {
   isInitialized: boolean;
   isLoggedIn: boolean;
   user: User | null;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<any, Error>>;
   setUser: (user: User | null) => void;
 }
 
@@ -65,7 +72,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
     );
   }, []);
 
-  const { isPending, data: userData } = useQuery({
+  const {
+    isPending,
+    data: userData,
+    refetch,
+  } = useQuery({
     queryKey: ["userData", user?.id],
     queryFn: () => {
       if (user) {
@@ -80,6 +91,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     isLoggedIn,
     user,
     setUser,
+    refetch,
     userData,
     isPending,
   };
