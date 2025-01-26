@@ -96,7 +96,7 @@ export const useParticipantCreateMutation = () => {
       });
     },
     onSuccess: () => {
-      toast.success("그룹에 참가신청을 완료했습니다다.");
+      toast.success("그룹에 참가신청을 완료했습니다.");
     },
     onError: () => {
       toast.error("그룹 참가 중 에러 발생. 다시 시도해주세요.");

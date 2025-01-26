@@ -20,13 +20,13 @@ function PostParents({ postId }: { postId: string }) {
             <PostParents postId={parents.parent_post_id} />
             <div className="relative">
               <Post post={parents} />
-              <div className="absolute left-[6.5%] top-20 h-10 w-[1px] bg-gray-400" />
+              <div className="absolute left-[62px] top-20 h-10 w-[1px] bg-gray-400" />
             </div>
           </div>
         ) : (
           <div className="relative">
             <Post key={parents.id} post={parents} />
-            <div className="absolute left-[6.5%] top-20 h-10 w-[1px] bg-gray-400" />
+            <div className="absolute left-[62px] top-20 h-10 w-[1px] bg-gray-400" />
           </div>
         ))}
     </>
