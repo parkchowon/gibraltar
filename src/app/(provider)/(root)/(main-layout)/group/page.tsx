@@ -116,7 +116,7 @@ function GroupPage() {
           <p className="w-full text-center">아직 만들어진 그룹이 없습니다.</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3 py-10">
+        <div className="lg:flex flex-col gap-3 py-10 hidden">
           {groups &&
             groups.pages.map((page) => {
               return page.map((group, idx) => {
