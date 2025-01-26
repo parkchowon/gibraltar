@@ -12,6 +12,7 @@ import {
   CreateQuoteType,
   deletePostType,
   LikesFnType,
+  PostsType,
   RepostFnType,
 } from "@/types/home.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -55,13 +56,19 @@ export const useLikeMutation = () => {
     mutationFn: ({ postId, userId, state = true, postUserId }: LikesFnType) =>
       clickLike({ postId, userId, state, postUserId }),
     onMutate: async (newState) => {
-      const prevTimeline = queryClient.getQueryData(["timelineData"]);
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
+
+      const prevTimeline = queryClient.getQueryData(["timelineData"]);
+
       if (prevTimeline) {
-        queryClient.setQueryData(["timelineData"], {
-          ...prevTimeline,
-          likes: newState,
-        });
+        queryClient.setQueryData<PostsType>(["timelineData"], (old) =>
+          old
+            ? old.map((post) => ({
+                ...post,
+                likes: [...post.likes, { user_id: newState.userId ?? "" }],
+              }))
+            : []
+        );
       }
       return () => queryClient.setQueryData(["timelineData"], prevTimeline);
     },
