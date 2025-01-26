@@ -159,7 +159,7 @@ function FollowUser() {
                       을 즐기는 유저예요
                     </p>
                     {/* 같은 시간대 */}
-                    {followTimes && (
+                    {followTimes && followTimes.length > 0 && (
                       <p className="text-gray-500 w-full text-sm lg:text-base">
                         &middot; 같은{" "}
                         <span className="font-bold text-black">
