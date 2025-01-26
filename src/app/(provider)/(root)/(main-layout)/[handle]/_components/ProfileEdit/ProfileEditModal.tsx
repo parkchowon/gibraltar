@@ -86,17 +86,27 @@ function ProfileEditModal({
   const { playStyle, tier, grade, playChamps, favoriteTeam, putPlayStyle } =
     useProfileStore();
 
-  const { data: profile, isPending } = useQuery({
+  const {
+    data: profile,
+    isPending,
+    isFetching,
+    refetch,
+  } = useQuery({
     queryKey: ["profileDetail", profileUser.id],
     queryFn: () => getUserProfile(profileUser.id),
+    enabled: false,
   });
 
   useEffect(() => {
-    if (!profile) {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    if (!isPending && !isFetching && !profile) {
       return router.push("/profile-setting?step=1");
     }
     setBio(profile?.bio || "");
-  }, [profile]);
+  }, [profile, isFetching]);
 
   // 닉네임 수정
   const handleNickChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -237,7 +247,7 @@ function ProfileEditModal({
     };
 
     await mutation.mutateAsync(updateDetail);
-    window.location.reload();
+    refetch();
   };
 
   const handleCloseModal = () => {
