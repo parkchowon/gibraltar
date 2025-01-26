@@ -92,6 +92,9 @@ function ProfileEditModal({
   });
 
   useEffect(() => {
+    if (!profile) {
+      return router.push("/profile-setting?step=1");
+    }
     setBio(profile?.bio || "");
   }, [profile]);
 

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProfileEditModal from "./ProfileEdit/ProfileEditModal";
 import ProfileLoading from "@/components/Loading/ProfileLoading";
+import { useRouter } from "next/navigation";
 
 type followerType = {
   created_at: string;
@@ -23,6 +24,8 @@ function ProfileBox({ userId }: { userId: string }) {
   const [isFollowing, setIsFollowing] = useState<boolean>();
   const [editClick, setEditClick] = useState<boolean>(false);
   const [buttonText, setButtonText] = useState<string>("");
+
+  const router = useRouter();
 
   // 지금 프로필 페이지가 내 페이지인지
   const isMyProfile = loginUser && loginUser.id === userId;
@@ -61,7 +64,7 @@ function ProfileBox({ userId }: { userId: string }) {
 
   // 본인일 시 프로필 편집 모달 오픈
   const handleEditClick = () => {
-    setEditClick(true);
+    return setEditClick(true);
   };
 
   // 팔로우, 언팔로우 업데이트를 위한 mutation
