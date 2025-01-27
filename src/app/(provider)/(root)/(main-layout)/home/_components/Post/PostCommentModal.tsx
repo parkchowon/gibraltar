@@ -18,7 +18,7 @@ function PostCommentModal({
         onClick={() => setCommentClick(false)}
         className="absolute inset-0 bg-black opacity-30"
       />
-      <div className="relative top-[6.9%] w-[38.3%] h-fit pb-[30px] bg-white divide-y divide-mainGray rounded-2xl">
+      <div className="relative lg:top-[6.9%] lg:w-[38.3%] w-[90%] top-10 h-fit lg:pb-[30px] bg-white divide-y divide-mainGray rounded-2xl">
         <BackArrowBtn
           intent={"commentModal"}
           setModalClick={setCommentClick}

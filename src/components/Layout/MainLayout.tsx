@@ -37,7 +37,7 @@ function MainLayout({ children }: PropsWithChildren) {
       {modalRendering()}
       <div className="relative flex w-screen w-m-[1920px] h-screen overflow-auto">
         {/* 사이드 바 */}
-        <section className="fixed left-2 mt-[5%] lg:mt-0 lg:left-[15.5%] lg:top-[5%] lg:w-[10.3%]">
+        <section className="fixed left-2 mt-[5%] lg:mt-0 lg:left-[13.5%] lg:top-[5%] lg:w-[10.3%]">
           <button
             onClick={() => router.push("/home")}
             className="flex flex-col items-center w-full pb-10 gap-1 outline-none"

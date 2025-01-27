@@ -144,7 +144,7 @@ function QuoteModal() {
           onClick={() => setIsModalOpen("closed")}
           className="absolute inset-0 bg-black opacity-30"
         />
-        <div className="relative top-[6.9%] w-[38.3%] h-fit pb-6 px-6 bg-white rounded-2xl">
+        <div className="relative lg:top-[6.9%] lg:w-[38.3%] w-[90%] top-10 h-fit lg:pb-6 pb-2 lg:px-6 px-3 bg-white rounded-2xl">
           {quoteLoading && (
             <div className="absolute top-0 left-0 w-full h-full grid place-items-center rounded-2xl bg-black/30 z-50">
               <LogoLoading />
@@ -152,7 +152,7 @@ function QuoteModal() {
           )}
           <BackArrowBtn intent={"profileEditModal"} type="modal" />
           {/* 인용 적는 곳 */}
-          <div className="flex px-4 py-6 gap-3 mt-[73px]">
+          <div className="flex lg:px-4 lg:py-6 px-1 py-3 lg:gap-3 gap-1 lg:mt-[73px] mt-10">
             <ProfileBtn
               profileUrl={userData.profile_url}
               handle={userData.handle ?? undefined}
@@ -164,7 +164,7 @@ function QuoteModal() {
               value={quoteText}
               maxLength={MAX_POST_TEXT_LENGTH}
               placeholder="내용을 입력하세요."
-              className="w-full h-max-[300px] py-2 resize-none outline-none"
+              className="w-full h-max-[300px] py-2 lg:text-base text-sm resize-none outline-none"
               onInput={handleInputChange}
             ></textarea>
           </div>
@@ -197,7 +197,7 @@ function QuoteModal() {
             <button
               disabled={!quoteText.trim()}
               onClick={handleQuoteSubmit}
-              className="px-5 py-3 rounded-full ml-auto bg-black text-white disabled:bg-mainGray"
+              className="lg:px-5 lg:py-3 px-3 py-1 text-sm lg:text-base rounded-full ml-auto bg-black text-white disabled:bg-mainGray"
             >
               게시하기
             </button>

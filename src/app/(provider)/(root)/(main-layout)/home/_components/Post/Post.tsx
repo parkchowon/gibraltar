@@ -104,12 +104,12 @@ function Post({ post }: PostProps) {
       )}
       <div
         onClick={handlePostClick}
-        className={`flex flex-col w-full lg:px-10 px-2 ${
+        className={`flex flex-col w-full lg:px-10 px-1 ${
           post.isReposted && post.reposted_by ? "pt-1 pb-4" : "py-4"
         }  cursor-pointer bg-white hover:bg-subGray`}
       >
         {post.isReposted && post.reposted_by && (
-          <p className="text-sm ml-16 text-mainGray">
+          <p className="lg:text-sm text-xs lg:ml-16 ml-10 text-mainGray">
             {post.reposted_by === userData?.nickname ||
             post.reposted_by === user?.id
               ? "재게시했습니다"
@@ -121,7 +121,7 @@ function Post({ post }: PostProps) {
             profileUrl={post.user.profile_url}
             handle={post.user.handle}
           />
-          <div className="lg:ml-6 ml-4 w-full">
+          <div className="lg:ml-6 ml-2 w-full">
             <div className="flex items-center">
               <p className="font-semibold text-sm lg:text-base w-fit text-overflow whitespace-nowrap line-clamp-1">
                 {post.user.nickname}

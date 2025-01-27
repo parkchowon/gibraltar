@@ -38,7 +38,7 @@ function PostQuote({ postId }: { postId?: string }) {
   return (
     <div
       onClick={handleQuoteClick}
-      className={`w-full h-fit px-6 py-4 border border-mainGray rounded-3xl bg-white ${
+      className={`w-full h-fit lg:px-6 lg:py-4 px-3 py-2 border border-mainGray lg:rounded-3xl rounded-xl bg-white ${
         data && "cursor-pointer"
       }`}
     >
@@ -52,11 +52,17 @@ function PostQuote({ postId }: { postId?: string }) {
               type="non-click"
               intent="miniQuote"
             />
-            <p className="font-semibold ml-2">{quote.user?.nickname}</p>
-            <p className="text-sm text-mainGray">{quote.user?.handle}</p>
+            <p className="font-semibold lg:ml-2 lg:text-base text-sm ml-1">
+              {quote.user?.nickname}
+            </p>
+            <p className="text-mainGray lg:text-sm text-xs">
+              {quote.user?.handle}
+            </p>
           </div>
           <div>
-            <p className="mt-[7px] mb-[6px] leading-snug">{quote.content}</p>
+            <p className="lg:mt-[7px] mt-1 lg:mb-[6px] text-sm lg:text-base mb-0.5 leading-snug">
+              {quote.content}
+            </p>
             {quote.images && (
               <div className="flex w-full h-[300px] overflow-hidden bg-subGray rounded-2xl">
                 <PostMedia jsons={quote.images} />
