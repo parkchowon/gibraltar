@@ -278,7 +278,7 @@ function ProfileEditModal({
         className="absolute w-full h-full inset-0 bg-black opacity-30"
       />
       <div
-        className={`relative w-[90%] lg:w-[38.3%] h-[90%] max-h-[90%] pb-[30px] bg-white rounded-2xl`}
+        className={`relative w-[90%] lg:w-[38.3%] h-[90%] max-h-[90%] lg:pb-[30px] pb-16 bg-white rounded-2xl`}
       >
         {/* 홈으로 */}
         <BackArrowBtn
@@ -289,7 +289,7 @@ function ProfileEditModal({
         {mutation.isPending && <LogoLoading />}
         <div
           id="modal"
-          className={`flex flex-col lg:px-6 lg:pl-[9.7%] lg:mt-[73px] lg:pr-[71px] lg:h-[650px] ${styles.customModalScrollbar} px-3 overflow-y-auto`}
+          className={`flex flex-col lg:px-6 lg:pl-[9.7%] lg:mt-[73px] lg:pr-[71px] lg:h-[650px] h-full ${styles.customModalScrollbar} px-3 overflow-y-auto`}
         >
           <div className="flex lg:flex-row flex-col justify-center items-center w-full lg:py-10 mt-[44px] lg:mt-0 py-2 lg:gap-[46px] gap-2">
             {/* 프로필 사진 부분 */}
@@ -429,7 +429,7 @@ function ProfileEditModal({
         <div className="flex w-full h-fit pt-3 justify-center">
           <button
             onClick={handleProfileEditClick}
-            className="px-12 py-3.5 text-white font-medium bg-black rounded-full"
+            className="lg:px-12 lg:py-3.5 px-8 py-2 lg:text-base text-sm text-white font-medium bg-black rounded-full"
           >
             변경사항 저장
           </button>

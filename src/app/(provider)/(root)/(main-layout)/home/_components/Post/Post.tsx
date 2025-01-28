@@ -104,7 +104,7 @@ function Post({ post }: PostProps) {
       )}
       <div
         onClick={handlePostClick}
-        className={`flex flex-col w-full lg:px-10 px-1 ${
+        className={`flex flex-col w-full lg:px-10 pl-2 pr-4 ${
           post.isReposted && post.reposted_by ? "pt-1 pb-4" : "py-4"
         }  cursor-pointer bg-white hover:bg-subGray`}
       >
