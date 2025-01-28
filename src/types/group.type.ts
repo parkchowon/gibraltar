@@ -86,6 +86,11 @@ export type GroupType = {
   tier: Json[] | null;
   title: string;
   user_id: string;
+  users: {
+    handle: string;
+    profile_url: string;
+    nickname: string;
+  } | null;
   update_at: string;
 }[];
 

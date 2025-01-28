@@ -9,6 +9,8 @@ import {
 } from "@/hooks/useGroupMutation";
 import LogoLoading from "@/components/Loading/LogoLoading";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import ProfileBtn from "@/components/ProfileBtn";
+import { formatToPostDate } from "@/utils/formatChange";
 
 function GroupItem({
   group,
@@ -64,6 +66,9 @@ function GroupItem({
     return deleteMutation.mutate({ groupId: group.id, userId });
   };
 
+  // 그룹 작성 시간
+  const groupTime = formatToPostDate(group.created_at);
+
   // 참가하기 버튼 클릭 시
   const handleParticipantClick = (groupId: string) => {
     if (group.group_status !== "모집 중") {
@@ -93,9 +98,20 @@ function GroupItem({
         </div>
       )}
       <div className="flex items-center">
-        <p className="outline-none font-semibold py-1 px-2 bg-transparent placeholder:text-mainGray whitespace-nowrap">
-          {group.title}
-        </p>
+        <div className="flex gap-3 items-center">
+          <ProfileBtn
+            profileUrl={group.users?.profile_url || ""}
+            handle={group.users?.handle}
+            type="click"
+            intent="two"
+          />
+          <div>
+            <p className="outline-none font-semibold bg-transparent placeholder:text-mainGray whitespace-nowrap">
+              {group.title}
+            </p>
+            <p className="text-xs text-mainGray">{groupTime}</p>
+          </div>
+        </div>
         <div
           className={`flex rounded-full ${
             group.group_status === "모집 중" ? "bg-mint" : "bg-carrot"

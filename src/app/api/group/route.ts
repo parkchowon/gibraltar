@@ -53,7 +53,7 @@ export const GET = async (request: NextRequest) => {
 
     const { data, error } = await supabase
       .from("group")
-      .select("*")
+      .select("*, users(nickname, handle, profile_url)")
       .range(start, end)
       .order("created_at", { ascending: false });
 
