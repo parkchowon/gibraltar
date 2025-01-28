@@ -10,7 +10,7 @@ const profileVariants = cva("relative aspect-square flex-shrink-0", {
       card: "lg:w-[106px] lg:h-[106px] w-16 h-16",
       two: "w-7 h-7",
       three: "w-[23px] h-[23px]",
-      edit: "absolute w-[155px] h-[155px] cursor-default",
+      edit: "absolute lg:w-[155px] lg:h-[155px] w-24 h-24 cursor-default",
       quote: "w-[46px] h-[46px] cursor-default",
       miniQuote: "w-6 h-6 cursor-default",
     },

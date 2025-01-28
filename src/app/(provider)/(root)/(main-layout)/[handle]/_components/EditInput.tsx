@@ -26,7 +26,7 @@ function EditInput({ label, value, onChange }: EditInputProps) {
   }, []);
 
   return (
-    <label className="flex w-full px-4 py-3 border gap-8 border-mainGray rounded-2xl bg-subGray">
+    <label className="flex w-full lg:px-4 lg:py-3 px-2 py-2 border gap-8 border-mainGray lg:rounded-2xl rounded-lg bg-subGray">
       <p className="text-mainGray lg:text-base text-sm">{label}</p>
       <textarea
         maxLength={maxLength}

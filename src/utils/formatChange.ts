@@ -23,7 +23,6 @@ export const formatToPostDate = (postTimeStamp: string) => {
   const [postHour, postMin, postSec] = postTime.split(".")[0].split(":");
 
   // 어제 쓰인 것
-  console.log("작성날짜: ", postDate, "지금 날짜:", currentDate);
   if (Number(postDay) === Number(currentDay) - 1) {
     return `${24 - Number(currentHour) - Number(postHour)}시간 전`;
   }

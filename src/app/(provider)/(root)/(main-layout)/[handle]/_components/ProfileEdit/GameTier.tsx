@@ -68,13 +68,13 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
           );
         })}
       </div>
-      <div className="flex w-full h-fit justify-center items-center py-2 bg-mint text-white rounded-full">
+      <div className="flex w-full h-fit justify-center items-center lg:py-2 py-1 bg-mint text-white rounded-full">
         <p className="font-semibold text-xs lg:text-base">
           {userTier[position] ? userTier[position] : "설정 안함"}{" "}
           {tierGrade[position] && 6 - tierGrade[position]}
         </p>
       </div>
-      <div className="flex w-full justify-center py-2 gap-2">
+      <div className="flex w-full justify-center lg:py-2 py-1 lg:gap-2 gap-1">
         {OWTier.map((tier) => {
           return (
             <button
@@ -94,7 +94,7 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
           );
         })}
       </div>
-      <div className="w-[80%] px-8 py-4 bg-gray-50 rounded-lg">
+      <div className="w-[80%] lg:px-8 lg:py-4 px-4 py-1 bg-gray-50 rounded-lg">
         <div className="flex w-full justify-between">
           {[...Array(5)].map((_, idx) => (
             <p key={idx} className="lg:text-base text-xs">

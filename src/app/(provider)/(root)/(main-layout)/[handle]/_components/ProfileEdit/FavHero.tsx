@@ -91,7 +91,7 @@ function FavHero({ main, play }: { main: Json; play: Json }) {
                 <button
                   key={hero.key}
                   onClick={() => handleHeroClick(hero.name)}
-                  className={`relative w-14 h-14 rounded-full ${
+                  className={`relative lg:w-14 lg:h-14 w-8 h-8 rounded-full ${
                     mainChamp.includes(hero.name)
                       ? "border-2 border-carrot bg-carrot"
                       : playChamp.includes(hero.name)

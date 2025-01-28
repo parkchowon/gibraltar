@@ -289,9 +289,9 @@ function ProfileEditModal({
         {mutation.isPending && <LogoLoading />}
         <div
           id="modal"
-          className={`flex flex-col px-6 pl-[9.7%] mt-[73px] pr-[71px] h-[650px] ${styles.customModalScrollbar} overflow-y-auto`}
+          className={`flex flex-col lg:px-6 lg:pl-[9.7%] lg:mt-[73px] lg:pr-[71px] lg:h-[650px] ${styles.customModalScrollbar} px-3 overflow-y-auto`}
         >
-          <div className="flex lg:flex-row flex-col justify-center items-center w-full py-10 gap-[46px]">
+          <div className="flex lg:flex-row flex-col justify-center items-center w-full lg:py-10 mt-[44px] lg:mt-0 py-2 lg:gap-[46px] gap-2">
             {/* 프로필 사진 부분 */}
             <div className="relative w-fit h-fit flex items-center justify-center">
               <button
@@ -316,7 +316,7 @@ function ProfileEditModal({
               />
             </div>
             {/* 닉네임, 아이디 수정 input 부분 */}
-            <div className="flex flex-col flex-grow gap-3">
+            <div className="flex flex-col flex-grow gap-3 w-[80%]">
               {/* 비공개 계정 설정 토글 버튼(비공개 기능 없음으로 hidden 처리) */}
               <div className="hidden items-center justify-end px-2">
                 <p className="text-sm text-mainGray mr-2">계정 잠금</p>
@@ -367,9 +367,9 @@ function ProfileEditModal({
               />
             </div>
           </div>
-          <div className="flex flex-col gap-5">
-            <p className="font-semibold">세부 프로필</p>
-            <div className="flex flex-col gap-2" ref={modeRef}>
+          <div className="flex flex-col lg:gap-5 gap-2">
+            <p className="font-semibold lg:text-base text-sm">세부 프로필</p>
+            <div className="flex flex-col lg:gap-2 gap-1" ref={modeRef}>
               <DetailTitle
                 title="플레이 모드"
                 type="mode"

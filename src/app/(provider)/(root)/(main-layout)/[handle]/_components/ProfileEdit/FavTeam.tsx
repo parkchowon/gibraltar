@@ -26,12 +26,12 @@ function FavTeam({ team }: { team: string | null }) {
             <button
               key={team.id}
               onClick={() => handleTeamClick(team.name)}
-              className={`relative w-14 h-14 aspect-square rounded-full border-[1px] ${
+              className={`relative lg:w-14 lg:h-14 w-7 h-7 aspect-square rounded-full border-[1px] ${
                 favTeam === team.name && "border-mint border-2"
               }`}
             >
               {team.id === 0 ? (
-                <p>없음</p>
+                <p className="lg:text-base text-xs">없음</p>
               ) : (
                 <Image
                   alt="team logo"
