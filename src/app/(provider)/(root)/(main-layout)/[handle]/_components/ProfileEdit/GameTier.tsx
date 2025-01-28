@@ -46,7 +46,7 @@ function GameTier({ tier, grade }: { tier: Json; grade: Json }) {
   }, [userTier]);
 
   useEffect(() => {
-    putGrade(tierGrade);
+    putGrade(tierGrade.map((item) => 6 - item));
   }, [tierGrade]);
 
   return (
