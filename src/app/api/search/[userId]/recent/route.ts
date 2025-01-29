@@ -11,9 +11,7 @@ export const POST = async (
   const supabase = createClient();
   const userId = params.userId;
   const pageParams = Number(searchParams.get("page-params") as string);
-  // const searchText = searchParams.get("text") as string;
   const { searchText } = await request.json();
-  console.log(searchText);
 
   try {
     const start = (pageParams - 1) * POST_SIZE;

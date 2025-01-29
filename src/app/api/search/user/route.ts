@@ -6,7 +6,6 @@ export const POST = async (request: NextRequest) => {
   const supabase = createClient();
   const searchParams = request.nextUrl.searchParams;
   const pageParams = Number(searchParams.get("page-params") as string);
-  // const searchText = searchParams.get("text") as string;
   const { searchText } = await request.json();
 
   try {
