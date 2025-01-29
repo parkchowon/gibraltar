@@ -7,6 +7,7 @@ const nextConfig = {
       { hostname: "k.kakaocdn.net" },
       { hostname: "img1.kakaocdn.net" },
       { hostname: "pbs.twimg.com" },
+      { hostname: "abs.twimg.com" },
       { hostname: "d15f34w2p8l1cc.cloudfront.net" },
     ],
   },

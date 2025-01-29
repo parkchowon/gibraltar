@@ -24,8 +24,9 @@ export const fetchRecentSearch = async (
   pageParams: number
 ): Promise<SearchPostType> => {
   try {
+    const encodedText = encodeURIComponent(searchText);
     const response = await apiClient.get(
-      `api/search/${userId}/recent?text=${searchText}&page-params=${pageParams}`
+      `api/search/${userId}/recent?text=${encodedText}&page-params=${pageParams}`
     );
     return response.data;
   } catch (error) {
@@ -39,8 +40,9 @@ export const fetchUserSearch = async (
   pageParams: number
 ): Promise<SearchUserType> => {
   try {
+    const encodedText = encodeURIComponent(searchText);
     const response = await apiClient.get(
-      `api/search/user?text=${searchText}&page-params=${pageParams}`
+      `api/search/user?text=${encodedText}&page-params=${pageParams}`
     );
 
     return response.data;
