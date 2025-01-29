@@ -75,10 +75,10 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
         </div>
       ) : (
         <div
-          className={`flex w-full h-full items-center gap-3 overflow-x-auto py-3 ${styles.customScrollbar}`}
+          className={`flex w-full h-full items-center lg:gap-3 gap-1 overflow-x-auto py-3 ${styles.customScrollbar}`}
         >
           {mainByRole.length + playByRole.length > 0 && (
-            <div className="flex items-center justify-center w-[110px] h-[110px] min-w-[110px] min-h-[110px]">
+            <div className="flex items-center justify-center lg:w-[110px] lg:h-[110px] lg:min-w-[110px] lg:min-h-[110px] h-12 w-12 min-w-12 min-h-12">
               <Image
                 src={
                   mainByRole && mainByRole.length !== 0
@@ -90,7 +90,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
                 width={110}
                 height={110}
                 alt="캐릭터"
-                className={`rounded-full border-2 w-[110px] h-[110px] ${
+                className={`rounded-full border-2 lg:w-[110px] lg:h-[110px] w-12 h-12 ${
                   mainByRole.length !== 0
                     ? "border-carrot bg-carrot"
                     : "border-mint bg-mint"
@@ -99,14 +99,14 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
             </div>
           )}
           <div className="flex flex-grow">
-            <div className="grid grid-rows-2 w-full grid-flow-col gap-3 items-center">
+            <div className="grid grid-rows-2 w-full grid-flow-col lg:gap-3 gap-1 items-center">
               {mainByRole &&
                 mainByRole.map((main, idx) => {
                   return (
                     <div
                       key={main.key}
                       className={`flex items-center justify-center ${
-                        idx === 0 ? "hidden" : "w-[52px] h-[52px]"
+                        idx === 0 ? "hidden" : "lg:w-[52px] lg:h-[52px] w-8 h-8"
                       }`}
                     >
                       <Image
@@ -115,7 +115,9 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
                         width={52}
                         height={52}
                         className={`rounded-full border-2 border-carrot bg-carrot ${
-                          idx === 0 ? "hidden" : "w-[52px] h-[52px]"
+                          idx === 0
+                            ? "hidden"
+                            : "lg:w-[52px] lg:h-[52px] w-8 h-8"
                         }`}
                       />
                     </div>
@@ -126,7 +128,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
                   return (
                     <div
                       key={play.key}
-                      className={`flex items-center justify-center w-[52px] h-[52px] ${
+                      className={`flex items-center justify-center lg:w-[52px] lg:h-[52px] w-8 h-8 ${
                         mainByRole.length === 0 && idx === 0 && "hidden"
                       }`}
                     >
@@ -136,7 +138,7 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
                         alt={play.key}
                         width={52}
                         height={52}
-                        className="rounded-full border-2 border-mint bg-mint "
+                        className="rounded-full border-2 border-mint bg-mint lg:w-[52px] lg:h-[52px] w-8 h-8"
                       />
                     </div>
                   );
