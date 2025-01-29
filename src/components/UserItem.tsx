@@ -80,13 +80,13 @@ function UserItem({
       />
       <div className="flex-grow lg:ml-6 lg:mr-8">
         <div className="flex items-center gap-1.5 w-fit">
-          <p className="font-semibold">{user.nickname}</p>
-          <p className="text-sm font-medium text-gray-500 truncate">
+          <p className="font-semibold lg:text-base text-sm">{user.nickname}</p>
+          <p className="lg:text-sm text-xs font-medium text-gray-500 truncate">
             {user.handle}
           </p>
         </div>
         <p
-          className={`text-sm flex-grow h-fit font-medium text-black ${
+          className={`lg:text-sm text-xs flex-grow h-fit font-medium text-black ${
             tag ? "line-clamp-1" : "line-clamp-3"
           }`}
         >

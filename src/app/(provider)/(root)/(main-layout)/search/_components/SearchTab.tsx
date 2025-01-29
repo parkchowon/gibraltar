@@ -133,21 +133,6 @@ function SearchTab() {
                 });
               }))
         )}
-        {/* {data && data.pages.flatMap((page) => page.length).length === 1 && (
-          <EmptyState type="검색 결과" />
-        )}
-        {data &&
-          (tabName === "user"
-            ? data.pages.map((page) => {
-                return (page as SearchUserType).map((user) => {
-                  return <UserItem key={user.id} user={user} />;
-                });
-              })
-            : data.pages.map((page) => {
-                return (page as SearchPostType).map((post) => {
-                  return <Post key={post.id} post={post} />;
-                });
-              }))} */}
         <div ref={loadMoreRef} style={{ height: "20px" }} />
         {isFetchingNextPage && <PostLoading />}
       </div>

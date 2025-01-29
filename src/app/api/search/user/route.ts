@@ -2,12 +2,12 @@ import { POST_SIZE } from "@/constants/post";
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   const supabase = createClient();
   const searchParams = request.nextUrl.searchParams;
   const pageParams = Number(searchParams.get("page-params") as string);
-  const searchText = searchParams.get("text") as string;
-  const decodedText = decodeURIComponent(searchText);
+  // const searchText = searchParams.get("text") as string;
+  const { searchText } = await request.json();
 
   try {
     const start = (pageParams - 1) * POST_SIZE;
@@ -17,7 +17,7 @@ export const GET = async (request: NextRequest) => {
       .from("users")
       .select("id, profile_url, nickname, handle, user_profiles(bio)")
       .range(start, end)
-      .or(`nickname.ilike.%${decodedText}%, handle.ilike.%${decodedText}%`);
+      .or(`nickname.ilike.%${searchText}%, handle.ilike.%${searchText}%`);
 
     if (error) throw new Error(error.message);
 

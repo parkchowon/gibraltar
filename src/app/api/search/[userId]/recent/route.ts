@@ -2,7 +2,7 @@ import { POST_SIZE } from "@/constants/post";
 import { createClient } from "@/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (
+export const POST = async (
   request: NextRequest,
   { params }: { params: { userId: string } }
 ) => {
@@ -11,8 +11,9 @@ export const GET = async (
   const supabase = createClient();
   const userId = params.userId;
   const pageParams = Number(searchParams.get("page-params") as string);
-  const searchText = searchParams.get("text") as string;
-  const decodedText = decodeURIComponent(searchText);
+  // const searchText = searchParams.get("text") as string;
+  const { searchText } = await request.json();
+  console.log(searchText);
 
   try {
     const start = (pageParams - 1) * POST_SIZE;
@@ -28,7 +29,7 @@ export const GET = async (
     const { data: tagId, error: tagError } = await supabase
       .from("tags")
       .select("id")
-      .eq("tag_name", decodedText)
+      .eq("tag_name", searchText)
       .single();
     if (tagError && tagError.code !== "PGRST116") {
       throw new Error(tagError.message);
@@ -45,10 +46,10 @@ export const GET = async (
 
       if (postTagData) {
         const postId = postTagData.map((post) => post.post_id);
-        query.or(`content.ilike.%${decodedText}%,id.in.(${postId.join(",")})`);
+        query.or(`content.ilike.%${searchText}%,id.in.(${postId.join(",")})`);
       }
     } else {
-      query.ilike("content", `%${decodedText}%`);
+      query.ilike("content", `%${searchText}%`);
     }
 
     const { data, error } = await query
