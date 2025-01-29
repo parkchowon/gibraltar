@@ -24,7 +24,10 @@ export const formatToPostDate = (postTimeStamp: string) => {
 
   // 어제 쓰인 것
   if (Number(postDay) === Number(currentDay) - 1) {
-    return `${24 - Number(currentHour) - Number(postHour)}시간 전`;
+    if (24 + Number(currentHour) - Number(postHour) < 24) {
+      return `${24 + Number(currentHour) - Number(postHour)}시간 전`;
+    }
+    return `1일 전`;
   }
 
   // 오늘 쓰인 post의 time
