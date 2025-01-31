@@ -1,5 +1,4 @@
 "use client";
-import MainLayout from "@/components/Layout/MainLayout";
 import { useSearchParams } from "next/navigation";
 import ProfileBox from "./_components/ProfileBox";
 import ProfileDetail from "./_components/ProfileDetail/ProfileDetail";

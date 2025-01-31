@@ -1,3 +1,4 @@
+import { SearchUserType } from "@/types/search.type";
 import apiClient from "./apiClient.api";
 
 export const addFollow = async (userId: string, followingId: string) => {
@@ -32,5 +33,35 @@ export const checkFollow = async (
   } catch (error) {
     console.error(error);
     return false;
+  }
+};
+
+export const getFollower = async (
+  handle: string,
+  pageParam: number
+): Promise<SearchUserType> => {
+  try {
+    const response = await apiClient.get(
+      `api/follow/follower?handle=${handle}&page_param=${pageParam}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getFollowing = async (
+  handle: string,
+  pageParam: number
+): Promise<SearchUserType> => {
+  try {
+    const response = await apiClient.get(
+      `api/follow/following?handle=${handle}&page_param=${pageParam}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 };

@@ -152,8 +152,18 @@ function ProfileBox({ userId }: { userId: string }) {
         </div>
         <div className="flex gap-5 lg:gap-14 text-xs font-bold">
           <p>포스트 {postCount}</p>
-          <p>팔로워 {followings}</p>
-          <p>팔로우 {followers.length}</p>
+          <button
+            className="hover:underline hover:underline-offset-4"
+            onClick={() => router.push(`/${profileUser?.handle}/follower`)}
+          >
+            <p>팔로워 {followings}</p>
+          </button>
+          <button
+            className="hover:underline hover:underline-offset-4"
+            onClick={() => router.push(`/${profileUser?.handle}/following`)}
+          >
+            <p>팔로우 중 {followers.length}</p>
+          </button>
         </div>
       </div>
     </div>

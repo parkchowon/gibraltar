@@ -22,7 +22,7 @@ export const POST = async (
 
     const { data, error } = await supabase
       .from("followers")
-      .insert({ follower_id: userId, following_id: followingId });
+      .upsert({ follower_id: userId, following_id: followingId });
 
     if (error) throw new Error(error.message);
 
