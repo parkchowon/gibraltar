@@ -21,10 +21,10 @@ function UserItem({
   const { userData } = useAuth();
   const [btnText, setBtnText] = useState<string>("팔로우");
 
-  const { followMutation, unFollowMutation } = useFollow();
   const { setSelectedHandle, selectedUser, setSelectedUser } =
     useUserTagStore();
-  const { data, isPending } = useQuery({
+
+  const { data, isPending, refetch } = useQuery({
     queryKey: ["userFollow", user.id],
     queryFn: () => {
       if (userData) {
@@ -32,6 +32,12 @@ function UserItem({
       }
     },
     enabled: !!userData,
+  });
+
+  const { followMutation, unFollowMutation } = useFollow({
+    onSuccess: () => {
+      refetch();
+    },
   });
 
   useEffect(() => {
@@ -61,6 +67,7 @@ function UserItem({
         followingId: user.id,
       });
     }
+    refetch();
   };
 
   return (
@@ -81,7 +88,7 @@ function UserItem({
       <div className="flex-grow lg:ml-6 lg:mr-8">
         <div className="flex items-center gap-1.5 w-fit">
           <p className="font-semibold lg:text-base text-sm">{user.nickname}</p>
-          <p className="lg:text-sm text-xs font-medium text-gray-500 truncate">
+          <p className="lg:text-sm text-xs font-medium text-mainGray truncate">
             {user.handle}
           </p>
         </div>
@@ -101,11 +108,13 @@ function UserItem({
           tag && "hidden"
         } px-4 lg:px-6 py-2.5 text-xs lg:text-sm ml-auto rounded-full flex-shrink-0 ${
           data
-            ? "border border-gray-400 hover:bg-warning"
-            : "bg-gray-300 hover:brightness-95"
+            ? "border border-mainGray hover:bg-warning"
+            : "bg-mint text-white hover:brightness-95"
         } `}
       >
-        {isPending ? "로딩 중" : btnText}
+        {isPending || followMutation.isPending || unFollowMutation.isPending
+          ? "로딩 중"
+          : btnText}
       </button>
     </div>
   );

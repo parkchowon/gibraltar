@@ -8,7 +8,7 @@ type followMutateType = {
   followingId: string;
 };
 
-export const useFollow = () => {
+export const useFollow = (options?: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
 
   const followMutation = useMutation({
@@ -20,27 +20,17 @@ export const useFollow = () => {
       await queryClient.cancelQueries({ queryKey: ["timelineData"] });
       await queryClient.cancelQueries({ queryKey: ["recommendedUsers"] });
       await queryClient.cancelQueries({ queryKey: ["followCheck"] });
+      await queryClient.cancelQueries({ queryKey: ["userFollow"] });
 
       // 이전 데이터를 저장장
       const prevProfileData = queryClient.getQueryData(["profileData"]);
       const prevTimeline = queryClient.getQueryData(["timelineData"]);
       const followCheck = queryClient.getQueryData(["followCheck"]);
+      const prevUserFollow = queryClient.getQueryData(["userFollow"]);
+
       const prevRecommendedUsers = queryClient.getQueryData<
         RecommendedUserType | undefined
       >(["recommendedUsers"]);
-
-      //       // 미리 UI 적용
-      //       queryClient.setQueryData<{
-      //     followerList: FollowType;
-      //     profileUser: any;
-      //     postCount: any;
-      // } | undefined>(["profileData"], (old) => old ? ({
-      //         ...old,
-      //         followerList:{
-      //           ...old,
-
-      //         },
-      //       }): undefined);
 
       queryClient.setQueryData<PostsType | undefined>(["timelineData"], (old) =>
         old
@@ -50,6 +40,7 @@ export const useFollow = () => {
             }
           : undefined
       );
+      queryClient.setQueryData<boolean>(["userFollow"], () => true);
       queryClient.setQueryData<boolean>(["followCheck"], () => true);
       queryClient.setQueryData<RecommendedUserType | undefined>(
         ["recommendedUsers"],
@@ -68,6 +59,7 @@ export const useFollow = () => {
         prevTimeline,
         followCheck,
         prevRecommendedUsers,
+        prevUserFollow,
       };
     },
     onSettled: () => {
@@ -81,9 +73,13 @@ export const useFollow = () => {
         queryKey: ["followCheck"],
       });
       queryClient.invalidateQueries({
+        queryKey: ["userFollow"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["recommendedUsers"],
       });
     },
+    onSuccess: options?.onSuccess,
   });
 
   const unFollowMutation = useMutation({
@@ -142,6 +138,7 @@ export const useFollow = () => {
         queryKey: ["recommendedUsers"],
       });
     },
+    onSuccess: options?.onSuccess,
   });
 
   return { followMutation, unFollowMutation };
