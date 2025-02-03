@@ -1,8 +1,4 @@
-import {
-  fetchPopularSearch,
-  fetchRecentSearch,
-  fetchUserSearch,
-} from "@/apis/search.api";
+import { fetchRecentSearch, fetchUserSearch } from "@/apis/search.api";
 import PostLoading from "@/components/Loading/PostLoading";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

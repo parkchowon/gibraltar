@@ -27,7 +27,9 @@ function SearchBar({
         `/search?word=${encodeURIComponent(searchText)}&tab=${tab}`
       );
     }
-    router.push(`/search?word=${encodeURIComponent(searchText)}&tab=recent`);
+    return router.push(
+      `/search?word=${encodeURIComponent(searchText)}&tab=recent`
+    );
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

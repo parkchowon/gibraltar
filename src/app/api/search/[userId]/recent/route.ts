@@ -12,7 +12,6 @@ export const POST = async (
   const userId = params.userId;
   const pageParams = Number(searchParams.get("page-params") as string);
   const { searchText } = await request.json();
-  const decodedText = decodeURIComponent(searchText);
 
   try {
     const start = (pageParams - 1) * POST_SIZE;
@@ -28,7 +27,7 @@ export const POST = async (
     const { data: tagId, error: tagError } = await supabase
       .from("tags")
       .select("id")
-      .eq("tag_name", decodedText)
+      .eq("tag_name", searchText)
       .single();
     if (tagError && tagError.code !== "PGRST116") {
       throw new Error(tagError.message);
@@ -45,10 +44,10 @@ export const POST = async (
 
       if (postTagData) {
         const postId = postTagData.map((post) => post.post_id);
-        query.or(`content.ilike.%${decodedText}%,id.in.(${postId.join(",")})`);
+        query.or(`content.ilike.%${searchText}%,id.in.(${postId.join(",")})`);
       }
     } else {
-      query.ilike("content", `%${decodedText}%`);
+      query.ilike("content", `%${searchText}%`);
     }
 
     const { data, error } = await query

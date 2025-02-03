@@ -7,7 +7,6 @@ export const POST = async (request: NextRequest) => {
   const searchParams = request.nextUrl.searchParams;
   const pageParams = Number(searchParams.get("page-params") as string);
   const { searchText } = await request.json();
-  const decodedText = decodeURIComponent(searchText);
 
   try {
     const start = (pageParams - 1) * POST_SIZE;
@@ -17,7 +16,7 @@ export const POST = async (request: NextRequest) => {
       .from("users")
       .select("id, profile_url, nickname, handle, user_profiles(bio)")
       .range(start, end)
-      .or(`nickname.ilike.%${decodedText}%, handle.ilike.%${decodedText}%`);
+      .or(`nickname.ilike.%${searchText}%, handle.ilike.%${searchText}%`);
 
     if (error) throw new Error(error.message);
 
