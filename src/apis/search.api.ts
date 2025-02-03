@@ -27,7 +27,7 @@ export const fetchRecentSearch = async (
     const response = await apiClient.post(
       `api/search/${userId}/recent?page-params=${pageParams}`,
       {
-        searchText: searchText,
+        searchText: encodeURIComponent(searchText),
       },
       {
         headers: {
@@ -51,7 +51,7 @@ export const fetchUserSearch = async (
     const response = await apiClient.post(
       `api/search/user?page-params=${pageParams}`,
       {
-        searchText: searchText,
+        searchText: encodeURIComponent(searchText),
       },
       {
         headers: {

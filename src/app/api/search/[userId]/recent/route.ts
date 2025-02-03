@@ -27,7 +27,7 @@ export const POST = async (
     const { data: tagId, error: tagError } = await supabase
       .from("tags")
       .select("id")
-      .eq("tag_name", searchText)
+      .eq("tag_name", decodeURIComponent(searchText))
       .single();
     if (tagError && tagError.code !== "PGRST116") {
       throw new Error(tagError.message);

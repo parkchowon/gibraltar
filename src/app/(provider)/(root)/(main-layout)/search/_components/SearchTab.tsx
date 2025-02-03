@@ -30,7 +30,6 @@ function SearchTab() {
 
   const loadMoreRef = useRef(null);
 
-  // TODO: pageParam에 .. 뭘 넘겨줄건지
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["searchPost", `${tabName}${searchText}`],
@@ -39,8 +38,8 @@ function SearchTab() {
       }): Promise<SearchPostType | SearchUserType> => {
         if (user) {
           switch (tabName) {
-            case "popular":
-              return fetchPopularSearch(searchText, user.id, pageParam);
+            // case "popular":
+            //   return fetchPopularSearch(searchText, user.id, pageParam);
             case "recent":
               return fetchRecentSearch(searchText, user.id, pageParam);
             case "user":
