@@ -20,7 +20,7 @@ function SearchBar({
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const encodedText = encodeURIComponent(searchText);
-    if (searchText === "") {
+    if (encodedText === "") {
       return;
     }
     if (tab) {

@@ -19,7 +19,7 @@ import Post from "../home/_components/Post/Post";
 function NotificationPage() {
   const { userData, isPending } = useAuth();
   const { notiCount, putNotiCount } = useNotificationStore();
-  // const [allNoti, setAllNoti] = useState<NotificationType[]>([]);
+  const [allNoti, setAllNoti] = useState<NotificationType[]>([]);
   const [currentTime, setCurrentTime] = useState<string>(
     new Date().toISOString()
   );
@@ -59,7 +59,10 @@ function NotificationPage() {
   };
 
   // 모든 페이지의 알람 배열
-  const allNoti = data?.pages.flat() || [];
+  useEffect(() => {
+    setAllNoti(data?.pages.flat() || []);
+  }, [data]);
+
   // 타입별로 나눈 배열
   const groupByType = groupBy(allNoti, "type") as Record<
     string,

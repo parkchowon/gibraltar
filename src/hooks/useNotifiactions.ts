@@ -6,6 +6,26 @@ import { useEffect } from "react";
 export const useNotifications = () => {
   const { user } = useAuth();
   const { putNotiCount } = useNotificationStore();
+
+  useEffect(() => {
+    const isNotiExist = async () => {
+      if (user) {
+        const { data, error } = await supabase
+          .from("notifications")
+          .select("*")
+          .eq("user_id", user?.id)
+          .eq("is_read", false)
+          .single();
+        if (data) {
+          console.log(data);
+          putNotiCount(true);
+        }
+      }
+    };
+
+    isNotiExist();
+  }, [user]);
+
   useEffect(() => {
     if (user) {
       const channel = supabase
@@ -26,6 +46,7 @@ export const useNotifications = () => {
         .subscribe((state) => {
           // console.log("구독상태: ", state);
         });
+
       return () => {
         supabase.removeChannel(channel);
       };
