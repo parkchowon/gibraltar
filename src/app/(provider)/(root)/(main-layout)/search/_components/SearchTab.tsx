@@ -26,7 +26,7 @@ function SearchTab() {
 
   const params = useSearchParams();
   const tabName = params.get("tab") ?? "";
-  const searchText = params.get("word") ?? "";
+  const searchText = decodeURIComponent(params.get("word") ?? "");
 
   const loadMoreRef = useRef(null);
 
