@@ -57,7 +57,7 @@ function SearchTab() {
         return allPages.length + 1;
       },
       initialPageParam: 1,
-      enabled: !!user?.id && !!searchText,
+      enabled: !!user?.id,
     });
 
   // observer로 스크롤 감지
