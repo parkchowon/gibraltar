@@ -19,17 +19,14 @@ function SearchBar({
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const encodedText = encodeURIComponent(searchText);
     if (searchText === "") {
       return;
     }
     if (tab) {
-      return router.push(
-        `/search?word=${encodeURIComponent(searchText)}&tab=${tab}`
-      );
+      return router.push(`/search?word=${encodedText}&tab=${tab}`);
     }
-    return router.push(
-      `/search?word=${encodeURIComponent(searchText)}&tab=recent`
-    );
+    return router.push(`/search?word=${encodedText}&tab=recent`);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
