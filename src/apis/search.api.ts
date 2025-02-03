@@ -28,6 +28,12 @@ export const fetchRecentSearch = async (
       `api/search/${userId}/recent?page-params=${pageParams}`,
       {
         searchText: searchText,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       }
     );
     return response.data;
@@ -46,6 +52,12 @@ export const fetchUserSearch = async (
       `api/search/user?page-params=${pageParams}`,
       {
         searchText: searchText,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       }
     );
 

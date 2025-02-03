@@ -81,7 +81,12 @@ export const POST = async (
         comments: postComments,
       };
     });
-    return NextResponse.json(post);
+    return NextResponse.json(post, {
+      headers: {
+        "Access-Control-Allow-Origin":
+          process.env.NEXT_PUBLIC_BASE_URL || "https://gibraltar.vercel.app",
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       { message: "서버로 인한 오류", error },
