@@ -43,7 +43,7 @@ function PostQuote({ postId }: { postId?: string }) {
       }`}
     >
       {quote.is_deleted ? (
-        <p>이 포스트는 삭제되었습니다.</p>
+        <p className="text-black">이 포스트는 삭제되었습니다.</p>
       ) : (
         <>
           <div className="flex w-full gap-1.5 items-center">
@@ -52,7 +52,7 @@ function PostQuote({ postId }: { postId?: string }) {
               type="non-click"
               intent="miniQuote"
             />
-            <p className="font-semibold lg:ml-2 lg:text-base text-sm ml-1">
+            <p className="font-semibold lg:ml-2 lg:text-base text-sm text-black ml-1">
               {quote.user?.nickname}
             </p>
             <p className="text-mainGray lg:text-sm text-xs">
@@ -60,7 +60,7 @@ function PostQuote({ postId }: { postId?: string }) {
             </p>
           </div>
           <div>
-            <p className="lg:mt-[7px] mt-1 lg:mb-[6px] text-sm lg:text-base mb-0.5 leading-snug">
+            <p className="lg:mt-[7px] mt-1 lg:mb-[6px] text-sm lg:text-base text-black mb-0.5 leading-snug">
               {quote.content}
             </p>
             {quote.images && (

@@ -29,13 +29,13 @@ function SettingPage() {
       <div className="flex flex-col items-center justify-center w-full divide-y-[1px]">
         <button
           onClick={() => setIsReportModalClick(true)}
-          className="w-full text-center py-4 hover:bg-subGray"
+          className="w-full text-center text-black py-4 hover:bg-subGray"
         >
           불편사항 신고
         </button>
         <button
           onClick={handleLogoutClick}
-          className="w-full text-center py-4 hover:bg-subGray"
+          className="w-full text-center text-black py-4 hover:bg-subGray"
         >
           로그아웃
         </button>
