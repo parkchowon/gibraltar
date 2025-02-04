@@ -16,9 +16,16 @@ function FullScreenMediaModal({
   const [idx, setIdx] = useState<number>(imgIdx);
 
   const handleBackClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
     if (e.target === e.currentTarget) {
       setIsFullScreen(false);
     }
+  };
+
+  const handleXClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFullScreen(false);
   };
 
   return ReactDOM.createPortal(
@@ -28,7 +35,7 @@ function FullScreenMediaModal({
     >
       <button
         className="absolute left-8 top-8 w-9 h-9 cursor-pointer"
-        onClick={() => setIsFullScreen(false)}
+        onClick={handleXClick}
       >
         <XBtn width="32px" height="32px" />
       </button>
