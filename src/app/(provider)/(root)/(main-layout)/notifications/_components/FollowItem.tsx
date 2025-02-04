@@ -52,8 +52,8 @@ function FollowItem({ notification }: { notification: NotificationType }) {
         handle={notification.reacted_user?.handle}
         profileUrl={notification.reacted_user?.profile_url || ""}
       />
-      <p className="text-sm lg:text-base">
-        <span className="font-bold">
+      <p className="text-sm lg:text-base text-black">
+        <span className="font-bold text-black">
           {notification.reacted_user?.nickname || "undefined"}
         </span>{" "}
         님이 회원님을 팔로우하기 시작했습니다.

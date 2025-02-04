@@ -19,7 +19,7 @@ function SideBar() {
   };
 
   return (
-    <aside className="flex flex-col w-full h-fit items-center">
+    <aside className="flex flex-col w-full h-fit items-center bg-white">
       {SIDE_BAR.map((item) => {
         return (
           <button

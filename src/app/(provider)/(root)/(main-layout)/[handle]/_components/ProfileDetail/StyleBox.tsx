@@ -6,7 +6,7 @@ import Logo from "@/assets/logo/gibraltar_logo.svg";
 function StyleBox({ style }: { style?: string }) {
   return (
     <div className="flex flex-col w-full h-full lg:py-4 py-2 justify-between border items-center text-center border-mainGray rounded-md bg-subGray">
-      <p className="font-bold lg:text-sm text-xs">플레이 성향</p>
+      <p className="font-bold lg:text-sm text-xs text-black">플레이 성향</p>
       {style === "즐겁게" && (
         <Joy
           width={92}
@@ -30,7 +30,9 @@ function StyleBox({ style }: { style?: string }) {
           />
         </div>
       )}
-      <p className="font-bold lg:text-sm text-xs">{style ? style : "없음"}</p>
+      <p className="font-bold lg:text-sm text-xs text-black">
+        {style ? style : "없음"}
+      </p>
     </div>
   );
 }

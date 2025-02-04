@@ -21,7 +21,7 @@ function Tag({ tag, checked }: { tag: TagRow; checked: boolean }) {
           checked ? "bg-mint" : "bg-gray-200"
         } `}
       />
-      <p>{tag.tag_name}</p>
+      <p className="text-black">{tag.tag_name}</p>
     </button>
   );
 }

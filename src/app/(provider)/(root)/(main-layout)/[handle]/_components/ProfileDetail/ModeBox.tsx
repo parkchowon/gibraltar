@@ -95,7 +95,7 @@ function ModeBox({ mode }: { mode: string[] }) {
 
   return (
     <div className="relative flex flex-col w-full h-full lg:py-4 py-2 justify-between border items-center text-center border-mainGray rounded-md bg-subGray">
-      <p className="font-bold lg:text-sm text-xs z-20 bg-white px-1">
+      <p className="font-bold lg:text-sm text-xs text-black z-20 bg-white px-1">
         게임모드
       </p>
       {mode && mode.length === 0 && (
@@ -105,26 +105,26 @@ function ModeBox({ mode }: { mode: string[] }) {
       )}
       {!mode ||
         (mode.length === 0 && (
-          <p className="font-bold lg:text-sm text-xs z-20 bg-white px-1">
+          <p className="font-bold lg:text-sm text-xs z-20 text-black bg-white px-1">
             없음
           </p>
         ))}
       {mode && mode.length === 1 && (
-        <p className="font-bold lg:text-sm text-xs z-20 bg-white px-1">
+        <p className="font-bold lg:text-sm text-xs text-black z-20 bg-white px-1">
           {mode[0]}
         </p>
       )}
       {mode && mode.length > 1 && (
         <div className="flex flex-col items-center z-20 gap-[1px]">
-          <p className="font-bold lg:text-sm text-xs bg-white px-1">
+          <p className="font-bold lg:text-sm text-xs text-black bg-white px-1">
             {mode[0]} {mode[1]}
           </p>
           {mode && mode.length === 3 ? (
-            <p className="font-bold w-fit lg:text-sm text-xs bg-white px-1">
+            <p className="font-bold w-fit lg:text-sm text-xs text-black bg-white px-1">
               {mode[2]}
             </p>
           ) : (
-            <p className="font-bold lg:text-sm text-xs bg-white px-1">
+            <p className="font-bold lg:text-sm text-xs text-black bg-white px-1">
               {mode[2]} {mode[3]}
             </p>
           )}

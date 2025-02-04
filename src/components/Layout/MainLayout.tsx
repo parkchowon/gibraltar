@@ -35,7 +35,7 @@ function MainLayout({ children }: PropsWithChildren) {
   return (
     <>
       {modalRendering()}
-      <div className="relative flex w-screen w-m-[1920px] h-screen overflow-auto">
+      <div className="relative flex w-screen w-m-[1920px] h-screen overflow-auto bg-white">
         {/* 사이드 바 */}
         <section className="fixed left-2 mt-[5%] lg:mt-0 lg:left-[13.5%] lg:top-[5%] lg:w-[10.3%]">
           <button

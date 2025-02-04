@@ -36,7 +36,9 @@ function HeroBox({ main, play }: { main?: HeroType[]; play?: HeroType[] }) {
         className="flex flex-shrink-0 items-center mr-auto gap-2 h-6"
       >
         <Image src={position.icon} alt={position.name} width={10} height={10} />
-        <p className="font-bold text-xs lg:text-sm">{position.name}</p>
+        <p className="font-bold text-xs lg:text-sm text-black">
+          {position.name}
+        </p>
         <div className="relative rotate-90 w-4 h-4 p-1">
           <ArrowHead />
         </div>

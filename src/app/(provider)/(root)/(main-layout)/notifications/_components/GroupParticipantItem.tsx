@@ -31,7 +31,7 @@ function GroupParticipantItem({
           handle={user?.handle}
           intent={"post"}
         />
-        <p className="text-sm lg:text-base">
+        <p className="text-sm lg:text-base text-black">
           <span className="font-semibold">{group?.title}</span>에{" "}
           <span className="font-bold">{user?.nickname}</span>이 참가하였습니다.
         </p>

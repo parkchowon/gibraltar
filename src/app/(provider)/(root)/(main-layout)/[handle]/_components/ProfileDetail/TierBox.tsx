@@ -6,7 +6,9 @@ import React from "react";
 function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
   return (
     <div className="flex flex-col w-[50%] px-2 lg:py-4 py-2 items-center text-center border border-mainGray rounded-md bg-subGray">
-      <p className="font-bold text-xs lg:text-sm lg:mb-7 mb-3">티어</p>
+      <p className="font-bold text-xs lg:text-sm lg:mb-7 mb-3 text-black">
+        티어
+      </p>
       <div className="flex w-full justify-evenly mb-3">
         {PLAY_POSITION.map((pos, idx) => {
           return (
@@ -23,7 +25,7 @@ function TierBox({ tier, grade }: { tier: string[]; grade: number[] }) {
                 />
               </div>
               {tier && tier.length === 0 ? (
-                <p className="text-xs lg:text-sm">설정 안함</p>
+                <p className="text-xs lg:text-sm text-black">설정 안함</p>
               ) : (
                 <>
                   <Image

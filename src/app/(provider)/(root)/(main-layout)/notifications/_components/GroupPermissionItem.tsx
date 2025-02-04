@@ -31,7 +31,7 @@ function GroupPermissionItem({
           handle={user?.handle}
           intent={"post"}
         />
-        <p className="text-sm lg:text-base">
+        <p className="text-sm lg:text-base text-black">
           <span className="font-bold">{user?.nickname}</span>님이{" "}
           <span className="font-semibold">{group?.title}</span>에 참가를
           확인하였습니다.

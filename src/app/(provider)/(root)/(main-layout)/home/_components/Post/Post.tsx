@@ -123,7 +123,7 @@ function Post({ post }: PostProps) {
           />
           <div className="lg:ml-6 ml-2 w-full">
             <div className="flex items-center">
-              <p className="font-semibold text-sm lg:text-base w-fit text-overflow whitespace-nowrap line-clamp-1">
+              <p className="font-semibold text-sm lg:text-base text-black w-fit text-overflow whitespace-nowrap line-clamp-1">
                 {post.user.nickname}
               </p>
               {post.user.account_type === "official" && (
@@ -181,7 +181,7 @@ function Post({ post }: PostProps) {
                     src={"/icons/post_chat.svg"}
                   />
                 </button>
-                <p>{post.comments?.length}</p>
+                <p className="text-black">{post.comments?.length}</p>
               </div>
               {/* 재게시 */}
               <PostReactButton

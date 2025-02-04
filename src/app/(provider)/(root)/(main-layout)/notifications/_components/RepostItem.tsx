@@ -69,8 +69,8 @@ function RepostItem({ notification, reactedUser }: RepostItemProps) {
               />
             )}
           </div>
-          <p className="text-sm lg:text-base">
-            <span className="font-bold">
+          <p className="text-sm lg:text-base text-black">
+            <span className="font-bold text-black">
               {nicknames ? nicknames : notification.reacted_user?.nickname}
             </span>{" "}
             님이 회원님의 포스트를

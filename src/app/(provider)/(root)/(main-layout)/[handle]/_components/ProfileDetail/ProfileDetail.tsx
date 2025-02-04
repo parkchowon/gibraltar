@@ -30,7 +30,7 @@ function ProfileDetail({ userId }: { userId: string }) {
         } justify-center border-mainGray`}
       >
         <button onClick={handleDetailProfileClick} className="flex gap-10">
-          <p className="text-xs font-semibold">세부 프로필 펼치기</p>
+          <p className="text-xs text-black font-semibold">세부 프로필 펼치기</p>
           <div className="grid place-items-center w-4 h-4 rotate-90">
             <ArrowHeadBtn width="5" height="9" />
           </div>

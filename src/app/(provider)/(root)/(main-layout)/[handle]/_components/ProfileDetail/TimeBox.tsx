@@ -3,7 +3,7 @@ import React from "react";
 function TimeBox({ time }: { time: string[] }) {
   return (
     <div className="flex flex-col w-full h-full lg:py-4 py-2 border justify-between items-center text-center border-mainGray rounded-md bg-subGray">
-      <p className="font-bold lg:text-sm text-xs">접속 시간</p>
+      <p className="font-bold lg:text-sm text-xs text-black">접속 시간</p>
       <div className="flex justify-center">
         <div
           className={`lg:w-[30px] lg:h-[30px] w-4 h-4 rounded-full ${
@@ -34,7 +34,7 @@ function TimeBox({ time }: { time: string[] }) {
           }`}
         />
       </div>
-      <p className="font-bold lg:text-sm text-xs">
+      <p className="font-bold lg:text-sm text-xs text-black">
         {time && time.length ? time.join(" ") : "없음"}
       </p>
     </div>

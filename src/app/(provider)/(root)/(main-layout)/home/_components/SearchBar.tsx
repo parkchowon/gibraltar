@@ -42,7 +42,7 @@ function SearchBar({
       <input
         value={searchText}
         onChange={handleInputChange}
-        className="flex-grow min-w-0 bg-inherit outline-none placeholder:text-mainGray"
+        className="flex-grow min-w-0 bg-inherit text-black outline-none placeholder:text-mainGray"
         placeholder="검색어를 입력하세요"
       />
       <button

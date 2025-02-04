@@ -14,7 +14,7 @@ function PostTextHighlighted({ text }: { text: string }) {
   };
 
   return (
-    <p className="text-sm lg:text-base mt-[7px] mb-[6px] leading-snug">
+    <p className="text-sm lg:text-base mt-[7px] mb-[6px] leading-snug text-black">
       {parts.map((content, idx) =>
         content.startsWith("@") ? (
           <span

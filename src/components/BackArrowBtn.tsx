@@ -74,7 +74,7 @@ function BackArrowBtn({
       <p
         className={`${
           title !== "뒤로가기" && "font-semibold px-3 lg:px-5"
-        } text-sm lg:text-base`}
+        } text-sm lg:text-base text-black`}
       >
         {title}
       </p>

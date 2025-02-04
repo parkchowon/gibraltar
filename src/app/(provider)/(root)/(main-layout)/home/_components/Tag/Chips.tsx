@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 
-const chipVariants = cva("flex", {
+const chipVariants = cva("flex text-black", {
   variants: {
     intent: {
       removable:

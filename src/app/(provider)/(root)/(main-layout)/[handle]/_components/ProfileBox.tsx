@@ -97,7 +97,7 @@ function ProfileBox({ userId }: { userId: string }) {
       return (
         <button
           onClick={handleEditClick}
-          className="ml-auto h-[35px] w-max-[150px] px-3 lg:px-[15px] text-xs lg:text-sm truncate rounded-full bg-white border border-mainGray hover:brightness-95"
+          className="ml-auto h-[35px] w-max-[150px] px-3 lg:px-[15px] text-black text-xs lg:text-sm truncate rounded-full bg-white border border-mainGray hover:brightness-95"
         >
           프로필 편집
         </button>
@@ -114,7 +114,7 @@ function ProfileBox({ userId }: { userId: string }) {
             isFollowing
               ? "bg-transparent border-[1px] border-mainGray hover:bg-warning"
               : "bg-subGray border border-mainGray hover:bg-carrot"
-          } ml-auto h-[35px] px-[15px] text-sm rounded-full `}
+          } ml-auto h-[35px] px-[15px] text-sm text-black rounded-full `}
         >
           {buttonText}
         </button>
@@ -141,9 +141,9 @@ function ProfileBox({ userId }: { userId: string }) {
       <div className="flex flex-col flex-grow gap-5 justify-between">
         <div className="flex">
           <div className="flex-grow">
-            <p className="font-semibold">{profileUser?.nickname}</p>
-            <p className="text-xs mb-1">{profileUser?.handle}</p>
-            <p className="text-sm mb-3">
+            <p className="font-semibold text-black">{profileUser?.nickname}</p>
+            <p className="text-xs text-black mb-1">{profileUser?.handle}</p>
+            <p className="text-sm text-black mb-3">
               {profileUser && profileUser.detail ? profileUser.detail.bio : ""}
             </p>
             <UserStatus status={status} intent={"page"} />
@@ -151,18 +151,18 @@ function ProfileBox({ userId }: { userId: string }) {
           {buttonRender()}
         </div>
         <div className="flex gap-5 lg:gap-14 text-xs font-bold">
-          <p>포스트 {postCount}</p>
+          <p className="text-black">포스트 {postCount}</p>
           <button
             className="hover:underline hover:underline-offset-4"
             onClick={() => router.push(`/${profileUser?.handle}/follower`)}
           >
-            <p>팔로워 {followings}</p>
+            <p className="text-black">팔로워 {followings}</p>
           </button>
           <button
             className="hover:underline hover:underline-offset-4"
             onClick={() => router.push(`/${profileUser?.handle}/following`)}
           >
-            <p>팔로우 중 {followers.length}</p>
+            <p className="text-black">팔로우 중 {followers.length}</p>
           </button>
         </div>
       </div>
